@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maviko | Tienda Oficial</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .cart-drawer { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .zoom-container { overflow: hidden; cursor: crosshair; }
+    .zoom-image { transition: transform 0.15s ease-out; transform-origin: center center; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-500 selection:text-white relative">
+
+  <!-- BARRA SUPERIOR: TASA BCV Y CONTADOR -->
+  <div class="bg-black text-white text-xs py-2 px-4 border-b border-zinc-800">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="bg-emerald-500 w-2 h-2 rounded-full inline-block animate-pulse"></span>
+        <span>Tasa Oficial BCV: <strong><span id="displayTasa">Cargando...</span> Bs/USD</strong></span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <div class="hidden sm:flex items-center gap-1.5 text-zinc-400 text-[11px]" title="Hora de actualización diaria BCV">
+          <i class="fa-regular fa-clock text-orange-400"></i>
+          <span>Cierre 5:00 PM:</span>
+          <span id="timerBCV" class="font-mono text-zinc-200 font-bold">--:--:--</span>
+        </div>
+        <span class="text-zinc-600 hidden sm:inline">|</span>
+        <button onclick="toggleEmpresaInfo()" class="text-orange-400 hover:text-orange-300 font-semibold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
+          <i class="fa-solid fa-building-columns"></i> Sobre Nosotros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CABECERA CON LOGO MAVIKO -->
+  <header class="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <!-- Imagen del logo oficial -->
+        <img src="https://i.ibb.co/ymDcp5tf/logo.jpg" onerror="this.onerror=null; this.src='logo.jpg';" alt="Logo Maviko" class="w-12 h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
+        <div>
+          <h1 class="text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
+          <p class="text-[11px] text-orange-400 font-medium">Grandes cosas en camino</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="toggleEmpresaInfo()" class="hidden md:flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3.5 py-2 rounded-xl text-xs font-semibold border border-zinc-700 transition-all cursor-pointer">
+          <i class="fa-solid fa-circle-info text-orange-400"></i>
+          <span>Nuestra Empresa</span>
+        </button>
+
+        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
+          <i class="fa-solid fa-basket-shopping text-base"></i>
+          <span class="hidden sm:inline font-bold text-xs">Carrito</span>
+          <span id="cartCount" class="bg-black text-orange-400 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border border-orange-500">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓN INSTITUCIONAL (DESPLEGABLE) -->
+  <section id="seccionEmpresa" class="hidden bg-zinc-900 border-b border-zinc-800 py-6 px-4 transition-all duration-300">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-orange-400"></i> Sobre Maviko
+          </h2>
+          <p class="text-xs text-zinc-400">Conoce más sobre nuestra visión, compromiso y forma de trabajo.</p>
+        </div>
+        <button onclick="toggleEmpresaInfo()" class="text-zinc-400 hover:text-white p-2 cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
+          <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
+            <i class="fa-solid fa-bullseye"></i>
+            <h3>Nuestra Misión</h3>
+          </div>
+          <p class="text-zinc-300 leading-relaxed">
+            Ofrecer productos seleccionados de moda, calzado, accesorios y cuidado personal con la mejor relación calidad-precio, garantizando un servicio de entrega rápido, transparente y confiable.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
+          <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
+            <i class="fa-solid fa-eye"></i>
+            <h3>Nuestra Visión</h3>
+          </div>
+          <p class="text-zinc-300 leading-relaxed">
+            Convertirnos en la tienda multicategoría de referencia en Venezuela, destacándonos por la versatilidad de nuestro catálogo y la excelencia en atención directa.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
+          <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
+            <i class="fa-solid fa-gem"></i>
+            <h3>Nuestros Valores</h3>
+          </div>
+          <ul class="text-zinc-300 space-y-1 list-disc list-inside">
+            <li><strong>Calidad Garantizada:</strong> Selección rigurosa de cada artículo.</li>
+            <li><strong>Transparencia:</strong> Precios claros en USD y Bolívares a tasa oficial.</li>
+            <li><strong>Atención Personalizada:</strong> Respuesta inmediata vía WhatsApp.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
+
+    <!-- SECCIÓN DE CONTACTO Y DATOS DE PAGO EN LA PÁGINA PRINCIPAL -->
+    <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 text-white rounded-2xl p-6 border border-zinc-800 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-6 relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-orange-600/10 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <!-- Contacto -->
+      <div>
+        <h2 class="text-lg font-bold mb-2 flex items-center gap-2 text-orange-400">
+          <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Contacto Directo
+        </h2>
+        <p class="text-xs text-zinc-300 mb-3">Haz tus consultas o envía tus comprobantes directamente a nuestro WhatsApp de atención:</p>
+        <a href="https://wa.me/584127701750" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
+          <i class="fa-brands fa-whatsapp text-base"></i> +58 412-7701750
+        </a>
+      </div>
+
+      <!-- Datos de Pago Móvil con botón Copiar -->
+      <div class="bg-black/60 p-4 rounded-xl border border-zinc-800 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">
+              <i class="fa-solid fa-mobile-screen-button text-orange-300"></i> Datos de Pago Móvil
+            </h2>
+            <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-regular fa-copy text-orange-400"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <ul class="text-xs space-y-1 text-zinc-300">
+            <li><strong>Banco:</strong> Banco de Venezuela (0102)</li>
+            <li><strong>Cédula / RIF:</strong> V-20.907.946</li>
+            <li><strong>Teléfono:</strong> 0412-7701750</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+    <div class="space-y-4">
+      <div class="relative max-w-md mx-auto sm:mx-0">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+        <input 
+          type="text" 
+          id="searchInput" 
+          oninput="filtrarProductos()" 
+          placeholder="Buscar mochilas, franelas, calzado..." 
+          class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
+        >
+      </div>
+
+      <!-- Filtros por Categoría -->
+      <div class="flex flex-wrap gap-2 text-xs" id="contenedorFiltros">
+        <button onclick="filtrarCategoria('todas')" class="cat-btn bg-orange-600 text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Todas</button>
+        <button onclick="filtrarCategoria('bolsos')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Bolsos y Morrales</button>
+        <button onclick="filtrarCategoria('lonchera')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Loncheras</button>
+        <button onclick="filtrarCategoria('ropa')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Ropa</button>
+        <button onclick="filtrarCategoria('calzado')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Calzado</button>
+        <button onclick="filtrarCategoria('skincare')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Skincare</button>
+        <button onclick="filtrarCategoria('cosmeticos')" class="cat-btn bg-zinc-900 text-zinc-300 hover:text-white px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer">Cosméticos</button>
+      </div>
+    </div>
+
+    <!-- CUADRÍCULA DE PRODUCTOS -->
+    <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div class="col-span-full text-center py-20 text-zinc-500 space-y-3">
+        <i class="fa-solid fa-spinner fa-spin text-3xl text-orange-500"></i>
+        <p class="text-sm font-medium">Sincronizando inventario en vivo...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE DETALLE Y MULTIMEDIA -->
+  <div id="modalDetalle" onclick="cerrarDetallePorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full p-6 relative space-y-6 shadow-2xl my-8">
+      <button onclick="cerrarDetalle()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 cursor-pointer z-10">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Visualizador Multimedia (4 fotos + video) -->
+        <div class="space-y-3">
+          <div 
+            id="contenedorVisor" 
+            class="zoom-container h-72 sm:h-80 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center relative p-2"
+            onmousemove="aplicarZoom(event)" 
+            onmouseleave="resetearZoom()"
+            ontouchmove="aplicarZoomTouch(event)" 
+            ontouchend="resetearZoom()"
+          >
+            <img id="fotoPrincipalModal" src="" alt="Producto" class="zoom-image max-w-full max-h-full object-contain pointer-events-none select-none">
+            <video id="videoPrincipalModal" controls playsinline class="hidden max-w-full max-h-full object-contain rounded-xl"></video>
+            <div id="zoomHint" class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-zinc-400 pointer-events-none flex items-center gap-1 border border-zinc-800">
+              <i class="fa-solid fa-magnifying-glass-plus"></i> Pasa el cursor o dedo para lupa
+            </div>
+          </div>
+          <!-- Galería de Miniaturas -->
+          <div id="galeriaMiniaturas" class="flex gap-2 overflow-x-auto pb-1"></div>
+        </div>
+
+        <!-- Información y Selección -->
+        <div class="flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span id="categoriaModal" class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-md capitalize border border-orange-500/30"></span>
+              <span id="skuModal" class="text-zinc-500 text-[11px] font-mono"></span>
+            </div>
+            <h2 id="tituloModal" class="text-lg font-bold text-white"></h2>
+            
+            <div class="flex items-baseline gap-2 pt-1">
+              <span id="precioModalUSD" class="text-2xl font-black text-orange-400"></span>
+              <span id="precioModalBS" class="text-xs text-zinc-400"></span>
+            </div>
+
+            <!-- Selector de Tallas Dinámico -->
+            <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-zinc-300">Selecciona tu talla:</span>
+                <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
+              </div>
+              <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Pestañas Descripción / Ficha Técnica -->
+            <div class="pt-4 border-t border-zinc-800">
+              <div class="flex gap-4 border-b border-zinc-800 text-xs font-bold mb-2">
+                <button id="tabDescBtn" onclick="cambiarTab('desc')" class="tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors">Descripción</button>
+                <button id="tabFichaBtn" onclick="cambiarTab('ficha')" class="tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors">Ficha Técnica</button>
+              </div>
+              <div id="tabDescripcion" class="text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+                <p id="descModalText"></p>
+              </div>
+              <div id="tabFicha" class="hidden text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+                <ul id="fichaModalList" class="list-disc list-inside space-y-1"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Agregar desde Modal -->
+          <button id="btnAgregarModal" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
+            <i class="fa-solid fa-cart-plus text-sm"></i>
+            <span>Agregar al Carrito</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY Y DRAWER DEL CARRITO -->
+  <div id="cartOverlay" onclick="toggleCarrito(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
+
+  <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+    <!-- Header Carrito -->
+    <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-orange-500"></i>
+        <h3 class="font-bold text-white text-sm">Tu Pedido</h3>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="vaciarCarrito()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Carrito">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+        <button onclick="toggleCarrito(false)" class="text-zinc-400 hover:text-white cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de Artículos -->
+    <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800"></div>
+
+    <!-- Checkout y Formulario de Despacho -->
+    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs">
+      <div class="space-y-2">
+        <input type="text" id="nombreCliente" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Método de Entrega -->
+          <select id="empresaEnvio" onchange="actualizarCostoEnvio()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-orange-500">
+            <option value="MRW (Cobro en Destino)" data-costo="0">MRW (Cobro en Destino)</option>
+            <option value="Zoom (Cobro en Destino)" data-costo="0">Zoom (Cobro en Destino)</option>
+            <option value="Tealca (Cobro en Destino)" data-costo="0">Tealca (Cobro en Destino)</option>
+            <option value="Delivery Local" data-costo="3">Delivery Local (+$3)</option>
+            <option value="Retiro en Tienda" data-costo="0">Retiro en Tienda (Gratis)</option>
+          </select>
+
+          <!-- Método de Pago -->
+          <select id="metodoPago" onchange="mostrarDatosPago()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-orange-500">
+            <option value="Pago Móvil">Pago Móvil</option>
+            <option value="Zelle">Zelle</option>
+            <option value="Efectivo / Divisas">Efectivo / Divisas</option>
+          </select>
+        </div>
+
+        <input type="text" id="direccionEnvio" placeholder="Ciudad, Estado o Dirección de Agencia" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        
+        <div id="campoReferencia">
+          <input type="text" id="referenciaPago" placeholder="Nº de Referencia o Comprobante" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Caja de Información de Pago Dinámica -->
+        <div id="infoPagoBox" class="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-[11px] space-y-1"></div>
+      </div>
+
+      <!-- Resumen Financiero -->
+      <div class="space-y-1 pt-2 border-t border-zinc-800">
+        <div class="flex justify-between text-zinc-400">
+          <span>Subtotal:</span>
+          <span>$<span id="subtotalUSD">0.00</span></span>
+        </div>
+        <div class="flex justify-between text-zinc-400">
+          <span>Envío:</span>
+          <span id="costoEnvioText">Cobro en destino</span>
+        </div>
+        <div class="flex justify-between text-base font-bold text-white pt-1">
+          <span>Total USD:</span>
+          <span class="text-orange-400">$<span id="totalUSD">0.00</span></span>
+        </div>
+        <div class="flex justify-between text-xs font-semibold text-zinc-300">
+          <span>Total en Bs. (BCV):</span>
+          <span><span id="totalBS">0,00</span> Bs.</span>
+        </div>
+      </div>
+
+      <!-- Botón WhatsApp -->
+      <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
+        <i class="fa-brands fa-whatsapp text-base"></i>
+        <span>Confirmar Pedido por WhatsApp</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl">
+    <div id="toastIcon" class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-check text-lg"></i>
+    </div>
+    <div>
+      <h4 id="toastTitle" class="text-xs font-bold text-white">¡Producto agregado!</h4>
+      <p id="toastMessage" class="text-[11px] text-zinc-400 line-clamp-1"></p>
+    </div>
+    <button id="toastBtnAccion" onclick="toggleCarrito(true)" class="ml-2 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">
+      Ver Carrito
+    </button>
+  </div>
+
+  <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
+  <div class="fixed bottom-6 left-6 z-40 group flex items-center">
+    <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Tengo%20una%20consulta%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
+      <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping pointer-events-none"></span>
+      <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+    <span class="absolute left-16 bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap ml-2">
+      ¿Dudas? Escríbenos
+    </span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-zinc-900 border-t border-zinc-800 py-6 text-center text-xs text-zinc-400 space-y-1 mt-auto">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="font-bold text-white">MAVIKO — Grandes cosas en camino</p>
+      <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca.</p>
+      <p class="text-zinc-500">Atención Directa: <strong>+58 412-7701750</strong> | Pago Móvil: <strong>0102 - V-20.907.946 - 04127701750</strong></p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT DE SINCRONIZACIÓN JSONP Y LOGICA -->
+  <script>
+    const GOOGLE_SHEET_ID = "1COZTlUBgqv2GPT6TMG1mfkkvliprvBGZw4-0-PTw5dM";
+    const GID_CATALOGO_WEB = "1599022863";
+    const NUMERO_WHATSAPP = "584127701750";
+
+    let tasaBCV = 36.50;
+    let productos = [];
+    let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
+    let categoriaActual = 'todas';
+    let tallaSeleccionadaActual = "";
+    let costoEnvioAdicional = 0;
+    let toastTimeout;
+    let timerEsperaJSONP;
+
+    const DATOS_PAGO_MOVIL = {
+      banco: "Banco de Venezuela (0102)",
+      codigoBanco: "0102",
+      cedula: "V-20.907.946",
+      telefono: "04127701750"
+    };
+
+    function guardarCarritoEnStorage() {
+      localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
+    }
+
+    // Iniciar consulta de hoja mediante JSONP
+    function cargarCatalogoDesdeHoja() {
+      const callbackName = "manejarRespuestaGoogleSheets";
+      const scriptUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${GID_CATALOGO_WEB}&_t=${Date.now()}`;
+
+      timerEsperaJSONP = setTimeout(() => {
+        const container = document.getElementById('gridProductos');
+        if (container && (!productos || productos.length === 0)) {
+          container.innerHTML = `
+            <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
+              <h3 class="text-white font-bold">Aviso de Sincronización</h3>
+              <p class="text-rose-400 font-mono text-xs max-w-lg mx-auto bg-black/50 p-2.5 rounded-lg border border-rose-900/40">
+                Google Sheets tardó en responder. Asegúrate de que el documento conserve los permisos públicos de lectura.
+              </p>
+            </div>
+          `;
+        }
+      }, 8000);
+
+      const script = document.createElement('script');
+      script.src = scriptUrl;
+      script.id = 'jsonp-sheets';
+      script.onerror = () => {
+        clearTimeout(timerEsperaJSONP);
+        const container = document.getElementById('gridProductos');
+        if (container) {
+          container.innerHTML = `
+            <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
+              <h3 class="text-white font-bold">Aviso de Sincronización</h3>
+              <p class="text-rose-400 font-mono text-xs max-w-lg mx-auto bg-black/50 p-2.5 rounded-lg border border-rose-900/40">
+                No se pudo descargar la hoja. Verifica tu conexión a internet o los permisos compartidos.
+              </p>
+            </div>
+          `;
+        }
+      };
+      document.body.appendChild(script);
+    }
+
+    // Procesador de datos recibidos de Google Sheets
+    window.manejarRespuestaGoogleSheets = function(data) {
+      clearTimeout(timerEsperaJSONP);
+
+      try {
+        if (!data || !data.table || !data.table.rows) {
+          throw new Error("Estructura de datos no válida recibida desde Google Sheets.");
+        }
+
+        const cabeceras = data.table.cols.map(c => (c.label || '').trim().toLowerCase().replace(/\s+/g, '_'));
+        const filas = data.table.rows;
+
+        productos = filas
+          .map(r => {
+            let obj = {};
+            r.c.forEach((celda, idx) => {
+              const cab = cabeceras[idx] || `col_${idx}`;
+              obj[cab] = celda && celda.v !== null && celda.v !== undefined ? String(celda.v) : '';
+            });
+            return obj;
+          })
+          .filter(f => {
+            const val = (f.activo || '').trim().toUpperCase();
+            return val === 'TRUE' || val === 'VERDADERO' || val === 'SI' || val === '1';
+          })
+          .map(f => {
+            let mapaTallas = {};
+            let stockTotal = 0;
+            const campoStock = f.stock_tallas || "";
+
+            if (campoStock.includes(':')) {
+              campoStock.split(',').forEach(par => {
+                const [t, cant] = par.split(':');
+                if (t && cant !== undefined) {
+                  const qty = parseInt(cant.trim()) || 0;
+                  mapaTallas[t.trim().toUpperCase()] = qty;
+                  stockTotal += qty;
+                }
+              });
+            } else {
+              stockTotal = parseInt(campoStock.trim()) || 0;
+            }
+
+            const galeriaFotos = [f.foto_1, f.foto_2, f.foto_3, f.foto_4].filter(url => url && url.trim().length > 0);
+            const ficha = f.ficha_tecnica ? f.ficha_tecnica.split('|').map(item => item.trim()).filter(Boolean) : [];
+            let precioLimpio = (f.preciousd || f.precio || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
+
+            return {
+              id: f.id || '',
+              nombre: f.nombre || 'Sin nombre',
+              categoria: (f.categoria || "bolsos").toLowerCase().trim(),
+              precioUSD: parseFloat(precioLimpio) || 0,
+              mapaTallas: mapaTallas,
+              tieneTallas: Object.keys(mapaTallas).length > 0,
+              stockTotal: stockTotal,
+              imagen: galeriaFotos[0] || 'https://via.placeholder.com/300x300?text=Sin+Imagen',
+              galeriaFotos: galeriaFotos,
+              videoURL: f.video_url ? f.video_url.trim() : null,
+              descripcion: f.descripcion || '',
+              fichaTecnica: ficha
+            };
+          });
+
+        const container = document.getElementById('gridProductos');
+        if (productos.length === 0 && container) {
+          container.innerHTML = `
+            <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
+              <h3 class="text-white font-bold">Catálogo Vacío</h3>
+              <p class="text-zinc-400 text-xs max-w-md mx-auto">Conexión establecida, pero ningún producto tiene <b>activo = TRUE</b> o <b>VERDADERO</b>.</p>
+            </div>
+          `;
+          return;
+        }
+
+        renderProductos(obtenerProductosFiltrados());
+      } catch (err) {
+        console.error("Error interpretando datos:", err);
+      }
+    };
+
+    function iniciarContadorBCV() {
+      function actualizarTimer() {
+        const ahora = new Date();
+        const objetivo = new Date();
+        objetivo.setHours(17, 0, 0, 0);
+
+        if (ahora >= objetivo) {
+          objetivo.setDate(objetivo.getDate() + 1);
+        }
+
+        const diferencia = objetivo - ahora;
+        const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+        const minutos = Math.floor((diferencia / 1000 / 60) % 60);
+        const segundos = Math.floor((diferencia / 1000) % 60);
+
+        const el = document.getElementById('timerBCV');
+        if (el) {
+          el.innerText = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+        }
+      }
+      actualizarTimer();
+      setInterval(actualizarTimer, 1000);
+    }
+
+    function copiarDatosPagoMovil(btn) {
+      const texto = `Banco: ${DATOS_PAGO_MOVIL.banco}\nCédula: ${DATOS_PAGO_MOVIL.cedula}\nTeléfono: ${DATOS_PAGO_MOVIL.telefono}`;
+      navigator.clipboard.writeText(texto).then(() => {
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> <span class="text-emerald-400">¡Copiado!</span>`;
+        mostrarToast("Datos de Pago Móvil copiados al portapapeles", "¡Copiado con éxito!", true);
+        setTimeout(() => btn.innerHTML = textoOriginal, 2200);
+      });
+    }
+
+    function mostrarToast(mensaje, titulo = "¡Producto agregado!", esCopiado = false) {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBtn = document.getElementById('toastBtnAccion');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      toastTitle.innerText = titulo;
+      toastMsg.innerText = mensaje;
+      
+      if (esCopiado) {
+        toastIcon.innerHTML = `<i class="fa-regular fa-copy text-lg text-emerald-400"></i>`;
+        toastIcon.className = "w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0";
+        toastBtn.classList.add('hidden');
+      } else {
+        toastIcon.innerHTML = `<i class="fa-solid fa-check text-lg"></i>`;
+        toastIcon.className = "w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0";
+        toastBtn.classList.remove('hidden');
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    function toggleEmpresaInfo() {
+      document.getElementById('seccionEmpresa').classList.toggle('hidden');
+    }
+
+    async function obtenerTasaBCV() {
+      try {
+        const respuesta = await fetch('https://rates.dolarvzla.com/bcv/current.json');
+        const datos = await respuesta.json();
+        if (datos && datos.current && datos.current.usd) {
+          tasaBCV = parseFloat(datos.current.usd);
+        }
+      } catch (error) {
+        console.warn("Tasa BCV por defecto activa:", tasaBCV);
+      } finally {
+        document.getElementById('displayTasa').innerText = tasaBCV.toFixed(2);
+        actualizarCarritoUI();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      obtenerTasaBCV();
+      iniciarContadorBCV();
+      cargarCatalogoDesdeHoja();
+      mostrarDatosPago();
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+          cerrarDetalle();
+          toggleCarrito(false);
+        }
+      });
+    });
+
+    function renderProductos(lista) {
+      const container = document.getElementById('gridProductos');
+      container.innerHTML = '';
+
+      if (lista.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-16 text-zinc-500">No se encontraron artículos disponibles en esta categoría.</div>`;
+        return;
+      }
+
+      lista.forEach(p => {
+        const precioBs = (p.precioUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const card = document.createElement('div');
+        card.className = "bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-lg hover:border-orange-500/50 transition-all flex flex-col justify-between group";
+        
+        let stockTag = '';
+        if (p.stockTotal <= 0) {
+          stockTag = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Agotado</span>`;
+        } else if (p.stockTotal <= 3) {
+          stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Últimas ${p.stockTotal} und</span>`;
+        }
+
+        const tallasDisponibles = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
+        const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Tallas: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'Agotadas'}</p>` : '';
+
+        card.innerHTML = `
+          <div>
+            <div class="h-48 rounded-xl bg-zinc-950 overflow-hidden mb-3 relative cursor-pointer flex items-center justify-center p-2" onclick="abrirDetalleProducto('${p.id}')">
+              <img src="${p.imagen}" alt="${p.nombre}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+              
+              <div class="absolute top-2 right-2 flex flex-col items-end gap-1">
+                <span class="bg-black/80 backdrop-blur-md text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize border border-orange-500/30">${p.categoria}</span>
+                ${stockTag}
+              </div>
+
+              ${p.videoURL ? `<span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded-md flex items-center gap-1 border border-zinc-700"><i class="fa-solid fa-circle-play text-orange-400"></i> Video</span>` : ''}
+
+              <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span class="bg-black/90 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg border border-orange-500/50 shadow-md">Ver detalles</span>
+              </div>
+            </div>
+            <h3 class="font-bold text-white mb-1 text-sm cursor-pointer hover:text-orange-400 transition-colors line-clamp-1" onclick="abrirDetalleProducto('${p.id}')">${p.nombre}</h3>
+            ${textoTallas}
+            <p class="text-xs text-zinc-400 mb-3 line-clamp-2">${p.descripcion}</p>
+          </div>
+          <div>
+            <div class="flex items-baseline gap-1.5 mb-3">
+              <span class="text-lg font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
+              <span class="text-xs text-zinc-500">/ ${precioBs} Bs.</span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="abrirDetalleProducto('${p.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer" title="Ver más detalles">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button ${p.stockTotal <= 0 ? 'disabled' : ''} onclick="agregarAlCarritoAccionDirecta('${p.id}')" class="flex-grow ${p.stockTotal <= 0 ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-500 text-white cursor-pointer shadow-md'} font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus"></i> ${p.stockTotal <= 0 ? 'Agotado' : 'Agregar'}
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function abrirDetalleProducto(id) {
+      const prod = productos.find(p => p.id === id);
+      if (!prod) return;
+
+      tallaSeleccionadaActual = "";
+
+      document.getElementById('skuModal').innerText = `Ref: ${prod.id}`;
+      document.getElementById('tituloModal').innerText = prod.nombre;
+      document.getElementById('categoriaModal').innerText = prod.categoria;
+      
+      const precioBs = (prod.precioUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('precioModalUSD').innerText = `$${prod.precioUSD.toFixed(2)}`;
+      document.getElementById('precioModalBS').innerText = `/ ${precioBs} Bs.`;
+      document.getElementById('descModalText').innerText = prod.descripcion;
+
+      const boxTallas = document.getElementById('boxTallasModal');
+      const gridTallas = document.getElementById('gridTallasModal');
+      const labelTalla = document.getElementById('labelTallaSeleccionada');
+      gridTallas.innerHTML = '';
+      labelTalla.innerText = '';
+
+      if (prod.tieneTallas) {
+        boxTallas.classList.remove('hidden');
+        Object.entries(prod.mapaTallas).forEach(([talla, stockTalla]) => {
+          const btnTalla = document.createElement('button');
+          btnTalla.type = "button";
+          
+          if (stockTalla <= 0) {
+            btnTalla.className = "bg-zinc-950 text-zinc-600 font-medium px-3.5 py-1.5 rounded-xl text-xs border border-zinc-800 line-through cursor-not-allowed";
+            btnTalla.innerText = `${talla} (0)`;
+            btnTalla.disabled = true;
+          } else {
+            btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
+            btnTalla.innerText = `${talla} (${stockTalla})`;
+            btnTalla.onclick = () => {
+              document.querySelectorAll('.btn-talla').forEach(b => {
+                b.classList.remove('bg-orange-600', 'text-white', 'border-orange-500');
+                b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
+              });
+              btnTalla.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
+              btnTalla.classList.add('bg-orange-600', 'text-white', 'border-orange-500');
+              tallaSeleccionadaActual = talla;
+              labelTalla.innerText = `Talla: ${talla} (${stockTalla} disp.)`;
+            };
+          }
+          gridTallas.appendChild(btnTalla);
+        });
+      } else {
+        boxTallas.classList.add('hidden');
+      }
+
+      const fotoPrincipal = document.getElementById('fotoPrincipalModal');
+      const videoPrincipal = document.getElementById('videoPrincipalModal');
+      const zoomHint = document.getElementById('zoomHint');
+
+      videoPrincipal.pause();
+      videoPrincipal.classList.add('hidden');
+      fotoPrincipal.classList.remove('hidden');
+      zoomHint.classList.remove('hidden');
+      fotoPrincipal.src = prod.galeriaFotos[0] || '';
+      resetearZoom();
+
+      const galeria = document.getElementById('galeriaMiniaturas');
+      galeria.innerHTML = '';
+
+      prod.galeriaFotos.forEach((imgUrl, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = `w-14 h-14 rounded-xl border flex items-center justify-center p-1 bg-zinc-950 cursor-pointer transition-all ${idx === 0 ? 'border-orange-500 ring-2 ring-orange-500/20' : 'border-zinc-800 hover:border-zinc-600'}`;
+        thumb.innerHTML = `<img src="${imgUrl}" class="max-w-full max-h-full object-contain pointer-events-none">`;
+        
+        thumb.onclick = () => {
+          videoPrincipal.pause();
+          videoPrincipal.classList.add('hidden');
+          fotoPrincipal.classList.remove('hidden');
+          zoomHint.classList.remove('hidden');
+          fotoPrincipal.src = imgUrl;
+          resetearZoom();
+          actualizarBordeMiniatura(thumb);
+        };
+        galeria.appendChild(thumb);
+      });
+
+      if (prod.videoURL) {
+        const thumbVideo = document.createElement('div');
+        thumbVideo.className = "w-14 h-14 rounded-xl border border-zinc-800 hover:border-zinc-600 flex flex-col items-center justify-center p-1 bg-zinc-950 text-orange-400 cursor-pointer transition-all";
+        thumbVideo.innerHTML = `<i class="fa-solid fa-play text-sm"></i><span class="text-[9px] font-bold mt-0.5 text-zinc-300">Video</span>`;
+        
+        thumbVideo.onclick = () => {
+          fotoPrincipal.classList.add('hidden');
+          zoomHint.classList.add('hidden');
+          videoPrincipal.classList.remove('hidden');
+          videoPrincipal.src = prod.videoURL;
+          videoPrincipal.play();
+          actualizarBordeMiniatura(thumbVideo);
+        };
+        galeria.appendChild(thumbVideo);
+      }
+
+      function actualizarBordeMiniatura(activo) {
+        Array.from(galeria.children).forEach(el => {
+          el.className = el.className.replace(/border-orange-500 ring-2 ring-orange-500\/20/g, 'border-zinc-800');
+        });
+        activo.className = activo.className.replace('border-zinc-800', 'border-orange-500 ring-2 ring-orange-500/20');
+      }
+
+      const fichaList = document.getElementById('fichaModalList');
+      fichaList.innerHTML = '';
+      if (prod.fichaTecnica && prod.fichaTecnica.length > 0) {
+        prod.fichaTecnica.forEach(item => {
+          const li = document.createElement('li');
+          li.innerText = item;
+          fichaList.appendChild(li);
+        });
+      } else {
+        fichaList.innerHTML = `<li class="text-zinc-500">Sin especificaciones adicionales.</li>`;
+      }
+
+      const btnAgregar = document.getElementById('btnAgregarModal');
+      if (prod.stockTotal <= 0) {
+        btnAgregar.disabled = true;
+        btnAgregar.className = "w-full bg-zinc-800 text-zinc-500 font-bold py-3.5 rounded-xl cursor-not-allowed flex items-center justify-center gap-2 text-sm";
+        btnAgregar.innerHTML = `<i class="fa-solid fa-ban"></i> <span>Agotado</span>`;
+      } else {
+        btnAgregar.disabled = false;
+        btnAgregar.className = "w-full bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
+        btnAgregar.innerHTML = `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
+        
+        btnAgregar.onclick = () => {
+          if (prod.tieneTallas && !tallaSeleccionadaActual) {
+            alert("Por favor selecciona una talla disponible.");
+            return;
+          }
+          agregarAlCarrito(prod.id, tallaSeleccionadaActual);
+          cerrarDetalle();
+        };
+      }
+
+      cambiarTab('desc');
+      document.getElementById('modalDetalle').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function aplicarZoom(e) {
+      const container = e.currentTarget;
+      const img = container.querySelector('#fotoPrincipalModal');
+      if (!img || img.classList.contains('hidden')) return;
+
+      const rect = container.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      img.style.transformOrigin = `${x}% ${y}%`;
+      img.style.transform = "scale(2.2)";
+    }
+
+    function aplicarZoomTouch(e) {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const container = e.currentTarget;
+        const img = container.querySelector('#fotoPrincipalModal');
+        if (!img || img.classList.contains('hidden')) return;
+
+        const rect = container.getBoundingClientRect();
+        const x = ((touch.clientX - rect.left) / rect.width) * 100;
+        const y = ((touch.clientY - rect.top) / rect.height) * 100;
+
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = "scale(2.2)";
+      }
+    }
+
+    function resetearZoom() {
+      const img = document.querySelector('#fotoPrincipalModal');
+      if (img) {
+        img.style.transform = "scale(1)";
+        img.style.transformOrigin = "center center";
+      }
+    }
+
+    function cerrarDetallePorOverlay(e) {
+      if (e.target.id === 'modalDetalle') cerrarDetalle();
+    }
+
+    function cerrarDetalle() {
+      const video = document.getElementById('videoPrincipalModal');
+      if (video) video.pause();
+      document.getElementById('modalDetalle').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      resetearZoom();
+    }
+
+    function agregarAlCarritoAccionDirecta(id) {
+      const prod = productos.find(p => p.id === id);
+      if (prod && prod.tieneTallas) {
+        abrirDetalleProducto(id);
+      } else {
+        agregarAlCarrito(id, "");
+      }
+    }
+
+    function cambiarTab(tab) {
+      const btnDesc = document.getElementById('tabDescBtn');
+      const btnFicha = document.getElementById('tabFichaBtn');
+      const boxDesc = document.getElementById('tabDescripcion');
+      const boxFicha = document.getElementById('tabFicha');
+
+      if (tab === 'desc') {
+        boxDesc.classList.remove('hidden');
+        boxFicha.classList.add('hidden');
+        btnDesc.className = "tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors";
+        btnFicha.className = "tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors";
+      } else {
+        boxDesc.classList.add('hidden');
+        boxFicha.classList.remove('hidden');
+        btnFicha.className = "tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors";
+        btnDesc.className = "tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors";
+      }
+    }
+
+    function agregarAlCarrito(id, talla = "") {
+      const prod = productos.find(p => p.id === id);
+      const claveCarrito = `${id}-${talla}`;
+      const existe = carrito.find(item => item.clave === claveCarrito);
+
+      let limiteStock = prod.tieneTallas ? (prod.mapaTallas[talla] || 0) : prod.stockTotal;
+
+      if (existe) {
+        if (existe.cantidad + 1 > limiteStock) {
+          alert(`Disculpas, solo quedan ${limiteStock} unidades disponibles en esa opción.`);
+          return;
+        }
+        existe.cantidad++;
+      } else {
+        if (limiteStock <= 0) {
+          alert("Este producto no tiene disponibilidad en este momento.");
+          return;
+        }
+        carrito.push({ ...prod, clave: claveCarrito, tallaSeleccionada: talla, cantidad: 1 });
+      }
+
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
+
+      const textoTalla = talla ? ` (Talla: ${talla})` : '';
+      mostrarToast(`${prod.nombre}${textoTalla}`);
+    }
+
+    function cambiarCantidad(clave, delta) {
+      const item = carrito.find(i => i.clave === clave);
+      if (item) {
+        const prod = productos.find(p => p.id === item.id);
+        const limiteStock = item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal;
+
+        if (delta > 0 && item.cantidad + 1 > limiteStock) {
+          alert(`Has alcanzado el límite disponible en almacén (${limiteStock} unidades).`);
+          return;
+        }
+
+        item.cantidad += delta;
+        if (item.cantidad <= 0) {
+          carrito = carrito.filter(i => i.clave !== clave);
+        }
+      }
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
+    }
+
+    function vaciarCarrito() {
+      if (carrito.length === 0) return;
+      if (confirm("¿Estás seguro de que deseas vaciar tu carrito?")) {
+        carrito = [];
+        guardarCarritoEnStorage();
+        actualizarCarritoUI();
+      }
+    }
+
+    function actualizarCostoEnvio() {
+      const select = document.getElementById('empresaEnvio');
+      const selectedOption = select.options[select.selectedIndex];
+      const costo = parseFloat(selectedOption.getAttribute('data-costo')) || 0;
+      costoEnvioAdicional = costo;
+
+      const textoCosto = document.getElementById('costoEnvioText');
+      if (costo > 0) {
+        textoCosto.innerText = `+$${costo.toFixed(2)}`;
+      } else if (select.value === 'Retiro en Tienda') {
+        textoCosto.innerText = "Gratis";
+      } else {
+        textoCosto.innerText = "Cobro en destino";
+      }
+
+      actualizarCarritoUI();
+    }
+
+    function actualizarCarritoUI() {
+      const count = carrito.reduce((acc, i) => acc + i.cantidad, 0);
+      document.getElementById('cartCount').innerText = count;
+
+      const listContainer = document.getElementById('cartItemsList');
+      listContainer.innerHTML = '';
+
+      if (carrito.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-16 text-zinc-500 space-y-2">
+            <i class="fa-solid fa-basket-shopping text-3xl mb-2 text-zinc-600"></i>
+            <p class="text-sm font-medium">Tu carrito está vacío</p>
+          </div>
+        `;
+      } else {
+        carrito.forEach(i => {
+          const itemEl = document.createElement('div');
+          itemEl.className = "py-3 flex items-center justify-between gap-3";
+          const textoTalla = i.tallaSeleccionada ? `<span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">Talla: ${i.tallaSeleccionada}</span>` : '';
+
+          itemEl.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-1">
+                <img src="${i.imagen}" class="max-w-full max-h-full object-contain">
+              </div>
+              <div>
+                <h4 class="font-bold text-xs text-white">${i.nombre} ${textoTalla}</h4>
+                <p class="text-xs text-zinc-400">$${i.precioUSD.toFixed(2)} c/u</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="cambiarCantidad('${i.clave}', -1)" class="w-6 h-6 bg-zinc-800 rounded text-zinc-300 font-bold text-xs cursor-pointer hover:bg-zinc-700 flex items-center justify-center">-</button>
+              <span class="text-xs font-bold w-4 text-center text-white">${i.cantidad}</span>
+              <button onclick="cambiarCantidad('${i.clave}', 1)" class="w-6 h-6 bg-zinc-800 rounded text-zinc-300 font-bold text-xs cursor-pointer hover:bg-zinc-700 flex items-center justify-center">+</button>
+            </div>
+          `;
+          listContainer.appendChild(itemEl);
+        });
+      }
+
+      const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+      const totalUSD = subtotalUSD + (subtotalUSD > 0 ? costoEnvioAdicional : 0);
+      const totalBS = totalUSD * tasaBCV;
+
+      document.getElementById('subtotalUSD').innerText = subtotalUSD.toFixed(2);
+      document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
+      document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function mostrarDatosPago() {
+      const metodo = document.getElementById('metodoPago').value;
+      const box = document.getElementById('infoPagoBox');
+      const campoRef = document.getElementById('campoReferencia');
+
+      if (metodo === 'Pago Móvil') {
+        campoRef.classList.remove('hidden');
+        box.innerHTML = `
+          <div class="flex justify-between items-center mb-1">
+            <p class="font-bold text-orange-400">Datos para Pago Móvil:</p>
+            <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2 py-0.5 rounded text-[10px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
+              <i class="fa-regular fa-copy text-orange-400"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <p class="text-zinc-300"><strong>Banco:</strong> ${DATOS_PAGO_MOVIL.banco}</p>
+          <p class="text-zinc-300"><strong>Cédula:</strong> ${DATOS_PAGO_MOVIL.cedula}</p>
+          <p class="text-zinc-300"><strong>Teléfono:</strong> ${DATOS_PAGO_MOVIL.telefono}</p>
+        `;
+      } else if (metodo === 'Zelle') {
+        campoRef.classList.remove('hidden');
+        box.innerHTML = `
+          <p class="font-bold text-orange-400 mb-0.5">Datos para Zelle:</p>
+          <p class="text-zinc-300"><strong>Correo:</strong> pagos@maviko.com</p>
+          <p class="text-zinc-300"><strong>Titular:</strong> Maviko C.A.</p>
+        `;
+      } else {
+        campoRef.classList.add('hidden');
+        box.innerHTML = `
+          <p class="font-bold text-orange-400 mb-0.5">Efectivo contra entrega:</p>
+          <p class="text-zinc-300">Pagas en divisas/efectivo al momento de la entrega acordada.</p>
+        `;
+      }
+    }
+
+    function toggleCarrito(forceOpen = false) {
+      const drawer = document.getElementById('cartDrawer');
+      const overlay = document.getElementById('cartOverlay');
+
+      if (drawer.classList.contains('translate-x-full') || forceOpen) {
+        drawer.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+      } else {
+        drawer.classList.add('translate-x-full');
+        overlay.classList.add('opacity-0');
+        document.body.classList.remove('overflow-hidden');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+      }
+    }
+
+    function filtrarCategoria(cat) {
+      categoriaActual = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('bg-orange-600', 'text-white');
+        btn.classList.add('bg-zinc-900', 'text-zinc-300');
+      });
+      event.target.classList.remove('bg-zinc-900', 'text-zinc-300');
+      event.target.classList.add('bg-orange-600', 'text-white');
+
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function filtrarProductos() {
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function obtenerProductosFiltrados() {
+      const busqueda = document.getElementById('searchInput').value.toLowerCase();
+      return productos.filter(p => {
+        const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
+        const coincideNombre = p.nombre.toLowerCase().includes(busqueda);
+        return coincideCat && coincideNombre;
+      });
+    }
+
+    function enviarPedidoWhatsApp() {
+      if (carrito.length === 0) {
+        alert("Tu carrito está vacío. Agrega al menos un producto.");
+        return;
+      }
+
+      const cliente = document.getElementById('nombreCliente').value.trim();
+      const metodo = document.getElementById('metodoPago').value;
+      const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
+      const agencia = document.getElementById('empresaEnvio').value;
+      const direccion = document.getElementById('direccionEnvio').value.trim();
+
+      if (!cliente) {
+        alert("Por favor ingresa tu Nombre y Apellido.");
+        document.getElementById('nombreCliente').focus();
+        return;
+      }
+
+      const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+      const totalUSD = subtotalUSD + costoEnvioAdicional;
+      const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      let mensaje = `*¡Hola Maviko! Quiero confirmar mi pedido:*\n\n`;
+      mensaje += `👤 *Cliente:* ${cliente}\n`;
+      mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
+      if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
+      mensaje += `💳 *Método de Pago:* ${metodo}\n`;
+      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
+      
+      mensaje += `\n📦 *Productos seleccionados:*\n`;
+      carrito.forEach(i => {
+        const detalleTalla = i.tallaSeleccionada ? ` (Talla: ${i.tallaSeleccionada})` : '';
+        mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+      });
+
+      if (costoEnvioAdicional > 0) {
+        mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
+      }
+
+      mensaje += `\n💵 *Total USD:* $${totalUSD.toFixed(2)}`;
+      mensaje += `\n🇻🇪 *Total Bs. (Tasa Oficial BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+      mensaje += `Quedo a la espera de la confirmación para coordinar el despacho. ¡Muchas gracias!`;
+
+      carrito = [];
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
+
+      const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+      window.open(urlWhatsApp, '_blank');
+    }
+  </script>
+</body>
+</html>
