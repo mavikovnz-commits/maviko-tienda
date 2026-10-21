@@ -4,10 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maviko | Tienda Oficial</title>
+
+  <!-- SOPORTE PWA (APP MÓVIL) -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#ea580c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Maviko">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/ymDcp5tf/logo.jpg">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -45,7 +56,7 @@
     </div>
   </div>
 
-  <!-- CABECERA CON LOGO MAVIKO Y SELLO DE AUTENTICIDAD -->
+  <!-- CABECERA CON LOGO MAVIKO, BOTÓN INSTALAR APP Y CARRITO -->
   <header class="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
@@ -61,10 +72,12 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <span class="sm:hidden flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-lg">
-          <i class="fa-solid fa-badge-check"></i> Original
-        </span>
+      <div class="flex items-center gap-2.5">
+        <!-- BOTÓN INSTALAR APP MÓVIL (VISIBLE EN CELULARES Y NAVEGADORES COMPATIBLES) -->
+        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-mobile-screen-button text-sm"></i>
+          <span class="hidden sm:inline">Instalar</span> App
+        </button>
 
         <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
           <i class="fa-solid fa-basket-shopping text-base"></i>
@@ -74,6 +87,27 @@
       </div>
     </div>
   </header>
+
+  <!-- MODAL EXPLICATIVO PARA INSTALACIÓN EN IPHONE (SAFARI) -->
+  <div id="modalInstalarIOS" onclick="cerrarModalIOS(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+      <button onclick="document.getElementById('modalInstalarIOS').classList.add('hidden')" class="absolute top-4 right-4 text-zinc-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="w-14 h-14 bg-orange-500/20 text-orange-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+        <i class="fa-brands fa-apple"></i>
+      </div>
+      <h3 class="font-bold text-white text-base">Instalar Maviko en iPhone</h3>
+      <p class="text-xs text-zinc-300 text-left leading-relaxed">
+        1. Toca el botón <strong>Compartir</strong> <i class="fa-solid fa-arrow-up-from-bracket text-orange-400"></i> en la barra de Safari.<br>
+        2. Desliza hacia abajo y selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="fa-regular fa-square-plus text-orange-400"></i>.<br>
+        3. Toca <strong>Agregar</strong> arriba a la derecha.
+      </p>
+      <button onclick="document.getElementById('modalInstalarIOS').classList.add('hidden')" class="w-full bg-orange-600 text-white py-2.5 rounded-xl font-bold text-xs">
+        Entendido
+      </button>
+    </div>
+  </div>
 
   <!-- SECCIÓN INSTITUCIONAL (DESPLEGABLE) -->
   <section id="seccionEmpresa" class="hidden bg-zinc-900 border-b border-zinc-800 py-6 px-4 transition-all duration-300">
@@ -106,7 +140,7 @@
             <h3>Nuestra Misión</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Ofrecer productos seleccionados con la mejor relación calidad-precio, garantizando un servicio de despacho rápido, transparente y confiable.
+            Brindar productos seleccionados con la mejor relación calidad-precio, con servicio de entrega rápido, transparente y confiable.
           </p>
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
@@ -141,7 +175,6 @@
           </a>
         </div>
 
-        <!-- Alerta de Confirmación de Stock -->
         <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start gap-2.5">
           <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 shrink-0"></i>
           <p class="text-[11px] text-amber-200 leading-snug">
@@ -168,7 +201,7 @@
           </ul>
         </div>
         <p class="text-[10px] text-zinc-500 mt-2 border-t border-zinc-800/80 pt-2 flex items-center gap-1">
-          <i class="fa-solid fa-circle-check text-emerald-400"></i> Monto calculado a tasa BCV del día en curso.
+          <i class="fa-solid fa-circle-check text-emerald-400"></i> Monto calculado en Bolívares a tasa oficial BCV.
         </p>
       </div>
     </div>
@@ -302,8 +335,6 @@
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800"></div>
 
     <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs">
-      
-      <!-- Recordatorio de confirmación previo en checkout -->
       <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2.5 flex items-center gap-2 text-[11px] text-amber-200">
         <i class="fa-solid fa-circle-exclamation text-amber-400 shrink-0"></i>
         <span>Recuerda confirmar existencia y tiempo de entrega antes de pagar.</span>
@@ -400,7 +431,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT DE SINCRONIZACIÓN Y CATEGORÍAS AUTOMÁTICAS -->
+  <!-- SCRIPT DE SINCRONIZACIÓN Y LOGICA DEL SITIO -->
   <script>
     const GOOGLE_SHEET_ID = "1COZTlUBgqv2GPT6TMG1mfkkvliprvBGZw4-0-PTw5dM";
     const GID_CATALOGO_WEB = "1599022863";
@@ -413,7 +444,7 @@
     let tallaSeleccionadaActual = "";
     let costoEnvioAdicional = 0;
     let toastTimeout;
-    let timerEsperaJSONP;
+    let eventoInstalacionPrompt = null;
 
     const DATOS_PAGO_MOVIL = {
       banco: "Banco de Venezuela (0102)",
@@ -426,51 +457,95 @@
       localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
     }
 
-    function cargarCatalogoDesdeHoja() {
-      const callbackName = "manejarRespuestaGoogleSheets";
-      const scriptUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${GID_CATALOGO_WEB}&_t=${Date.now()}`;
+    function parseCSV(text) {
+      const textoLimpio = text.replace(/\r/g, '').replace(/\t/g, ' ');
+      const lineas = textoLimpio.trim().split('\n');
+      if (lineas.length < 2) return [];
 
-      timerEsperaJSONP = setTimeout(() => {
-        const container = document.getElementById('gridProductos');
-        if (container && (!productos || productos.length === 0)) {
+      const cabeceras = lineas[0].split(',').map(h => 
+        h.trim().replace(/^"|"$/g, '').toLowerCase().replace(/\s+/g, '_')
+      );
+      const items = [];
+
+      for (let i = 1; i < lineas.length; i++) {
+        const linea = lineas[i].trim();
+        if (!linea) continue;
+
+        const fila = [];
+        let dentroComillas = false;
+        let entrada = '';
+
+        for (let char of linea) {
+          if (char === '"') {
+            dentroComillas = !dentroComillas;
+          } else if (char === ',' && !dentroComillas) {
+            fila.push(entrada.trim().replace(/^"|"$/g, ''));
+            entrada = '';
+          } else {
+            entrada += char;
+          }
+        }
+        fila.push(entrada.trim().replace(/^"|"$/g, ''));
+
+        if (fila.length >= cabeceras.length) {
+          let obj = {};
+          cabeceras.forEach((cab, idx) => {
+            obj[cab] = fila[idx] !== undefined ? fila[idx] : '';
+          });
+          items.push(obj);
+        }
+      }
+      return items;
+    }
+
+    async function cargarCatalogoDesdeHoja() {
+      const container = document.getElementById('gridProductos');
+      let csvTexto = "";
+
+      const fuentes = [
+        `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID_CATALOGO_WEB}&_t=${Date.now()}`,
+        `https://docs.google.com/spreadsheets/d/e/2PACX-1vQaqeY3SDZTYjq0-JjsKEh-gVkl5mECXlGdDBMo7seNJszsnPN13SJXMJaNyxqo4JtkpJI7PWk3QJpv/pub?gid=${GID_CATALOGO_WEB}&single=true&output=csv&_t=${Date.now()}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID_CATALOGO_WEB}`)}`
+      ];
+
+      for (let url of fuentes) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 4500);
+          const res = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          if (res.ok) {
+            const txt = await res.text();
+            if (txt && txt.trim().length > 30) {
+              csvTexto = txt;
+              break;
+            }
+          }
+        } catch (e) {
+          console.warn("Reintentando con fuente alternativa:", url);
+        }
+      }
+
+      if (!csvTexto) {
+        if (container) {
           container.innerHTML = `
             <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
               <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
               <h3 class="text-white font-bold">Aviso de Sincronización</h3>
-              <p class="text-rose-400 font-mono text-xs max-w-lg mx-auto bg-black/50 p-2.5 rounded-lg border border-rose-900/40">
-                Google Sheets tardó en responder. Asegúrate de mantener la opción "Cualquier persona que tenga el vínculo" en Lector.
+              <p class="text-zinc-400 text-xs max-w-md mx-auto">
+                No se pudo conectar con Google Sheets en este momento. Por favor recarga la página (<kbd>Ctrl</kbd> + <kbd>F5</kbd>).
               </p>
             </div>
           `;
         }
-      }, 8000);
-
-      const script = document.createElement('script');
-      script.src = scriptUrl;
-      script.id = 'jsonp-sheets';
-      document.body.appendChild(script);
-    }
-
-    window.manejarRespuestaGoogleSheets = function(data) {
-      clearTimeout(timerEsperaJSONP);
+        return;
+      }
 
       try {
-        if (!data || !data.table || !data.table.rows) {
-          throw new Error("Estructura de datos no válida recibida desde Google Sheets.");
-        }
-
-        const cabeceras = data.table.cols.map(c => (c.label || '').trim().toLowerCase().replace(/\s+/g, '_'));
-        const filas = data.table.rows;
+        const filas = parseCSV(csvTexto);
 
         productos = filas
-          .map(r => {
-            let obj = {};
-            r.c.forEach((celda, idx) => {
-              const cab = cabeceras[idx] || `col_${idx}`;
-              obj[cab] = celda && celda.v !== null && celda.v !== undefined ? String(celda.v) : '';
-            });
-            return obj;
-          })
           .filter(f => {
             const val = (f.activo || '').trim().toUpperCase();
             return val === 'TRUE' || val === 'VERDADERO' || val === 'SI' || val === '1';
@@ -514,24 +589,25 @@
             };
           });
 
-        const container = document.getElementById('gridProductos');
-        if (productos.length === 0 && container) {
-          container.innerHTML = `
-            <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
-              <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
-              <h3 class="text-white font-bold">Catálogo Vacío</h3>
-              <p class="text-zinc-400 text-xs max-w-md mx-auto">No hay productos marcados con activo = TRUE en Google Sheets.</p>
-            </div>
-          `;
+        if (productos.length === 0) {
+          if (container) {
+            container.innerHTML = `
+              <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
+                <i class="fa-solid fa-box-open text-zinc-600 text-3xl"></i>
+                <h3 class="text-white font-bold">Catálogo sin productos activos</h3>
+                <p class="text-zinc-400 text-xs max-w-md mx-auto">Revisa que tus productos tengan <b>TRUE</b> o <b>VERDADERO</b> en la columna M de Google Sheets.</p>
+              </div>
+            `;
+          }
           return;
         }
 
         generarBotonesCategoriasDinamicos();
         renderProductos(obtenerProductosFiltrados());
       } catch (err) {
-        console.error("Error interpretando datos:", err);
+        console.error("Error al procesar el archivo:", err);
       }
-    };
+    }
 
     function generarBotonesCategoriasDinamicos() {
       const contenedor = document.getElementById('contenedorFiltros');
@@ -574,7 +650,7 @@
         const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
         const coincideBusqueda = !busqueda || 
           p.nombre.toLowerCase().includes(busqueda) || 
-          p.id.toLowerCase().includes(busqueda) ||
+          p.id.toLowerCase().includes(busqueda) || 
           p.categoria.toLowerCase().includes(busqueda) ||
           p.descripcion.toLowerCase().includes(busqueda);
         return coincideCat && coincideBusqueda;
@@ -664,11 +740,52 @@
       }
     }
 
+    // LOGICA DE DETECCIÓN E INSTALACIÓN DE LA APP MÓVIL
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      eventoInstalacionPrompt = e;
+      const btn = document.getElementById('btnInstalarApp');
+      if (btn) btn.classList.remove('hidden');
+    });
+
+    function accionInstalarApp() {
+      const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (esIOS) {
+        document.getElementById('modalInstalarIOS').classList.remove('hidden');
+        return;
+      }
+      if (eventoInstalacionPrompt) {
+        eventoInstalacionPrompt.prompt();
+        eventoInstalacionPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('btnInstalarApp').classList.add('hidden');
+          }
+          eventoInstalacionPrompt = null;
+        });
+      } else {
+        alert("Para instalar en tu teléfono: abre el menú de opciones de tu navegador (los 3 puntos) y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+      }
+    }
+
+    function cerrarModalIOS(e) {
+      if (e.target.id === 'modalInstalarIOS') {
+        document.getElementById('modalInstalarIOS').classList.add('hidden');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       obtenerTasaBCV();
       iniciarContadorBCV();
       cargarCatalogoDesdeHoja();
       mostrarDatosPago();
+
+      // En iPhone se muestra el botón directamente ya que Safari no emite beforeinstallprompt
+      const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const esStandalone = window.navigator.standalone === true;
+      if (esIOS && !esStandalone) {
+        const btn = document.getElementById('btnInstalarApp');
+        if (btn) btn.classList.remove('hidden');
+      }
 
       document.addEventListener('keydown', (e) => {
         if (e.key === "Escape") {
@@ -1184,6 +1301,17 @@
 
       const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
       window.open(urlWhatsApp, '_blank');
+    }
+  </script>
+
+  <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('PWA Service Worker registrado con éxito'))
+          .catch((err) => console.log('Error registrando Service Worker:', err));
+      });
     }
   </script>
 </body>
