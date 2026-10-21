@@ -1,0 +1,24 @@
+{
+  "name": "Maviko | Tienda Oficial",
+  "short_name": "Maviko",
+  "description": "Tienda oficial Maviko - Calzado, bolsos, skincare y accesorios 100% originales",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#ea580c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/ymDcp5tf/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/ymDcp5tf/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
