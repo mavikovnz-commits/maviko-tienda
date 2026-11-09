@@ -1,20 +1,11 @@
-const CACHE_NAME = 'maviko-app-v2';
-const STATIC_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  'https://i.ibb.co/ymDcp5tf/logo.jpg'
-];
+const CACHE_NAME = 'maviko-app-v3';
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
-  );
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
@@ -26,13 +17,14 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (e) => {
-  // Las consultas a Google Sheets y APIs de tasa cambian en tiempo real, van siempre por red
-  if (e.request.url.includes('google') || e.request.url.includes('dolarvzla')) {
-    e.respondWith(fetch(e.request));
+self.addEventListener('fetch', (event) => {
+  // Las peticiones a Google Sheets y APIs siempre van por red en vivo
+  if (event.request.url.includes('google') || event.request.url.includes('dolarvzla')) {
+    event.respondWith(fetch(event.request));
     return;
   }
-  e.respondWith(
-    caches.match(e.request).then((res) => res || fetch(e.request))
+
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
