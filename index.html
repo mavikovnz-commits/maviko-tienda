@@ -314,7 +314,8 @@
         <i class="fa-solid fa-qrcode text-orange-400"></i> Código QR Pago Móvil
       </h3>
       <div class="bg-white p-3 rounded-2xl inline-block shadow-md">
-        <img src="https://i.ibb.co/bgsP9Zc/qr.jpg" alt="QR Pago Móvil Maviko" class="w-56 h-56 mx-auto object-contain rounded-xl">
+        <!-- TU ENLACE DIRECTO DE IMGBB -->
+        <img src="https://i.ibb.co/Lz9kvW77/Whats-App-Image-2026-11-09-at-01-43-19.jpg" alt="QR Pago Móvil Maviko" class="w-56 h-56 mx-auto object-contain rounded-xl shadow-inner">
       </div>
       <div class="text-[11px] text-zinc-400 space-y-0.5">
         <p><strong>BDV (0102)</strong> · V-20.907.946</p>
@@ -447,7 +448,7 @@
     <!-- BARRA DINÁMICA DE META DE DESPACHO -->
     <div id="barraMetaEnvio" class="p-3 bg-zinc-950 border-b border-zinc-800"></div>
 
-    <!-- LISTA DE ARTÍCULOS EN EL CARRITO (AJUSTADA CON MAYOR ESPACIO Y FOTOS DE 64px) -->
+    <!-- LISTA DE ARTÍCULOS EN EL CARRITO (TARJETAS DE 64px) -->
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
 
     <!-- FORMULARIO DE CHECKOUT -->
@@ -1435,7 +1436,6 @@
       actualizarCarritoUI();
     }
 
-    // ACTUALIZACIÓN DE CARRITO CON TARJETAS AMPLIAS DE 64px
     function actualizarCarritoUI() {
       const count = carrito.reduce((acc, i) => acc + i.cantidad, 0);
       document.getElementById('cartCount').innerText = count;
