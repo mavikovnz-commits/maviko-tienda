@@ -49,6 +49,7 @@
     ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
     /* ANIMACIÓN CINTILLO EN MOVIMIENTO */
     @keyframes marquee {
       0% { transform: translateX(0%); }
@@ -66,18 +67,6 @@
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-500 selection:text-white relative">
 
   <!-- BARRA SUPERIOR: TASA BCV Y CONTADOR -->
-  <!-- CINTILLO ANIMADO EN MOVIMIENTO (SEÑAL DE COMPRA Y CONFIANZA) -->
-<div class="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-orange-500/30">
-  <div class="inline-flex gap-8 animate-marquee">
-    <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
-    <span>✨ PRODUCTOS 100% ORIGINALES</span>
-    <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
-    <span>📲 ATENCIÓN PERSONALIZADA POR WHATSAPP</span>
-    <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
-    <span>✨ PRODUCTOS 100% ORIGINALES</span>
-    <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
-    <span>📲 ATENCIÓN PERSONALIZADA POR WHATSAPP</span>
-</div>
   <div class="bg-black text-white text-xs py-2 px-4 border-b border-zinc-800">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
@@ -85,9 +74,9 @@
         <span>Tasa Oficial BCV: <strong><span id="displayTasa">Cargando...</span> Bs/USD</strong></span>
       </div>
       <div class="flex items-center gap-4 text-xs">
-        <div class="hidden sm:flex items-center gap-1.5 text-zinc-400 text-[11px]" title="Hora habitual en la que el BCV emite la tasa para el siguiente día hábil">
+        <div class="hidden sm:flex items-center gap-1.5 text-zinc-400 text-[11px]" title="Hora habitual en la que el BCV emite la tasa oficial para el siguiente día hábil">
           <i class="fa-regular fa-clock text-orange-400"></i>
-          <span>Cierre 5:00 PM:</span>
+          <span>Cierre 17:00:</span>
           <span id="timerBCV" class="font-mono text-zinc-200 font-bold">--:--:--</span>
         </div>
         <span class="text-zinc-600 hidden sm:inline">|</span>
@@ -115,7 +104,7 @@
       </div>
 
       <div class="flex items-center gap-2.5">
-        <!-- BOTÓN INSTALAR APP MÓVIL (VISIBLE EN CELULARES Y NAVEGADORES COMPATIBLES) -->
+        <!-- BOTÓN INSTALAR APP MÓVIL (VISIBLE EN DISPOSITIVOS COMPATIBLES) -->
         <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer">
           <i class="fa-solid fa-mobile-screen-button text-sm"></i>
           <span class="hidden sm:inline">Instalar</span> App
@@ -129,6 +118,20 @@
       </div>
     </div>
   </header>
+
+  <!-- CINTILLO ANIMADO EN MOVIMIENTO (SEÑAL DE COMPRA Y CONFIANZA) -->
+  <div class="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-orange-500/30">
+    <div class="inline-flex gap-8 animate-marquee">
+      <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
+      <span>✨ PRODUCTOS 100% ORIGINALES</span>
+      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
+      <span>📲 ATENCIÓN PERSONALIZADA POR WHATSAPP</span>
+      <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
+      <span>✨ PRODUCTOS 100% ORIGINALES</span>
+      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
+      <span>📲 ATENCIÓN PERSONALIZADA POR WHATSAPP</span>
+    </div>
+  </div>
 
   <!-- MODAL EXPLICATIVO PARA INSTALACIÓN EN IPHONE (SAFARI) -->
   <div id="modalInstalarIOS" onclick="cerrarModalIOS(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -473,7 +476,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT DE SINCRONIZACIÓN Y LOGICA DEL SITIO -->
+  <!-- SCRIPT DE SINCRONIZACIÓN Y LÓGICA DEL SITIO -->
   <script>
     const GOOGLE_SHEET_ID = "1COZTlUBgqv2GPT6TMG1mfkkvliprvBGZw4-0-PTw5dM";
     const GID_CATALOGO_WEB = "1599022863";
@@ -497,6 +500,15 @@
 
     function guardarCarritoEnStorage() {
       localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
+    }
+
+    // Función para barajar y mostrar productos de forma aleatoria en cada visita
+    function barajarProductos(lista) {
+      for (let i = lista.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [lista[i], lista[j]] = [lista[j], lista[i]];
+      }
+      return lista;
     }
 
     function parseCSV(text) {
@@ -611,7 +623,7 @@
             }
 
             const galeriaFotos = [f.foto_1, f.foto_2, f.foto_3, f.foto_4].filter(url => url && url.trim().length > 0);
-            const ficha = f.ficha_tecnica ? f.ficha_tecnica.split('|').map(item => item.trim()).filter(Boolean) : [];
+            const ficha = f.ficha_tecnica ? f.ficha_tecnica.split('|').map(item => item.trim()).filter(Boolean) :;
             let precioLimpio = (f.preciousd || f.precio || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
             const catLimpia = (f.categoria || "otros").trim().toLowerCase();
 
@@ -644,6 +656,8 @@
           return;
         }
 
+        // Barajar orden de productos aleatoriamente
+        productos = barajarProductos(productos);
         generarBotonesCategoriasDinamicos();
         renderProductos(obtenerProductosFiltrados());
       } catch (err) {
@@ -691,7 +705,7 @@
       return productos.filter(p => {
         const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
         const coincideBusqueda = !busqueda || 
-          p.nombre.toLowerCase().includes(busqueda) || 
+          p.nombre.toLowerCase().includes(busqueda) ||
           p.id.toLowerCase().includes(busqueda) || 
           p.categoria.toLowerCase().includes(busqueda) ||
           p.descripcion.toLowerCase().includes(busqueda);
@@ -782,7 +796,7 @@
       }
     }
 
-    // LOGICA DE DETECCIÓN E INSTALACIÓN DE LA APP MÓVIL
+    // LÓGICA DE INSTALACIÓN DE LA PWA (APP MÓVIL)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       eventoInstalacionPrompt = e;
@@ -805,7 +819,7 @@
           eventoInstalacionPrompt = null;
         });
       } else {
-        alert("Para instalar en tu teléfono: abre el menú de opciones de tu navegador (los 3 puntos) y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+        alert("Para instalar en tu teléfono: abre las opciones del navegador (los 3 puntos) y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
       }
     }
 
@@ -821,7 +835,6 @@
       cargarCatalogoDesdeHoja();
       mostrarDatosPago();
 
-      // En iPhone se muestra el botón directamente ya que Safari no emite beforeinstallprompt
       const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       const esStandalone = window.navigator.standalone === true;
       if (esIOS && !esStandalone) {
