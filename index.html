@@ -304,6 +304,29 @@
     </div>
   </main>
 
+  <!-- BANNER FLOTANTE DE RETORNO / RECUPERACIÓN DE CARRITO -->
+  <div id="bannerCarritoPendiente" class="hidden fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-zinc-900/95 border border-orange-500/50 backdrop-blur-md p-4 rounded-2xl shadow-2xl transition-all duration-500">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0 text-lg">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white">¡No olvides tu pedido!</h4>
+          <p class="text-[11px] text-zinc-400">Dejaste productos apartados en tu carrito.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleCarrito(true); descartarAvisoCarrito();" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl cursor-pointer shadow-md">
+          Ver Carrito
+        </button>
+        <button onclick="descartarAvisoCarrito()" class="text-zinc-500 hover:text-white p-1.5 cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL DE CÓDIGO QR PARA PAGO MÓVIL (IMAGEN OFICIAL MAVIKO) -->
   <div id="modalQR" onclick="cerrarQRPorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl relative">
@@ -314,7 +337,6 @@
         <i class="fa-solid fa-qrcode text-orange-400"></i> Código QR Pago Móvil
       </h3>
       <div class="bg-white p-3 rounded-2xl inline-block shadow-md">
-        <!-- TU ENLACE DIRECTO DE IMGBB -->
         <img src="https://i.ibb.co/Lz9kvW77/Whats-App-Image-2026-11-09-at-01-43-19.jpg" alt="QR Pago Móvil Maviko" class="w-56 h-56 mx-auto object-contain rounded-xl shadow-inner">
       </div>
       <div class="text-[11px] text-zinc-400 space-y-0.5">
@@ -459,8 +481,11 @@
       </div>
 
       <div class="space-y-2">
-        <input type="text" id="nombreCliente" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        <input type="text" id="nombreCliente" oninput="agendarEnvioLead()" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
         
+        <!-- CAMPO TELÉFONO PARA CAPTURA AUTOMÁTICA DE CARRITOS ABANDONADOS -->
+        <input type="tel" id="telefonoCliente" oninput="agendarEnvioLead()" placeholder="Teléfono WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+
         <div class="grid grid-cols-2 gap-2">
           <select id="empresaEnvio" onchange="actualizarCostoEnvio()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-orange-500">
             <option value="MRW (Cobro en Destino)" data-costo="0">MRW (Cobro en Destino)</option>
@@ -573,6 +598,9 @@
     const GID_CATALOGO_WEB = "1599022863";
     const NUMERO_WHATSAPP = "584127701750";
 
+    // URL DEL WEBHOOK DE GOOGLE APPS SCRIPT (Reemplaza con tu URL /exec)
+    const WEBHOOK_APPSCRIPT_URL = "";
+
     let tasaBCV = 36.50;
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
@@ -581,6 +609,7 @@
     let tallaSeleccionadaActual = "";
     let costoEnvioAdicional = 0;
     let toastTimeout;
+    let timerLeadDebounce = null;
     let eventoInstalacionPrompt = null;
     let autoSliderTimer = null;
     let indiceFotoActual = 0;
@@ -595,6 +624,63 @@
 
     function guardarCarritoEnStorage() {
       localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
+      localStorage.setItem('maviko_carrito_hora', Date.now().toString());
+    }
+
+    // BANNER DE RECUPERACIÓN / RETORNO
+    function comprobarCarritoPendiente() {
+      if (carrito.length > 0) {
+        const banner = document.getElementById('bannerCarritoPendiente');
+        if (banner && !sessionStorage.getItem('aviso_carrito_descartado')) {
+          setTimeout(() => {
+            banner.classList.remove('hidden');
+          }, 1800);
+        }
+      }
+    }
+
+    function descartarAvisoCarrito() {
+      const banner = document.getElementById('bannerCarritoPendiente');
+      if (banner) banner.classList.add('hidden');
+      sessionStorage.setItem('aviso_carrito_descartado', 'true');
+    }
+
+    // CAPTURA AUTOMÁTICA DE PROSPECTO A GOOGLE SHEETS TRAS ESCRIBIR EL TELÉFONO
+    function agendarEnvioLead() {
+      clearTimeout(timerLeadDebounce);
+      timerLeadDebounce = setTimeout(() => {
+        enviarLeadSilencioso();
+      }, 5000);
+    }
+
+    async function enviarLeadSilencioso() {
+      if (!WEBHOOK_APPSCRIPT_URL || carrito.length === 0) return;
+      const tel = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
+      const nom = document.getElementById('nombreCliente') ? document.getElementById('nombreCliente').value.trim() : "";
+
+      if (tel.length >= 7) {
+        const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+        const totalUSD = subtotalUSD + costoEnvioAdicional;
+        const totalBS = (totalUSD * tasaBCV).toFixed(2);
+        const listaProd = carrito.map(i => `${i.nombre} (${i.tallaSeleccionada || 'Única'} x${i.cantidad})`).join(', ');
+
+        try {
+          await fetch(WEBHOOK_APPSCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nombre: nom || "Interesado Web",
+              telefono: tel,
+              totalUSD: totalUSD.toFixed(2),
+              totalBS: totalBS,
+              productos: listaProd
+            })
+          });
+        } catch (e) {
+          console.warn("Fallo en envío de lead silencioso", e);
+        }
+      }
     }
 
     function barajarProductos(lista) {
@@ -993,6 +1079,7 @@
       cargarCatalogoDesdeHoja();
       mostrarDatosPago();
       iniciarValidacionSocial();
+      comprobarCarritoPendiente();
 
       const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       const esStandalone = window.navigator.standalone === true;
@@ -1587,6 +1674,7 @@
       }
 
       const cliente = document.getElementById('nombreCliente').value.trim();
+      const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
       const metodo = document.getElementById('metodoPago').value;
       const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
       const agencia = document.getElementById('empresaEnvio').value;
@@ -1606,6 +1694,7 @@
 
       let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
+      if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
       mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
       if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
       mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
