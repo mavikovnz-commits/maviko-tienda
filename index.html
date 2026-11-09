@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- METADATOS DE VISTA PREVIA (REDES SOCIALES Y WHATSAPP) -->
+  <!-- METADATOS DE VISTA PREVIA (WHATSAPP, INSTAGRAM, FACEBOOK) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Maviko | Tienda Oficial">
   <meta property="og:description" content="Calzado, bolsos, skincare y accesorios 100% originales con envíos a toda Venezuela.">
@@ -61,6 +61,17 @@
     }
     .animate-marquee:hover {
       animation-play-state: paused;
+    }
+
+    /* EFECTO SHIMMER (SKELETON LOADING) */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #18181b 25%, #27272a 50%, #18181b 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
     }
   </style>
 </head>
@@ -251,9 +262,9 @@
       </div>
     </div>
     
-    <!-- BARRA DE BÚSQUEDA Y FILTROS AUTOMÁTICOS -->
-    <div class="space-y-4">
-      <div class="relative max-w-md mx-auto sm:mx-0">
+    <!-- BARRA DE BÚSQUEDA Y FILTRO DE PRECIOS -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="relative w-full sm:max-w-md">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
         <input 
           type="text" 
@@ -264,19 +275,50 @@
         >
       </div>
 
-      <!-- BOTONES DE CATEGORÍA AUTO-GENERADOS DESDE GOOGLE SHEETS -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="contenedorFiltros">
-        <button onclick="filtrarCategoria('todas')" class="cat-btn bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap">
-          Todas
-        </button>
+      <!-- ORDENAR POR PRECIO -->
+      <div class="w-full sm:w-auto flex items-center gap-2">
+        <i class="fa-solid fa-arrow-down-short-wide text-zinc-500 text-xs"></i>
+        <select id="ordenarPrecios" onchange="ordenarProductos(this.value)" class="w-full sm:w-auto bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500 cursor-pointer">
+          <option value="destacados">Orden: Novedades / Variado</option>
+          <option value="menor">Precio: Menor a Mayor</option>
+          <option value="mayor">Precio: Mayor a Menor</option>
+        </select>
       </div>
     </div>
 
-    <!-- CUADRÍCULA DE PRODUCTOS -->
+    <!-- BOTONES DE CATEGORÍA AUTO-GENERADOS -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="contenedorFiltros">
+      <button onclick="filtrarCategoria('todas')" class="cat-btn bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap">
+        Todas
+      </button>
+    </div>
+
+    <!-- CUADRÍCULA DE PRODUCTOS (CON SKELETON LOADERS INICIALES) -->
     <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <div class="col-span-full text-center py-20 text-zinc-500 space-y-3">
-        <i class="fa-solid fa-spinner fa-spin text-3xl text-orange-500"></i>
-        <p class="text-sm font-medium">Sincronizando inventario en vivo...</p>
+      <!-- 4 TARJETAS SKELETON PARPADEANTES -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4">
+        <div class="h-48 rounded-xl skeleton-box"></div>
+        <div class="h-4 w-3/4 rounded skeleton-box"></div>
+        <div class="h-3 w-1/2 rounded skeleton-box"></div>
+        <div class="h-8 rounded-xl skeleton-box"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4">
+        <div class="h-48 rounded-xl skeleton-box"></div>
+        <div class="h-4 w-3/4 rounded skeleton-box"></div>
+        <div class="h-3 w-1/2 rounded skeleton-box"></div>
+        <div class="h-8 rounded-xl skeleton-box"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4 hidden sm:block">
+        <div class="h-48 rounded-xl skeleton-box"></div>
+        <div class="h-4 w-3/4 rounded skeleton-box"></div>
+        <div class="h-3 w-1/2 rounded skeleton-box"></div>
+        <div class="h-8 rounded-xl skeleton-box"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4 hidden lg:block">
+        <div class="h-48 rounded-xl skeleton-box"></div>
+        <div class="h-4 w-3/4 rounded skeleton-box"></div>
+        <div class="h-3 w-1/2 rounded skeleton-box"></div>
+        <div class="h-8 rounded-xl skeleton-box"></div>
       </div>
     </div>
   </main>
@@ -328,7 +370,7 @@
             <!-- GATILLO DE URGENCIA / PERSONAS VIENDO -->
             <div class="flex items-center gap-2 py-1 text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-              <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas están consultando este artículo</span>
+              <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas consultando este artículo</span>
             </div>
 
             <!-- Selector de Tallas / Opciones -->
@@ -359,6 +401,12 @@
             <button id="btnAgregarModal" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
               <i class="fa-solid fa-cart-plus text-sm"></i>
               <span>Agregar al Carrito</span>
+            </button>
+
+            <!-- BOTÓN SECUNDARIO: CONSULTA DIRECTA DE ESTE ARTÍCULO POR WHATSAPP -->
+            <button id="btnPreguntarWhatsApp" class="w-full bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-xs">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>Consultar por WhatsApp ahora</span>
             </button>
 
             <!-- MICRO-GARANTÍAS EN MODAL -->
@@ -522,6 +570,7 @@
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
     let categoriaActual = 'todas';
+    let ordenActual = 'destacados';
     let tallaSeleccionadaActual = "";
     let costoEnvioAdicional = 0;
     let toastTimeout;
@@ -538,7 +587,6 @@
       localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
     }
 
-    // Mezclador de orden de productos al inicio
     function barajarProductos(lista) {
       for (let i = lista.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -695,6 +743,7 @@
         productos = barajarProductos(productos);
         generarBotonesCategoriasDinamicos();
         renderProductos(obtenerProductosFiltrados());
+        revisarAperturaDirectaURL();
       } catch (err) {
         console.error("Error al procesar el archivo:", err);
       }
@@ -726,6 +775,7 @@
     }
 
     function filtrarCategoria(cat) {
+      if (navigator.vibrate) navigator.vibrate(10);
       categoriaActual = cat;
       generarBotonesCategoriasDinamicos();
       renderProductos(obtenerProductosFiltrados());
@@ -735,9 +785,15 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
+    function ordenarProductos(orden) {
+      if (navigator.vibrate) navigator.vibrate(10);
+      ordenActual = orden;
+      renderProductos(obtenerProductosFiltrados());
+    }
+
     function obtenerProductosFiltrados() {
       const busqueda = document.getElementById('searchInput').value.toLowerCase().trim();
-      return productos.filter(p => {
+      let resultado = productos.filter(p => {
         const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
         const coincideBusqueda = !busqueda || 
           p.nombre.toLowerCase().includes(busqueda) || 
@@ -746,6 +802,14 @@
           p.descripcion.toLowerCase().includes(busqueda);
         return coincideCat && coincideBusqueda;
       });
+
+      if (ordenActual === 'menor') {
+        resultado.sort((a, b) => a.precioUSD - b.precioUSD);
+      } else if (ordenActual === 'mayor') {
+        resultado.sort((a, b) => b.precioUSD - a.precioUSD);
+      }
+
+      return resultado;
     }
 
     function iniciarContadorBCV() {
@@ -813,10 +877,9 @@
       }, 3000);
     }
 
-    // AUTOMATIZACIÓN DE VALIDACIÓN SOCIAL (EFECTO MANADA)
     function iniciarValidacionSocial() {
       const ciudades = ["Caracas", "Valencia", "Barquisimeto", "Maracay", "Maracaibo", "Puerto La Cruz", "San Cristóbal", "Maturín"];
-      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó envío para"];
+      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó envío de"];
 
       setInterval(() => {
         if (!productos || productos.length === 0) return;
@@ -835,7 +898,19 @@
           toast.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
           toast.classList.add('-translate-x-full', 'opacity-0', 'pointer-events-none');
         }, 4000);
-      }, 42000);
+      }, 40000);
+    }
+
+    // APERTURA AUTOMÁTICA SI ENTRAN CON ?id=... O ?prod=...
+    function revisarAperturaDirectaURL() {
+      const params = new URLSearchParams(window.location.search);
+      const prodId = params.get('id') || params.get('prod');
+      if (prodId) {
+        const prod = productos.find(p => p.id.toString().toLowerCase() === prodId.toString().toLowerCase());
+        if (prod) {
+          abrirDetalleProducto(prod.id);
+        }
+      }
     }
 
     function toggleEmpresaInfo() {
@@ -857,7 +932,6 @@
       }
     }
 
-    // LÓGICA DE INSTALACIÓN PWA
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       eventoInstalacionPrompt = e;
@@ -939,7 +1013,7 @@
         card.innerHTML = `
           <div>
             <div class="h-48 rounded-xl bg-zinc-950 overflow-hidden mb-3 relative cursor-pointer flex items-center justify-center p-2" onclick="abrirDetalleProducto('${p.id}')">
-              <img src="${p.imagen}" alt="${p.nombre}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+              <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
               
               <div class="absolute top-2 right-2 flex flex-col items-end gap-1">
                 <span class="bg-black/80 backdrop-blur-md text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize border border-orange-500/30">${p.categoria}</span>
@@ -976,7 +1050,7 @@
     }
 
     function abrirDetalleProducto(id) {
-      const prod = productos.find(p => p.id === id);
+      const prod = productos.find(p => p.id.toString() === id.toString());
       if (!prod) return;
 
       if (navigator.vibrate) navigator.vibrate(15);
@@ -991,9 +1065,17 @@
       document.getElementById('precioModalBS').innerText = `/ ${precioBs} Bs.`;
       document.getElementById('descModalText').innerText = prod.descripcion;
 
-      // Actualizar número aleatorio de personas viendo (entre 2 y 5)
       const countEl = document.getElementById('personasViendoCount');
       if (countEl) countEl.innerText = Math.floor(Math.random() * 4) + 2;
+
+      // BOTÓN DE CONSULTA DIRECTA POR WHATSAPP DE ESTE ARTÍCULO
+      const btnDirectoWA = document.getElementById('btnPreguntarWhatsApp');
+      if (btnDirectoWA) {
+        btnDirectoWA.onclick = () => {
+          const mensajeWA = `¡Hola Maviko! Tengo una consulta sobre este producto: *${prod.nombre}* (Ref: ${prod.id}) - $${prod.precioUSD.toFixed(2)}. ¿Tienen disponibilidad?`;
+          window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensajeWA)}`, '_blank');
+        };
+      }
 
       const boxTallas = document.getElementById('boxTallasModal');
       const gridTallas = document.getElementById('gridTallasModal');
@@ -1201,10 +1283,7 @@
     }
 
     function agregarAlCarrito(id, talla = "") {
-      // RESPUESTA HÁPTICA AL AGREGAR PRODUCTO
-      if (navigator.vibrate) {
-        navigator.vibrate(25);
-      }
+      if (navigator.vibrate) navigator.vibrate(25);
 
       const prod = productos.find(p => p.id === id);
       const claveCarrito = `${id}-${talla}`;
@@ -1329,7 +1408,7 @@
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
       document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      // CÁLCULO DINÁMICO DE LA BARRA DE DESPACHO PREFERENCIAL
+      // BARRA DINÁMICA DE META DE DESPACHO
       const metaDespacho = 40.00;
       const porcentaje = Math.min((subtotalUSD / metaDespacho) * 100, 100);
       const restante = metaDespacho - subtotalUSD;
