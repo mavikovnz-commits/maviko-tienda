@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- METADATOS DE VISTA PREVIA (IMAGEN AL COMPARTIR EL ENLACE) -->
+  <!-- METADATOS DE VISTA PREVIA (REDES SOCIALES Y WHATSAPP) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Maviko | Tienda Oficial">
   <meta property="og:description" content="Calzado, bolsos, skincare y accesorios 100% originales con envíos a toda Venezuela.">
@@ -325,6 +325,12 @@
               <span id="precioModalBS" class="text-xs text-zinc-400"></span>
             </div>
 
+            <!-- GATILLO DE URGENCIA / PERSONAS VIENDO -->
+            <div class="flex items-center gap-2 py-1 text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas están consultando este artículo</span>
+            </div>
+
             <!-- Selector de Tallas / Opciones -->
             <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
               <div class="flex justify-between items-center">
@@ -349,10 +355,19 @@
             </div>
           </div>
 
-          <button id="btnAgregarModal" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
-            <i class="fa-solid fa-cart-plus text-sm"></i>
-            <span>Agregar al Carrito</span>
-          </button>
+          <div class="space-y-2">
+            <button id="btnAgregarModal" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
+              <i class="fa-solid fa-cart-plus text-sm"></i>
+              <span>Agregar al Carrito</span>
+            </button>
+
+            <!-- MICRO-GARANTÍAS EN MODAL -->
+            <div class="grid grid-cols-3 gap-1 pt-1 text-center text-[9px] text-zinc-400 border-t border-zinc-800/60">
+              <div><i class="fa-solid fa-camera text-orange-400"></i> Fotos Reales</div>
+              <div><i class="fa-solid fa-shield-halved text-emerald-400"></i> Cero Réplicas</div>
+              <div><i class="fa-solid fa-box text-orange-400"></i> Envío Blindado</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -376,6 +391,9 @@
         </button>
       </div>
     </div>
+
+    <!-- BARRA DINÁMICA DE META DE DESPACHO -->
+    <div id="barraMetaEnvio" class="p-3 bg-zinc-950 border-b border-zinc-800"></div>
 
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800"></div>
 
@@ -436,10 +454,17 @@
         <i class="fa-brands fa-whatsapp text-base"></i>
         <span>Confirmar Disponibilidad por WhatsApp</span>
       </button>
+
+      <!-- MICRO-GARANTÍAS EN CARRITO -->
+      <div class="flex justify-around pt-1 text-[10px] text-zinc-500 text-center">
+        <span><i class="fa-solid fa-lock text-emerald-400"></i> Compra Directa</span>
+        <span><i class="fa-solid fa-truck-ramp-box text-orange-400"></i> Despacho en 24h</span>
+        <span><i class="fa-solid fa-certificate text-emerald-400"></i> Original</span>
+      </div>
     </div>
   </div>
 
-  <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+  <!-- NOTIFICACIÓN TOAST FLOTANTE (CARRITO) -->
   <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl">
     <div id="toastIcon" class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0">
       <i class="fa-solid fa-check text-lg"></i>
@@ -451,6 +476,17 @@
     <button id="toastBtnAccion" onclick="toggleCarrito(true)" class="ml-2 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">
       Ver Carrito
     </button>
+  </div>
+
+  <!-- TOAST DE VALIDACIÓN SOCIAL (EFECTO MANADA) -->
+  <div id="toastSocialProof" class="fixed bottom-24 left-6 z-40 transform -translate-x-full opacity-0 pointer-events-none transition-all duration-500 flex items-center gap-3 bg-zinc-900/95 backdrop-blur-md border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl max-w-xs">
+    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-bag-shopping text-sm"></i>
+    </div>
+    <div>
+      <h5 id="socialProofTitle" class="text-[11px] font-bold text-white">Consulta reciente</h5>
+      <p id="socialProofMsg" class="text-[10px] text-zinc-400 line-clamp-1"></p>
+    </div>
   </div>
 
   <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
@@ -656,7 +692,6 @@
           return;
         }
 
-        // Barajado de productos para que siempre aparezcan variados
         productos = barajarProductos(productos);
         generarBotonesCategoriasDinamicos();
         renderProductos(obtenerProductosFiltrados());
@@ -738,6 +773,7 @@
     }
 
     function copiarDatosPagoMovil(btn) {
+      if (navigator.vibrate) navigator.vibrate(20);
       const texto = `Banco: ${DATOS_PAGO_MOVIL.banco}\nCédula: ${DATOS_PAGO_MOVIL.cedula}\nTeléfono: ${DATOS_PAGO_MOVIL.telefono}`;
       navigator.clipboard.writeText(texto).then(() => {
         const textoOriginal = btn.innerHTML;
@@ -775,6 +811,31 @@
         toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
         toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
       }, 3000);
+    }
+
+    // AUTOMATIZACIÓN DE VALIDACIÓN SOCIAL (EFECTO MANADA)
+    function iniciarValidacionSocial() {
+      const ciudades = ["Caracas", "Valencia", "Barquisimeto", "Maracay", "Maracaibo", "Puerto La Cruz", "San Cristóbal", "Maturín"];
+      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó envío para"];
+
+      setInterval(() => {
+        if (!productos || productos.length === 0) return;
+        const toast = document.getElementById('toastSocialProof');
+        const prod = productos[Math.floor(Math.random() * productos.length)];
+        const ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
+        const accion = acciones[Math.floor(Math.random() * acciones.length)];
+
+        document.getElementById('socialProofTitle').innerText = `Cliente desde ${ciudad}`;
+        document.getElementById('socialProofMsg').innerText = `${accion} ${prod.nombre}`;
+
+        toast.classList.remove('-translate-x-full', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
+
+        setTimeout(() => {
+          toast.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
+          toast.classList.add('-translate-x-full', 'opacity-0', 'pointer-events-none');
+        }, 4000);
+      }, 42000);
     }
 
     function toggleEmpresaInfo() {
@@ -834,6 +895,7 @@
       iniciarContadorBCV();
       cargarCatalogoDesdeHoja();
       mostrarDatosPago();
+      iniciarValidacionSocial();
 
       const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       const esStandalone = window.navigator.standalone === true;
@@ -917,6 +979,7 @@
       const prod = productos.find(p => p.id === id);
       if (!prod) return;
 
+      if (navigator.vibrate) navigator.vibrate(15);
       tallaSeleccionadaActual = "";
 
       document.getElementById('skuModal').innerText = `Ref: ${prod.id}`;
@@ -927,6 +990,10 @@
       document.getElementById('precioModalUSD').innerText = `$${prod.precioUSD.toFixed(2)}`;
       document.getElementById('precioModalBS').innerText = `/ ${precioBs} Bs.`;
       document.getElementById('descModalText').innerText = prod.descripcion;
+
+      // Actualizar número aleatorio de personas viendo (entre 2 y 5)
+      const countEl = document.getElementById('personasViendoCount');
+      if (countEl) countEl.innerText = Math.floor(Math.random() * 4) + 2;
 
       const boxTallas = document.getElementById('boxTallasModal');
       const gridTallas = document.getElementById('gridTallasModal');
@@ -948,6 +1015,7 @@
             btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
             btnTalla.innerText = `${talla} (${stockTalla})`;
             btnTalla.onclick = () => {
+              if (navigator.vibrate) navigator.vibrate(10);
               document.querySelectorAll('.btn-talla').forEach(b => {
                 b.classList.remove('bg-orange-600', 'text-white', 'border-orange-500');
                 b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
@@ -1133,6 +1201,11 @@
     }
 
     function agregarAlCarrito(id, talla = "") {
+      // RESPUESTA HÁPTICA AL AGREGAR PRODUCTO
+      if (navigator.vibrate) {
+        navigator.vibrate(25);
+      }
+
       const prod = productos.find(p => p.id === id);
       const claveCarrito = `${id}-${talla}`;
       const existe = carrito.find(item => item.clave === claveCarrito);
@@ -1161,6 +1234,7 @@
     }
 
     function cambiarCantidad(clave, delta) {
+      if (navigator.vibrate) navigator.vibrate(15);
       const item = carrito.find(i => i.clave === clave);
       if (item) {
         const prod = productos.find(p => p.id === item.id);
@@ -1254,6 +1328,38 @@
       document.getElementById('subtotalUSD').innerText = subtotalUSD.toFixed(2);
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
       document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // CÁLCULO DINÁMICO DE LA BARRA DE DESPACHO PREFERENCIAL
+      const metaDespacho = 40.00;
+      const porcentaje = Math.min((subtotalUSD / metaDespacho) * 100, 100);
+      const restante = metaDespacho - subtotalUSD;
+      const barraBox = document.getElementById('barraMetaEnvio');
+
+      if (barraBox) {
+        if (subtotalUSD === 0) {
+          barraBox.innerHTML = `
+            <p class="text-[10px] text-zinc-400 text-center">Agrega productos para calcular beneficios de despacho.</p>
+          `;
+        } else if (restante > 0) {
+          barraBox.innerHTML = `
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-[10px] font-bold">
+                <span class="text-zinc-300">Agrega <span class="text-orange-400 font-extrabold">$${restante.toFixed(2)}</span> más para despacho preferencial</span>
+                <span class="text-orange-400">${Math.round(porcentaje)}%</span>
+              </div>
+              <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+                <div class="bg-gradient-to-r from-orange-500 to-amber-500 h-full transition-all duration-300" style="width: ${porcentaje}%"></div>
+              </div>
+            </div>
+          `;
+        } else {
+          barraBox.innerHTML = `
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-truck-fast"></i> ¡Calificas para despacho preferencial asegurado!
+            </div>
+          `;
+        }
+      }
     }
 
     function mostrarDatosPago() {
@@ -1295,6 +1401,7 @@
       const overlay = document.getElementById('cartOverlay');
 
       if (drawer.classList.contains('translate-x-full') || forceOpen) {
+        if (navigator.vibrate) navigator.vibrate(15);
         drawer.classList.remove('translate-x-full');
         overlay.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
@@ -1324,6 +1431,8 @@
         document.getElementById('nombreCliente').focus();
         return;
       }
+
+      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
       const totalUSD = subtotalUSD + costoEnvioAdicional;
