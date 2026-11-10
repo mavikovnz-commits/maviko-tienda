@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Maviko">
-  <link rel="apple-touch-icon" href="./logo.jpeg">
+  <link rel="apple-touch-icon" href="./logo.jpg">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -100,7 +100,7 @@
   <header class="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <img src="https://i.ibb.co/ymDcp5tf/logo.jpg" onerror="this.onerror=null; this.src='logo.jpg';" alt="Logo Maviko" class="w-12 h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
+        <img src="./logo.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/ymDcp5tf/logo.jpg';" alt="Logo Maviko" class="w-12 h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
@@ -178,7 +178,7 @@
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
           <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
             <i class="fa-solid fa-truck-fast"></i>
-            <h3>Despacho Nacional</h3>
+            <h3>Despacho Nacional Blindado</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
             Envíos asegurados por MRW, Zoom y Tealca con cobro en destino a nivel nacional, además de entregas locales.
@@ -202,7 +202,7 @@
             <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Pedidos
           </h2>
           <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden o consulta de stock directamente a nuestro WhatsApp oficial:</p>
-          <a href="https://wa.me/584127701750" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
+          <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
             <i class="fa-brands fa-whatsapp text-base"></i> +58 412-7701750
           </a>
         </div>
@@ -210,7 +210,7 @@
         <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start gap-2.5">
           <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 shrink-0"></i>
           <p class="text-[11px] text-amber-200 leading-snug">
-            <strong>Importante:</strong> Antes de realizar cualquier pago o transferencia, <strong>confirma siempre la disponibilidad física y tiempo de entrega</strong> con nosotros vía WhatsApp[cite: 3].
+            <strong>Importante:</strong> Antes de realizar cualquier pago o transferencia, <strong>confirma siempre la disponibilidad física y tiempo de entrega</strong> con nosotros vía WhatsApp.
           </p>
         </div>
       </div>
@@ -477,13 +477,13 @@
     <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[55vh]">
       <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2.5 flex items-center gap-2 text-[11px] text-amber-200">
         <i class="fa-solid fa-circle-exclamation text-amber-400 shrink-0"></i>
-        <span>Recuerda confirmar existencia y tiempo de entrega antes de pagar[cite: 3].</span>
+        <span>Envíos asegurados por agencia con cobro en destino. Confirma disponibilidad antes de transferir.</span>
       </div>
 
       <div class="space-y-2">
         <input type="text" id="nombreCliente" oninput="agendarEnvioLead()" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
         
-        <!-- CAMPO TELÉFONO PARA CAPTURA AUTOMÁTICA DE CARRITOS ABANDONADOS -->
+        <!-- CAMPO TELÉFONO PARA CAPTURA AUTOMÁTICA -->
         <input type="tel" id="telefonoCliente" oninput="agendarEnvioLead()" placeholder="Teléfono WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
 
         <div class="grid grid-cols-2 gap-2">
@@ -569,9 +569,9 @@
     </div>
   </div>
 
-  <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
+  <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP CON MENSAJE OPTIMIZADO -->
   <div class="fixed bottom-6 left-6 z-40 group flex items-center">
-    <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Tengo%20una%20consulta%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
+    <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
       <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping pointer-events-none"></span>
       <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
@@ -587,7 +587,7 @@
         <span>MAVIKO — Grandes cosas en camino</span>
         <span class="text-emerald-400 text-[11px]">(Productos 100% Originales)</span>
       </p>
-      <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca.</p>
+      <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca con cobro en destino.</p>
       <p class="text-zinc-500">Atención Directa: <strong>+58 412-7701750</strong> | Pago Móvil: <strong>0102 - V-20.907.946 - 04127701750</strong></p>
     </div>
   </footer>
@@ -598,10 +598,11 @@
     const GID_CATALOGO_WEB = "1599022863";
     const NUMERO_WHATSAPP = "584127701750";
 
-    // URL DEL WEBHOOK DE GOOGLE APPS SCRIPT (Reemplaza con tu URL /exec)
-    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycby5R0M3SHB4ReSZiuomdOPf7YpmeXRQufvNjsVXYJg7MkDtvlhO9d6oFQHhA09MKr3IVg/exec";
+    // URL DEL WEBHOOK DE GOOGLE APPS SCRIPT
+    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbysROM3SHB4ReSZiudOPf7YpmeXRQufNjsVXYJg7MKDv1h09d6oFQHHA09MKr3IVg/exec";
 
-    let tasaBCV = 36.50;
+    // Tasa BCV de respaldo actualizada
+    let tasaBCV = 44.50;
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
     let categoriaActual = 'todas';
@@ -627,7 +628,6 @@
       localStorage.setItem('maviko_carrito_hora', Date.now().toString());
     }
 
-    // BANNER DE RECUPERACIÓN / RETORNO
     function comprobarCarritoPendiente() {
       if (carrito.length > 0) {
         const banner = document.getElementById('bannerCarritoPendiente');
@@ -645,7 +645,6 @@
       sessionStorage.setItem('aviso_carrito_descartado', 'true');
     }
 
-    // CAPTURA AUTOMÁTICA DE PROSPECTO A GOOGLE SHEETS TRAS ESCRIBIR EL TELÉFONO
     function agendarEnvioLead() {
       clearTimeout(timerLeadDebounce);
       timerLeadDebounce = setTimeout(() => {
@@ -670,6 +669,7 @@
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              tipo: "lead_abandonado",
               nombre: nom || "Interesado Web",
               telefono: tel,
               totalUSD: totalUSD.toFixed(2),
@@ -1056,8 +1056,7 @@
     function accionInstalarApp() {
       const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       if (esIOS) {
-        const modal = document.getElementById('modalInstalarIOS');
-        if (modal) modal.classList.remove('hidden');
+        alert("En iPhone: Toca el icono de Compartir (el recuadro con la flecha arriba) en la barra de Safari y selecciona 'Agregar a pantalla de inicio'.");
         return;
       }
       if (eventoInstalacionPrompt) {
@@ -1577,7 +1576,7 @@
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
       document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      // BARRA DE DESPACHO
+      // BARRA DE DESPACHO PREFERENCIAL
       const metaDespacho = 40.00;
       const porcentaje = Math.min((subtotalUSD / metaDespacho) * 100, 100);
       const restante = metaDespacho - subtotalUSD;
@@ -1667,89 +1666,88 @@
       }
     }
 
-   function enviarPedidoWhatsApp() {
-  if (carrito.length === 0) {
-    alert("Tu carrito está vacío. Agrega al menos un producto.");
-    return;
-  }
+    function enviarPedidoWhatsApp() {
+      if (carrito.length === 0) {
+        alert("Tu carrito está vacío. Agrega al menos un producto.");
+        return;
+      }
 
-  const cliente = document.getElementById('nombreCliente').value.trim();
-  const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
-  const metodo = document.getElementById('metodoPago').value;
-  const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
-  const agencia = document.getElementById('empresaEnvio').value;
-  const direccion = document.getElementById('direccionEnvio').value.trim();
+      const cliente = document.getElementById('nombreCliente').value.trim();
+      const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
+      const metodo = document.getElementById('metodoPago').value;
+      const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
+      const agencia = document.getElementById('empresaEnvio').value;
+      const direccion = document.getElementById('direccionEnvio').value.trim();
 
-  if (!cliente) {
-    alert("Por favor ingresa tu Nombre y Apellido.");
-    document.getElementById('nombreCliente').focus();
-    return;
-  }
+      if (!cliente) {
+        alert("Por favor ingresa tu Nombre y Apellido.");
+        document.getElementById('nombreCliente').focus();
+        return;
+      }
 
-  if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
-  const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-  const totalUSD = subtotalUSD + costoEnvioAdicional;
-  const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+      const totalUSD = subtotalUSD + costoEnvioAdicional;
+      const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  // Formato compacto de la lista de productos
-  const listaProdTexto = carrito.map(i => {
-    const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-    return `${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}`;
-  }).join(' | ');
+      const listaProdTexto = carrito.map(i => {
+        const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+        return `${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}`;
+      }).join(' | ');
 
-  // 1. REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (SILENCIOSO)
-  if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
-    fetch(WEBHOOK_APPSCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tipo: "venta_confirmada",
-        cliente: cliente,
-        telefono: telefono,
-        metodo: metodo,
-        referencia: ref,
-        agencia: agencia,
-        direccion: direccion,
-        totalUSD: totalUSD.toFixed(2),
-        totalBS: totalBS,
-        tasaBCV: tasaBCV.toFixed(2),
-        productos: listaProdTexto
-      })
-    }).catch(err => console.warn("Error enviando registro a Sheets:", err));
-  }
+      // 1. REGISTRO AUTOMÁTICO DE VENTA EN GOOGLE SHEETS
+      if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
+        fetch(WEBHOOK_APPSCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: "venta_confirmada",
+            cliente: cliente,
+            telefono: telefono,
+            metodo: metodo,
+            referencia: ref,
+            agencia: agencia,
+            direccion: direccion,
+            totalUSD: totalUSD.toFixed(2),
+            totalBS: totalBS,
+            tasaBCV: tasaBCV.toFixed(2),
+            productos: listaProdTexto
+          })
+        }).catch(err => console.warn("Error enviando registro a Sheets:", err));
+      }
 
-  // 2. ENVÍO DE MENSAJE A WHATSAPP
-  let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
-  mensaje += `👤 *Cliente:* ${cliente}\n`;
-  if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
-  mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
-  if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
-  mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
-  if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
-  
-  mensaje += `\n📦 *Productos solicitados (100% Originales):*\n`;
-  carrito.forEach(i => {
-    const detalleTalla = i.tallaSeleccionada ? ` (Opción: ${i.tallaSeleccionada})` : '';
-    mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
-  });
+      // 2. CONSTRUCCIÓN DE LA COMANDA EN WHATSAPP
+      let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
+      mensaje += `👤 *Cliente:* ${cliente}\n`;
+      if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
+      mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
+      if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
+      mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
+      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
+      
+      mensaje += `\n📦 *Productos solicitados (100% Originales):*\n`;
+      carrito.forEach(i => {
+        const detalleTalla = i.tallaSeleccionada ? ` (Opción: ${i.tallaSeleccionada})` : '';
+        mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+      });
 
-  if (costoEnvioAdicional > 0) {
-    mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
-  }
+      if (costoEnvioAdicional > 0) {
+        mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
+      }
 
-  mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
-  mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-  mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempo de entrega estimado para formalizar el pago.* ¡Muchas gracias!`;
+      mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
+      mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+      mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempo de entrega estimado para formalizar el pago.* ¡Muchas gracias!`;
 
-  carrito = [];
-  guardarCarritoEnStorage();
-  actualizarCarritoUI();
+      carrito = [];
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
 
-  const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-  window.open(urlWhatsApp, '_blank');
-}
+      const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+      window.open(urlWhatsApp, '_blank');
+    }
   </script>
 
   <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
