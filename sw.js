@@ -1,6 +1,17 @@
-const CACHE_NAME = 'maviko-app-v3';
+const CACHE_NAME = 'maviko-cache-v1';
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  './logo.jpg'
+];
 
 self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS_TO_CACHE);
+    })
+  );
   self.skipWaiting();
 });
 
@@ -9,7 +20,9 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
         })
       );
     })
@@ -18,13 +31,12 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Las peticiones a Google Sheets y APIs siempre van por red en vivo
-  if (event.request.url.includes('google') || event.request.url.includes('dolarvzla')) {
-    event.respondWith(fetch(event.request));
-    return;
+  // Solo cachear peticiones GET internas, dejar que la API y Sheets pasen directo a red
+  if (event.request.method === 'GET' && event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        return cachedResponse || fetch(event.request);
+      })
+    );
   }
-
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
-  );
 });
