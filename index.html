@@ -1667,60 +1667,89 @@
       }
     }
 
-    function enviarPedidoWhatsApp() {
-      if (carrito.length === 0) {
-        alert("Tu carrito está vacío. Agrega al menos un producto.");
-        return;
-      }
+   function enviarPedidoWhatsApp() {
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío. Agrega al menos un producto.");
+    return;
+  }
 
-      const cliente = document.getElementById('nombreCliente').value.trim();
-      const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
-      const metodo = document.getElementById('metodoPago').value;
-      const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
-      const agencia = document.getElementById('empresaEnvio').value;
-      const direccion = document.getElementById('direccionEnvio').value.trim();
+  const cliente = document.getElementById('nombreCliente').value.trim();
+  const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
+  const metodo = document.getElementById('metodoPago').value;
+  const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
+  const agencia = document.getElementById('empresaEnvio').value;
+  const direccion = document.getElementById('direccionEnvio').value.trim();
 
-      if (!cliente) {
-        alert("Por favor ingresa tu Nombre y Apellido.");
-        document.getElementById('nombreCliente').focus();
-        return;
-      }
+  if (!cliente) {
+    alert("Por favor ingresa tu Nombre y Apellido.");
+    document.getElementById('nombreCliente').focus();
+    return;
+  }
 
-      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+  if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
-      const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const totalUSD = subtotalUSD + costoEnvioAdicional;
-      const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+  const totalUSD = subtotalUSD + costoEnvioAdicional;
+  const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
-      mensaje += `👤 *Cliente:* ${cliente}\n`;
-      if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
-      mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
-      if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
-      mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
-      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
-      
-      mensaje += `\n📦 *Productos solicitados (100% Originales):*\n`;
-      carrito.forEach(i => {
-        const detalleTalla = i.tallaSeleccionada ? ` (Opción: ${i.tallaSeleccionada})` : '';
-        mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
-      });
+  // Formato compacto de la lista de productos
+  const listaProdTexto = carrito.map(i => {
+    const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+    return `${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}`;
+  }).join(' | ');
 
-      if (costoEnvioAdicional > 0) {
-        mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
-      }
+  // 1. REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (SILENCIOSO)
+  if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
+    fetch(WEBHOOK_APPSCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: "venta_confirmada",
+        cliente: cliente,
+        telefono: telefono,
+        metodo: metodo,
+        referencia: ref,
+        agencia: agencia,
+        direccion: direccion,
+        totalUSD: totalUSD.toFixed(2),
+        totalBS: totalBS,
+        tasaBCV: tasaBCV.toFixed(2),
+        productos: listaProdTexto
+      })
+    }).catch(err => console.warn("Error enviando registro a Sheets:", err));
+  }
 
-      mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
-      mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-      mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempo de entrega estimado para formalizar el pago.* ¡Muchas gracias!`;
+  // 2. ENVÍO DE MENSAJE A WHATSAPP
+  let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
+  mensaje += `👤 *Cliente:* ${cliente}\n`;
+  if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
+  mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
+  if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
+  mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
+  if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
+  
+  mensaje += `\n📦 *Productos solicitados (100% Originales):*\n`;
+  carrito.forEach(i => {
+    const detalleTalla = i.tallaSeleccionada ? ` (Opción: ${i.tallaSeleccionada})` : '';
+    mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+  });
 
-      carrito = [];
-      guardarCarritoEnStorage();
-      actualizarCarritoUI();
+  if (costoEnvioAdicional > 0) {
+    mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
+  }
 
-      const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-      window.open(urlWhatsApp, '_blank');
-    }
+  mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
+  mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+  mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempo de entrega estimado para formalizar el pago.* ¡Muchas gracias!`;
+
+  carrito = [];
+  guardarCarritoEnStorage();
+  actualizarCarritoUI();
+
+  const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+  window.open(urlWhatsApp, '_blank');
+}
   </script>
 
   <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
