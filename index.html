@@ -5,8 +5,8 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Maviko | Tienda Oficial">
   <meta property="og:description" content="Calzado, bolsos, skincare y accesorios 100% originales con envíos a toda Venezuela.">
-  <meta property="og:image" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
-  <meta property="og:image:secure_url" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
+  <meta property="og:image" content="./logo.jpg">
+  <meta property="og:image:secure_url" content="./logo.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="600">
   <meta property="og:image:height" content="600">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Maviko | Tienda Oficial">
   <meta name="twitter:description" content="Calzado, bolsos, skincare y accesorios 100% originales.">
-  <meta name="twitter:image" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
+  <meta name="twitter:image" content="./logo.jpg">
 
   <!-- ÍCONO EN LA PESTAÑA DEL NAVEGADOR -->
   <link rel="icon" type="image/jpeg" href="./logo.jpg">
@@ -218,10 +218,10 @@
               <i class="fa-solid fa-mobile-screen-button text-orange-300"></i> Datos para Pago Móvil
             </h2>
             <div class="flex items-center gap-2">
-              <button onclick="toggleModalQR()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer" title="Ver código QR">
+              <button onclick="toggleModalQR()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer" title="Ver código QR">
                 <i class="fa-solid fa-qrcode text-orange-400"></i> <span>Ver QR</span>
               </button>
-              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer">
+              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
                 <i class="fa-regular fa-copy text-orange-400"></i> <span>Copiar</span>
               </button>
             </div>
@@ -299,25 +299,21 @@
     </div>
   </main>
 
-  <!-- VENTANA FLOTANTE INFERIOR: ESTILO PLAY STORE DISCRETO Y FLUIDO -->
+  <!-- PESTAÑA FLOTANTE INFERIOR DISCRETA ESTILO PLAY STORE -->
   <div id="bannerInstalacionPlayStore" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-zinc-900/95 border-t border-zinc-800 backdrop-blur-md px-4 py-2.5 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
         <img src="./logo.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/ymDcp5tf/logo.jpg';" alt="Logo" class="w-10 h-10 object-cover rounded-xl border border-orange-500/30 shrink-0">
         <div class="min-w-0">
-          <h4 class="text-xs font-bold text-white truncate">App Maviko</h4>
-          <p class="text-[10px] text-zinc-400 truncate">Rápida, ligera y 100% original</p>
+          <h4 class="text-xs font-bold text-white truncate">Maviko</h4>
+          <p class="text-[10px] text-zinc-400 truncate">Instalar en pantalla de inicio</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
-        <button onclick="instalarAndroidDirecto()" class="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-emerald-600/30">
-          <i class="fa-brands fa-android text-sm"></i>
-          <span>Instalar</span>
-        </button>
-        <button onclick="toggleModalIOS(true)" class="bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-zinc-300 font-bold text-xs px-3 py-2 rounded-xl transition-all flex items-center gap-1 cursor-pointer border border-zinc-700">
-          <i class="fa-brands fa-apple text-sm"></i>
-          <span>iPhone</span>
+        <button id="btnDescargaAndroid" onclick="instalarAndroidDirecto()" class="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-emerald-600/30">
+          <i class="fa-solid fa-download text-xs"></i>
+          <span>Descargar</span>
         </button>
         <button onclick="descartarBannerPlayStore()" class="text-zinc-500 hover:text-white p-1.5 cursor-pointer" title="Cerrar">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -326,30 +322,23 @@
     </div>
   </div>
 
-  <!-- BANNER FLOTANTE DE RETORNO / RECUPERACIÓN DE CARRITO -->
-  <div id="bannerCarritoPendiente" class="hidden fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-zinc-900/95 border border-orange-500/50 backdrop-blur-md p-4 rounded-2xl shadow-2xl transition-all duration-500">
-    <div class="flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0 text-lg">
-          <i class="fa-solid fa-cart-shopping"></i>
-        </div>
-        <div>
-          <h4 class="text-xs font-bold text-white">¡No olvides tu pedido!</h4>
-          <p class="text-[11px] text-zinc-400">Dejaste productos apartados en tu carrito.</p>
-        </div>
+  <!-- AVISO FLOTANTE DE DESCARGA ACTIVA (PLAY STORE STYLE) -->
+  <div id="avisoDescargandoApp" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm z-50 bg-zinc-900 border border-emerald-500/50 backdrop-blur-md p-3.5 rounded-2xl shadow-2xl space-y-2">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-arrow-down animate-bounce text-sm"></i>
       </div>
-      <div class="flex items-center gap-1.5">
-        <button onclick="toggleCarrito(true); descartarAvisoCarrito();" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl cursor-pointer shadow-md">
-          Ver Carrito
-        </button>
-        <button onclick="descartarAvisoCarrito()" class="text-zinc-500 hover:text-white p-1.5 cursor-pointer">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
+      <div class="min-w-0">
+        <h5 class="text-xs font-bold text-white">Instalando Maviko...</h5>
+        <p class="text-[10px] text-zinc-400">Agregando a tu pantalla principal</p>
       </div>
+    </div>
+    <div class="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+      <div id="barraProgresoInstalacion" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
     </div>
   </div>
 
-  <!-- MODAL DE AYUDA PARA INSTALAR EN IPHONE (IOS) -->
+  <!-- MODAL DE AYUDA PARA INSTALAR EN IPHONE (SOLO SE MUESTRA EN IOS) -->
   <div id="modalInstalarIOS" onclick="cerrarModalIOS(event)" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
       <button onclick="toggleModalIOS(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1">
@@ -1116,30 +1105,64 @@
       }
     }
 
-    // CAPTURAR EL EVENTO OFICIAL DE INSTALACIÓN EN ANDROID
+    // CAPTURA INMEDIATA DEL EVENTO NATIVO DE INSTALACIÓN ANDROID
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       eventoInstalacionAndroid = e;
-      // Mostrar el banner inferior nativo en Android al estar disponible
       const banner = document.getElementById('bannerInstalacionPlayStore');
       if (banner && !sessionStorage.getItem('banner_playstore_descartado')) {
         banner.classList.remove('hidden');
       }
     });
 
-    // INSTALACIÓN DIRECTA EN ANDROID CON UN SOLO TOQUE
+    // INSTALACIÓN DIRECTA EN ANDROID CON EFECTO PLAY STORE
     async function instalarAndroidDirecto() {
+      const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (esIOS) {
+        toggleModalIOS(true);
+        return;
+      }
+
       if (eventoInstalacionAndroid) {
+        // Simular descarga con pestaña flotante
+        mostrarDescargaFlotantePlayStore();
+        
         eventoInstalacionAndroid.prompt();
         const choiceResult = await eventoInstalacionAndroid.userChoice;
+        
         if (choiceResult.outcome === 'accepted') {
           const banner = document.getElementById('bannerInstalacionPlayStore');
           if (banner) banner.classList.add('hidden');
+        } else {
+          ocultarDescargaFlotantePlayStore();
         }
         eventoInstalacionAndroid = null;
       } else {
-        alert("Para instalar en Android: toca el menú de los 3 puntos (⋮) en la esquina superior de Chrome y pulsa 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+        alert("Para instalar: toca el menú de los 3 puntos (⋮) en la esquina superior de Chrome y pulsa 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
       }
+    }
+
+    function mostrarDescargaFlotantePlayStore() {
+      const banner = document.getElementById('bannerInstalacionPlayStore');
+      if (banner) banner.classList.add('hidden');
+
+      const aviso = document.getElementById('avisoDescargandoApp');
+      const barra = document.getElementById('barraProgresoInstalacion');
+      if (!aviso || !barra) return;
+
+      aviso.classList.remove('hidden');
+      barra.style.width = '30%';
+
+      setTimeout(() => { barra.style.width = '70%'; }, 500);
+      setTimeout(() => { 
+        barra.style.width = '100%'; 
+        setTimeout(() => { aviso.classList.add('hidden'); }, 1200);
+      }, 1400);
+    }
+
+    function ocultarDescargaFlotantePlayStore() {
+      const aviso = document.getElementById('avisoDescargandoApp');
+      if (aviso) aviso.classList.add('hidden');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1153,13 +1176,13 @@
       const esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const esAppInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-      // Mostrar el banner en móviles siempre que no esté en modo app instalada
+      // Mostrar barra inferior solo en móviles si aún no está instalada
       if (esDispositivoMovil && !esAppInstalada) {
         const banner = document.getElementById('bannerInstalacionPlayStore');
         if (banner && !sessionStorage.getItem('banner_playstore_descartado')) {
           setTimeout(() => {
             banner.classList.remove('hidden');
-          }, 1200);
+          }, 1000);
         }
       }
 
