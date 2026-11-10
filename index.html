@@ -375,15 +375,15 @@
       <div class="text-xs text-zinc-300 space-y-3 text-left bg-zinc-950 p-4 rounded-xl border border-zinc-800">
         <p class="flex items-start gap-2.5">
           <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-          <span>Abre esta tienda desde <strong>Safari</strong> (icono de brújula azul).</span>
+          <span>Abre esta tienda desde <strong>Safari</strong> (icono de brújula azul)[cite: 3].</span>
         </p>
         <p class="flex items-start gap-2.5">
           <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
-          <span>Toca el botón <strong>Compartir</strong> <i class="fa-solid fa-arrow-up-from-bracket text-orange-400"></i> en la barra inferior de Safari.</span>
+          <span>Toca el botón <strong>Compartir</strong> <i class="fa-solid fa-arrow-up-from-bracket text-orange-400"></i> en la barra inferior de Safari[cite: 3].</span>
         </p>
         <p class="flex items-start gap-2.5">
           <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
-          <span>Desliza y selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="fa-regular fa-square-plus text-orange-400"></i>.</span>
+          <span>Desliza y selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="fa-regular fa-square-plus text-orange-400"></i>[cite: 3].</span>
         </p>
       </div>
       <button onclick="toggleModalIOS(false)" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-2.5 rounded-xl font-bold text-xs cursor-pointer transition-colors shadow-md">
@@ -678,7 +678,7 @@
     let costoEnvioAdicional = 0;
     let toastTimeout;
     let timerLeadDebounce = null;
-    let eventoInstalacionPrompt = null;
+    let eventoInstalacionAndroid = null;
     let autoSliderTimer = null;
     let indiceFotoActual = 0;
     let galeriaFotosActual = [];
@@ -1133,10 +1133,11 @@
       }
     }
 
-    // CAPTURA DEL EVENTO DE INSTALACIÓN
+    // CAPTURA DEL EVENTO OFICIAL DE INSTALACIÓN (ANDROID / NAVEGADOR)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      eventoInstalacionPrompt = e;
+      eventoInstalacionAndroid = e;
+      
       const btn = document.getElementById('btnInstalarApp');
       if (btn) btn.classList.remove('hidden');
       
@@ -1146,25 +1147,31 @@
       }
     });
 
-    function accionInstalarApp() {
+    // FUNCIÓN DE INSTALACIÓN CON UN SOLO TOQUE DIRECTO
+    async function accionInstalarApp() {
       const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      // Si es iPhone: mostrar el modal instructivo de Safari
       if (esIOS) {
         toggleModalIOS(true);
         return;
       }
-      if (eventoInstalacionPrompt) {
-        eventoInstalacionPrompt.prompt();
-        eventoInstalacionPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            const btn = document.getElementById('btnInstalarApp');
-            if (btn) btn.classList.add('hidden');
-            const bannerPS = document.getElementById('bannerInstalacionPlayStore');
-            if (bannerPS) bannerPS.classList.add('hidden');
-          }
-          eventoInstalacionPrompt = null;
-        });
+
+      // Si es Android: disparar directamente la instalación nativa del sistema
+      if (eventoInstalacionAndroid) {
+        eventoInstalacionAndroid.prompt();
+        const choiceResult = await eventoInstalacionAndroid.userChoice;
+        
+        if (choiceResult.outcome === 'accepted') {
+          console.log('App instalada con éxito');
+          const btn = document.getElementById('btnInstalarApp');
+          if (btn) btn.classList.add('hidden');
+          const bannerPS = document.getElementById('bannerInstalacionPlayStore');
+          if (bannerPS) bannerPS.classList.add('hidden');
+        }
+        eventoInstalacionAndroid = null;
       } else {
-        alert("Para instalar en Android: toca el menú de los 3 puntos arriba a la derecha de Chrome y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+        alert("Para instalar en Android: toca el menú de los 3 puntos (⋮) en la esquina superior de Chrome y pulsa 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
       }
     }
 
