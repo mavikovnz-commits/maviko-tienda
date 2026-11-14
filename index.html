@@ -123,7 +123,7 @@
           <span class="hidden sm:inline">Instalar</span> App
         </button>
 
-        <!-- BOTÓN CARRITO UNIFICADO (COMPRA INMEDIATA + ENCARGOS) -->
+        <!-- BOTÓN CARRITO UNIFICADO -->
         <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-3.5 sm:px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
           <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
           <span class="hidden sm:inline font-bold text-xs">Carrito / Encargos</span>
@@ -138,11 +138,11 @@
     <div class="inline-flex gap-8 animate-marquee">
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>🛍️ COMPRA INMEDIATA O POR ENCARGO EN TU CARRITO</span>
+      <span>💳 ENCARGA EN 1 PAGO O EN 2 PARTES (50% ABONO)</span>
       <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>🛍️ COMPRA INMEDIATA O POR ENCARGO EN TU CARRITO</span>
+      <span>💳 ENCARGA EN 1 PAGO O EN 2 PARTES (50% ABONO)</span>
       <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
     </div>
   </div>
@@ -174,11 +174,11 @@
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
           <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
-            <i class="fa-solid fa-bullseye"></i>
-            <h3>Compra Inmediata o Encargo</h3>
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <h3>Encargos Flexibles (50% / 50%)</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Adquiere artículos en entrega inmediata o encarga productos agotados y mercancía especial directamente desde tu carrito.
+            Aparta tus encargos abonando el 50% al confirmar y cancela el 50% restante al recibir tu mercancía.
           </p>
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
@@ -262,7 +262,7 @@
           type="text" 
           id="searchInput" 
           oninput="filtrarProductos()" 
-          placeholder="Buscar mochilas, calzado, kits, marcas..." 
+          placeholder="Buscar zapatos hombre, bolsos, kits, marcas..." 
           class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
         >
       </div>
@@ -365,7 +365,6 @@
         </button>
       </div>
 
-      <!-- TARJETA DE PUNTOS MAVIKO -->
       <div id="boxPuntosCliente" class="hidden bg-gradient-to-r from-orange-600/20 via-amber-600/10 to-zinc-950 border border-orange-500/30 rounded-xl p-4 flex items-center justify-between">
         <div>
           <span class="text-[10px] font-bold uppercase tracking-wider text-orange-400">Maviko Club Puntos</span>
@@ -378,14 +377,13 @@
         </div>
       </div>
 
-      <!-- LISTA DE PEDIDOS -->
       <div id="listaResultadosRastreo" class="space-y-2.5 max-h-60 overflow-y-auto text-xs">
         <p class="text-center text-zinc-500 py-6">Introduce tu teléfono arriba para consultar tu historial.</p>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE AYUDA PARA INSTALACIÓN MANUAL (SOLO SE ABRE SI EL NAVEGADOR NO SOPORTA INSTALACIÓN DIRECTA) -->
+  <!-- MODAL DE AYUDA PARA INSTALACIÓN MANUAL -->
   <div id="modalInstalarManual" onclick="if(event.target.id==='modalInstalarManual') toggleModalManual(false)" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
       <button onclick="toggleModalManual(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 cursor-pointer">
@@ -496,7 +494,7 @@
               <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas consultando este artículo</span>
             </div>
 
-            <!-- SELECTOR DE MODALIDAD EN MODAL (COMPRA INMEDIATA VS ENCARGO) -->
+            <!-- SELECTOR DE MODALIDAD EN MODAL -->
             <div class="pt-2">
               <span class="block text-[11px] font-bold text-zinc-400 mb-1.5">Modalidad de adquisición:</span>
               <div class="grid grid-cols-2 gap-2" id="selectorModalidadModal">
@@ -553,7 +551,7 @@
     </div>
   </div>
 
-  <!-- OVERLAY Y DRAWER DEL CARRITO UNIFICADO (COMPRA INMEDIATA + ENCARGOS) -->
+  <!-- OVERLAY Y DRAWER DEL CARRITO UNIFICADO -->
   <div id="cartOverlay" onclick="toggleCarrito(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
 
   <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
@@ -562,7 +560,7 @@
         <i class="fa-solid fa-basket-shopping text-orange-500 text-lg"></i>
         <div>
           <h3 class="font-bold text-white text-sm">Tu Carrito y Encargos</h3>
-          <p class="text-[10px] text-zinc-400">Elige compra inmediata o encargo por artículo</p>
+          <p class="text-[10px] text-zinc-400">Configura entrega inmediata o encargo</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -575,7 +573,7 @@
       </div>
     </div>
 
-    <!-- BOTÓN DESPLEGABLE PARA AGREGAR ENCARGO EXTERNO NO PUBLICADO -->
+    <!-- BOTÓN DESPLEGABLE PARA ENCARGO EXTERNO NO PUBLICADO -->
     <div class="bg-zinc-950 border-b border-zinc-800 px-3 py-2">
       <button type="button" onclick="toggleFormularioEncargoExterno()" class="w-full text-left text-[11px] font-bold text-orange-400 hover:text-orange-300 flex items-center justify-between cursor-pointer py-1">
         <span><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> + Encargar artículo que no está en la tienda</span>
@@ -600,7 +598,35 @@
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
 
     <!-- FORMULARIO DE CHECKOUT -->
-    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[52vh]">
+    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[55vh]">
+      
+      <!-- BLOQUE ESPECIAL PARA ENCARGOS: FECHA TENTATIVA Y PLAN DE PAGO (1 O 2 PARTES) -->
+      <div id="panelOpcionesEncargo" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar-check"></i> Configuración de Encargo
+          </span>
+          <span class="text-[10px] text-amber-400/80 font-semibold">Flexible</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">¿Para cuándo lo necesitas? (Tentativo):</label>
+            <input type="date" id="fechaTentativaEncargo" class="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-[11px] focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">Modalidad de Pago Encargo:</label>
+            <select id="planPagoEncargo" onchange="actualizarCarritoUI()" class="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-[11px] focus:outline-none focus:border-amber-500 cursor-pointer">
+              <option value="2_pagos">2 Pagos (50% Abono / 50% Entrega)</option>
+              <option value="1_pago">1 Pago Único (100% Adelantado)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- RESUMEN FINANCIERO DEL ABONO VS SALDO -->
+        <div id="resumenCuotasEncargo" class="bg-black/50 p-2 rounded-lg border border-zinc-800/80 text-[11px] space-y-1"></div>
+      </div>
+
       <div class="space-y-2">
         <input type="text" id="nombreCliente" oninput="agendarEnvioLead()" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
         <input type="tel" id="telefonoCliente" oninput="agendarEnvioLead()" placeholder="Teléfono WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
@@ -632,7 +658,7 @@
 
       <div class="space-y-1 pt-2 border-t border-zinc-800">
         <div class="flex justify-between text-zinc-400">
-          <span>Subtotal Artículos Publicados:</span>
+          <span>Subtotal Artículos:</span>
           <span>$<span id="subtotalUSD">0.00</span></span>
         </div>
         <div class="flex justify-between text-zinc-400">
@@ -640,7 +666,7 @@
           <span id="costoEnvioText">Cobro en destino</span>
         </div>
         <div class="flex justify-between text-base font-bold text-white pt-1">
-          <span>Total Estimado USD:</span>
+          <span>Total Pedido USD:</span>
           <span class="text-orange-400">$<span id="totalUSD">0.00</span></span>
         </div>
         <div class="flex justify-between text-xs font-semibold text-zinc-300">
@@ -735,6 +761,22 @@
       cedula: "V-20.907.946",
       telefono: "04127701750"
     };
+
+    // --- NORMALIZADOR INTELIGENTE PARA BUSCADOR (SINGULAR / PLURAL / TILDES) ---
+    function normalizarTextoBusqueda(texto) {
+      return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Quitar tildes
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(palabra => {
+          // Convertir plurales simples en español a raíz singular
+          if (palabra.length > 4 && palabra.endsWith('es')) return palabra.slice(0, -2);
+          if (palabra.length > 3 && palabra.endsWith('s')) return palabra.slice(0, -1);
+          return palabra;
+        });
+    }
 
     // --- FUNCIONES DE ENCARGO UNIFICADO EN CARRITO ---
     function toggleFormularioEncargoExterno() {
@@ -1264,8 +1306,11 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
+    // BUSCADOR INTELIGENTE POR RAÍCES DE PALABRAS (SOPORTA PLURALES COMO "ZAPATOS HOMBRE" -> "ZAPATO HOMBRE")
     function obtenerProductosFiltrados() {
-      const busqueda = document.getElementById('searchInput').value.toLowerCase().trim();
+      const busquedaRaw = document.getElementById('searchInput').value.trim();
+      const palabrasBusqueda = normalizarTextoBusqueda(busquedaRaw);
+
       let resultado = productos.filter(p => {
         let coincideCat = false;
         if (categoriaActual === 'todas') {
@@ -1276,12 +1321,14 @@
           coincideCat = p.categoria === categoriaActual;
         }
 
-        const coincideBusqueda = !busqueda || 
-          p.nombre.toLowerCase().includes(busqueda) || 
-          p.id.toLowerCase().includes(busqueda) || 
-          p.categoria.toLowerCase().includes(busqueda) ||
-          p.descripcion.toLowerCase().includes(busqueda);
-        return coincideCat && coincideBusqueda;
+        if (!coincideCat) return false;
+        if (palabrasBusqueda.length === 0) return true;
+
+        const textoProductoNormalizado = normalizarTextoBusqueda(
+          `${p.nombre} ${p.id} ${p.categoria} ${p.descripcion}`
+        ).join(' ');
+
+        return palabrasBusqueda.every(raiz => textoProductoNormalizado.includes(raiz));
       });
 
       if (ordenActual === 'menor') {
@@ -1457,6 +1504,13 @@
       iniciarValidacionSocial();
       comprobarCarritoPendiente();
 
+      // Establecer fecha mínima de hoy en el calendario de encargo
+      const inputFecha = document.getElementById('fechaTentativaEncargo');
+      if (inputFecha) {
+        const hoy = new Date().toISOString().split('T')[0];
+        inputFecha.min = hoy;
+      }
+
       const esAppInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
       if (esAppInstalada) {
         const btn = document.getElementById('btnInstalarApp');
@@ -1524,7 +1578,6 @@
         const tallasDisponibles = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
         const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Opciones: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'A encargar'}</p>` : '';
 
-        // Botón dinámico: Agregar (Inmediata) o Encargar (Si está agotado)
         const botonAccionHTML = p.stockTotal <= 0
           ? `<button onclick="agregarAlCarritoAccionDirecta('${p.id}', 'encargo')" class="flex-grow bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-amber-500/40 cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
                <i class="fa-solid fa-clock-rotate-left"></i> Encargar
@@ -1626,7 +1679,6 @@
       galeriaFotosActual = prod.galeriaFotos;
       indiceFotoActual = 0;
 
-      // Por defecto, si hay stock es compra inmediata; si está agotado, es encargo
       seleccionarModalidadEnModal(prod.stockTotal > 0 ? 'inmediata' : 'encargo');
 
       history.pushState({ modalAbierto: true }, "");
@@ -1671,7 +1723,6 @@
           const btnTalla = document.createElement('button');
           btnTalla.type = "button";
           
-          // Ahora incluso si stockTalla es 0, el usuario puede seleccionarla para encargo
           btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
           btnTalla.innerText = stockTalla > 0 ? `${talla} (${stockTalla})` : `${talla} (Encargo)`;
           
@@ -1854,7 +1905,6 @@
       const prod = productos.find(p => p.id === id);
       let limiteStock = prod.tieneTallas ? (prod.mapaTallas[talla] || 0) : prod.stockTotal;
 
-      // Si no hay stock disponible, cambiar automáticamente a 'encargo'
       if (limiteStock <= 0) {
         modalidad = "encargo";
       }
@@ -1970,7 +2020,6 @@
             ? `<span class="text-amber-400 text-[11px] font-bold">Precio por cotizar</span>`
             : `$${(i.precioUSD * i.cantidad).toFixed(2)} <span class="text-zinc-500 font-normal text-[10px]">($${i.precioUSD.toFixed(2)} c/u)</span>`;
 
-          // Selector de modalidad en cada ítem del carrito
           const selectorModalidadHTML = i.esExterno
             ? `<span class="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Encargo Especial</span>`
             : `<select onchange="cambiarModalidadItemCarrito('${i.clave}', this.value)" class="text-[10px] font-bold rounded-lg px-2 py-1 border cursor-pointer focus:outline-none ${i.modalidad === 'encargo' ? 'bg-amber-500/15 text-amber-400 border-amber-500/40' : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40'}">
@@ -2010,6 +2059,7 @@
         });
       }
 
+      const itemsEncargo = carrito.filter(i => i.modalidad === 'encargo');
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
       const totalUSD = subtotalUSD + (subtotalUSD > 0 ? costoEnvioAdicional : 0);
       const totalBS = totalUSD * tasaBCV;
@@ -2018,6 +2068,47 @@
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
       document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+      // GESTIÓN DEL PANEL DE ENCARGOS (FECHA TENTATIVA Y 1 O 2 PAGOS)
+      const panelEncargo = document.getElementById('panelOpcionesEncargo');
+      const resumenCuotas = document.getElementById('resumenCuotasEncargo');
+      const planPago = document.getElementById('planPagoEncargo') ? document.getElementById('planPagoEncargo').value : '2_pagos';
+
+      if (itemsEncargo.length > 0 && panelEncargo) {
+        panelEncargo.classList.remove('hidden');
+        const totalEncargoUSD = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+        
+        if (totalEncargoUSD > 0) {
+          if (planPago === '2_pagos') {
+            const abonoUSD = totalEncargoUSD * 0.5;
+            const saldoUSD = totalEncargoUSD - abonoUSD;
+            const abonoBS = (abonoUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            resumenCuotas.innerHTML = `
+              <div class="flex justify-between text-emerald-400 font-bold">
+                <span>1er Pago / Abono (50%):</span>
+                <span>$${abonoUSD.toFixed(2)} (${abonoBS} Bs.)</span>
+              </div>
+              <div class="flex justify-between text-zinc-400">
+                <span>2do Pago al recibir (50%):</span>
+                <span>$${saldoUSD.toFixed(2)}</span>
+              </div>
+            `;
+          } else {
+            const totalEncBS = (totalEncargoUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            resumenCuotas.innerHTML = `
+              <div class="flex justify-between text-emerald-400 font-bold">
+                <span>Pago Único Encargo (100%):</span>
+                <span>$${totalEncargoUSD.toFixed(2)} (${totalEncBS} Bs.)</span>
+              </div>
+            `;
+          }
+        } else {
+          resumenCuotas.innerHTML = `<p class="text-amber-300 text-center">Artículo externo: el monto del abono (50% o 100%) se calculará al cotizar.</p>`;
+        }
+      } else if (panelEncargo) {
+        panelEncargo.classList.add('hidden');
+      }
+
+      // Barra meta despacho
       const metaDespacho = 40.00;
       const porcentaje = Math.min((subtotalUSD / metaDespacho) * 100, 100);
       const restante = metaDespacho - subtotalUSD;
@@ -2025,9 +2116,7 @@
 
       if (barraBox) {
         if (subtotalUSD === 0) {
-          barraBox.innerHTML = `
-            <p class="text-[10px] text-zinc-400 text-center">Agrega productos para calcular beneficios de despacho.</p>
-          `;
+          barraBox.innerHTML = `<p class="text-[10px] text-zinc-400 text-center">Agrega productos para calcular beneficios de despacho.</p>`;
         } else if (restante > 0) {
           barraBox.innerHTML = `
             <div class="space-y-1.5">
@@ -2136,9 +2225,17 @@
       const itemsInmediatos = carrito.filter(i => i.modalidad === 'inmediata');
       const itemsEncargo = carrito.filter(i => i.modalidad === 'encargo');
 
+      const fechaTentativa = document.getElementById('fechaTentativaEncargo') ? document.getElementById('fechaTentativaEncargo').value : "";
+      const planPago = document.getElementById('planPagoEncargo') ? document.getElementById('planPagoEncargo').value : "2_pagos";
+      const textoPlanPago = planPago === '2_pagos' ? "2 Pagos (50% Abono / 50% Contra Entrega)" : "1 Pago Único (100%)";
+
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
       const totalUSD = subtotalUSD + costoEnvioAdicional;
       const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      const totalEncargoUSD = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+      const abonoInicialUSD = planPago === '2_pagos' ? (totalEncargoUSD * 0.5) : totalEncargoUSD;
+      const saldoPendienteUSD = totalEncargoUSD - abonoInicialUSD;
 
       const listaProdTexto = carrito.map(i => {
         const modTag = i.modalidad === 'encargo' ? '[ENCARGO]' : '[INMEDIATA]';
@@ -2155,9 +2252,9 @@
       });
       localStorage.setItem('maviko_pedidos_locales', JSON.stringify(historialLocalPedidos));
 
-      // 1. REGISTRO EN GOOGLE SHEETS (Separa venta confirmada y encargos si aplica)
+      // 1. REGISTRO EN GOOGLE SHEETS
       if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
-        if (itemsInmediatos.length > 0 || itemsEncargo.length > 0) {
+        if (itemsInmediatos.length > 0) {
           fetch(WEBHOOK_APPSCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -2175,7 +2272,7 @@
               tasaBCV: tasaBCV.toFixed(2),
               productos: listaProdTexto
             })
-          }).catch(err => console.warn("Error enviando registro a Sheets:", err));
+          }).catch(err => console.warn("Error enviando venta:", err));
         }
 
         if (itemsEncargo.length > 0) {
@@ -2189,13 +2286,17 @@
               cliente: cliente,
               telefono: telefono,
               producto: resumenEncargos,
-              detalles: `Enviado desde carrito unificado (${agencia})`
+              fechaTentativa: fechaTentativa || "Lo antes posible",
+              planPago: textoPlanPago,
+              totalEncargoUSD: totalEncargoUSD > 0 ? totalEncargoUSD.toFixed(2) : "Por cotizar",
+              abonoInicialUSD: abonoInicialUSD.toFixed(2),
+              saldoPendiente: saldoPendienteUSD.toFixed(2)
             })
-          }).catch(err => console.warn("Error registrando encargo en Sheets:", err));
+          }).catch(err => console.warn("Error registrando encargo:", err));
         }
       }
 
-      // 2. CONSTRUCCIÓN DE COMANDA ESTRUCTURADA EN WHATSAPP
+      // 2. COMANDA EN WHATSAPP
       let mensaje = `*¡Hola Maviko! Quiero gestionar la siguiente solicitud:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
       if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
@@ -2219,6 +2320,11 @@
           const precioStr = i.esExterno ? 'Por cotizar' : `$${(i.precioUSD * i.cantidad).toFixed(2)}`;
           mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - ${precioStr}\n`;
         });
+        if (fechaTentativa) mensaje += `📅 *Fecha Tentativa Deseada:* ${fechaTentativa}\n`;
+        mensaje += `💳 *Plan de Pago Encargo:* ${textoPlanPago}\n`;
+        if (totalEncargoUSD > 0 && planPago === '2_pagos') {
+          mensaje += `💵 *1er Abono (50%):* $${abonoInicialUSD.toFixed(2)} | *Saldo al recibir:* $${saldoPendienteUSD.toFixed(2)}\n`;
+        }
       }
 
       if (costoEnvioAdicional > 0) {
@@ -2227,7 +2333,7 @@
 
       mensaje += `\n💵 *Total Publicado USD:* $${totalUSD.toFixed(2)}`;
       mensaje += `\n🇻🇪 *Total Publicado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-      mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempos de entrega para formalizar.* ¡Muchas gracias!`;
+      mensaje += `⚠️ *Por favor confírmenme disponibilidad física, fecha exacta de entrega y datos para formalizar.* ¡Muchas gracias!`;
 
       carrito = [];
       guardarCarritoEnStorage();
