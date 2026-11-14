@@ -1,4 +1,4 @@
-const CACHE_NAME = 'maviko-cache-v1';
+const CACHE_NAME = 'maviko-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -9,7 +9,10 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Usa Promise.allSettled para que si un archivo tarda, no aborte toda la PWA
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map((url) => cache.add(url))
+      );
     })
   );
   self.skipWaiting();
@@ -31,12 +34,21 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Solo cachear peticiones GET internas, dejar que la API y Sheets pasen directo a red
-  if (event.request.method === 'GET' && event.request.url.startsWith(self.location.origin)) {
+  if (event.request.method !== 'GET') return;
+
+  // Estrategia Network-First: siempre busca la versión más reciente en internet
+  // y usa la caché solo si el cliente está sin conexión
+  if (event.request.url.startsWith(self.location.origin)) {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        return cachedResponse || fetch(event.request);
-      })
+      fetch(event.request)
+        .then((networkResponse) => {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
     );
   }
 });
