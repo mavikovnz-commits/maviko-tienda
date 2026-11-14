@@ -90,7 +90,7 @@
         </div>
         <span class="text-zinc-700 hidden md:inline">|</span>
         <button onclick="toggleModalRastreo(true)" class="text-emerald-400 hover:text-emerald-300 font-bold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
-          <i class="fa-solid fa-user-check"></i> <span id="labelCuentaHeader">Mis Pedidos / Puntos</span>
+          <i class="fa-solid fa-user-check"></i> <span>Mis Pedidos / Puntos</span>
         </button>
         <span class="text-zinc-700">|</span>
         <button onclick="toggleEmpresaInfo()" class="text-orange-400 hover:text-orange-300 font-semibold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
@@ -102,36 +102,37 @@
 
   <!-- CABECERA -->
   <header class="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <img src="./logo.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/ymDcp5tf/logo.jpg';" alt="Logo Maviko" class="w-12 h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
+      <div class="flex items-center gap-2.5">
+        <img src="./logo.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/ymDcp5tf/logo.jpg';" alt="Logo Maviko" class="w-11 h-11 sm:w-12 sm:h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
-            <span class="hidden sm:inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
+            <span class="hidden md:inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
               <i class="fa-solid fa-shield-check"></i> 100% Originales
             </span>
           </div>
-          <p class="text-[11px] text-orange-400 font-medium">Grandes cosas en camino</p>
+          <p class="text-[10px] sm:text-[11px] text-orange-400 font-medium">Grandes cosas en camino</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <!-- BOTÓN INSTALAR APP (SOLO SE ACTIVA CUANDO EL INSTALADOR AUTOMÁTICO ESTÁ DISPONIBLE) -->
-        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer">
+      <div class="flex items-center gap-1.5 sm:gap-2.5">
+        <!-- BOTÓN INSTALAR APP SIEMPRE VISIBLE -->
+        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="flex bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer" title="Descargar Aplicación">
           <i class="fa-solid fa-mobile-screen-button text-sm"></i>
           <span class="hidden sm:inline">Instalar</span> App
         </button>
 
-        <!-- BOTÓN ENCARGOS / A PEDIDO -->
-        <button onclick="toggleModalEncargo(true)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95" title="Solicitar mercancía por encargo">
+        <!-- BOTÓN ENCARGOS / LISTA A PEDIDO -->
+        <button onclick="toggleEncargoDrawer(true)" class="relative bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95" title="Armar lista de encargos">
           <i class="fa-solid fa-bag-shopping text-orange-400"></i>
           <span class="hidden sm:inline">Encargar</span>
+          <span id="encargoCount" class="bg-orange-500/20 text-orange-400 border border-orange-500/40 text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
         </button>
 
         <!-- BOTÓN CARRITO -->
-        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
-          <i class="fa-solid fa-basket-shopping text-base"></i>
+        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
+          <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
           <span class="hidden sm:inline font-bold text-xs">Carrito</span>
           <span id="cartCount" class="bg-black text-orange-400 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border border-orange-500">0</span>
         </button>
@@ -213,13 +214,13 @@
           <h2 class="text-lg font-bold mb-1 flex items-center gap-2 text-orange-400">
             <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Pedidos
           </h2>
-          <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden, consulta stock o encarga mercancía específica:</p>
+          <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden, consulta stock o arma tu lista de mercancía por encargo:</p>
           <div class="flex flex-wrap gap-2">
             <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
               <i class="fa-brands fa-whatsapp text-base"></i> +58 412-7701750
             </a>
-            <button onclick="toggleModalEncargo(true)" class="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer active:scale-95">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Pedir por Encargo
+            <button onclick="toggleEncargoDrawer(true)" class="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer active:scale-95">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Lista de Encargos
             </button>
           </div>
         </div>
@@ -320,7 +321,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN DE SUSCRIPCIÓN VIP (ALERTAS DE NOVEDADES Y OFERTAS) -->
+    <!-- SECCIÓN DE SUSCRIPCIÓN VIP -->
     <section class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black border border-zinc-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
       <div class="max-w-3xl mx-auto text-center space-y-3">
         <span class="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
@@ -350,44 +351,55 @@
 
   </main>
 
-  <!-- MODAL: ENCARGOS / MERCANCÍA A PEDIDO -->
-  <div id="modalEncargo" onclick="if(event.target.id==='modalEncargo') toggleModalEncargo(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-6 relative space-y-4 shadow-2xl">
-      <button onclick="toggleModalEncargo(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 cursor-pointer">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
+  <!-- OVERLAY Y DRAWER LATERAL DE ENCARGOS (FUNCIONA IGUAL QUE EL CARRITO) -->
+  <div id="encargoOverlay" onclick="toggleEncargoDrawer(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
 
-      <div class="space-y-1">
-        <span class="inline-flex items-center gap-1 bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-orange-500/30">
-          <i class="fa-solid fa-plane-arrival"></i> Servicio de Encargos
-        </span>
-        <h3 class="text-lg font-bold text-white">¿Buscas un artículo específico?</h3>
-        <p class="text-xs text-zinc-400">Indícanos qué producto deseas. Lo registramos en nuestro sistema y te cotizamos disponibilidad por WhatsApp.</p>
+  <div id="encargoDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+    <!-- Cabecera Drawer Encargo -->
+    <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-black/40">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-orange-400 text-lg"></i>
+        <div>
+          <h3 class="font-bold text-white text-sm">Lista de Encargos a Pedido</h3>
+          <p class="text-[10px] text-zinc-400">Agrega varios artículos para cotizar juntos</p>
+        </div>
       </div>
-
-      <form onsubmit="procesarEncargoProducto(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block text-zinc-400 font-semibold mb-1">Tu Nombre y Apellido *</label>
-          <input type="text" id="encargoNombre" required placeholder="Ej. María Pérez" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500">
-        </div>
-        <div>
-          <label class="block text-zinc-400 font-semibold mb-1">Tu Teléfono WhatsApp *</label>
-          <input type="tel" id="encargoTelefono" required placeholder="Ej. 04121234567" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500">
-        </div>
-        <div>
-          <label class="block text-zinc-400 font-semibold mb-1">Producto / Marca deseada *</label>
-          <input type="text" id="encargoProducto" required placeholder="Ej. Zapatos Nike Air Force 1 Blancos o Serum La Roche-Posay" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500">
-        </div>
-        <div>
-          <label class="block text-zinc-400 font-semibold mb-1">Talla, Color o Detalles adicionales</label>
-          <textarea id="encargoDetalles" rows="2" placeholder="Ej. Talla 38 EUR / 7.5 US, color blanco..." class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500"></textarea>
-        </div>
-
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
-          <i class="fa-brands fa-whatsapp text-base"></i>
-          <span>Guardar y Cotizar por WhatsApp</span>
+      <div class="flex items-center gap-3">
+        <button onclick="vaciarEncargos()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Lista">
+          <i class="fa-regular fa-trash-can"></i> Vaciar
         </button>
-      </form>
+        <button onclick="toggleEncargoDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario rápido para añadir ítems a la lista de encargo -->
+    <div class="p-3.5 bg-zinc-950 border-b border-zinc-800 space-y-2 text-xs">
+      <p class="text-[11px] font-bold text-orange-400 flex items-center gap-1.5">
+        <i class="fa-solid fa-plus-circle"></i> Añadir artículo a tu lista:
+      </p>
+      <input type="text" id="encargoItemNombre" placeholder="Nombre del producto o marca (ej. Nike Air Force 1)" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+      <div class="grid grid-cols-3 gap-2">
+        <input type="text" id="encargoItemDetalle" placeholder="Talla / Color" class="col-span-2 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        <input type="number" id="encargoItemCant" value="1" min="1" max="50" placeholder="Cant." class="px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white text-center focus:outline-none focus:border-orange-500">
+      </div>
+      <button type="button" onclick="agregarItemAListaEncargo()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 font-bold py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-plus"></i> Agregar a la lista
+      </button>
+    </div>
+
+    <!-- Lista de artículos agregados al encargo -->
+    <div id="encargoItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
+
+    <!-- Datos del cliente y envío final de lista de encargos -->
+    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-2.5 text-xs">
+      <input type="text" id="encargoClienteNombre" placeholder="Tu Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+      <input type="tel" id="encargoClienteTel" placeholder="Tu WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+      <button onclick="enviarListaEncargosWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
+        <i class="fa-brands fa-whatsapp text-base"></i>
+        <span>Cotizar Lista por WhatsApp</span>
+      </button>
     </div>
   </div>
 
@@ -432,31 +444,18 @@
     </div>
   </div>
 
-  <!-- MODAL DE INSTRUCCIONES PARA IPHONE (SOLO SE ABRE SI EL USUARIO LO TOCA EN EL FOOTER) -->
-  <div id="modalInstalarIOS" onclick="if(event.target.id==='modalInstalarIOS') toggleModalIOS(false)" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+  <!-- MODAL DE AYUDA PARA INSTALACIÓN MANUAL (SOLO SE ABRE SI EL NAVEGADOR NO SOPORTA INSTALACIÓN DIRECTA) -->
+  <div id="modalInstalarManual" onclick="if(event.target.id==='modalInstalarManual') toggleModalManual(false)" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
-      <button onclick="toggleModalIOS(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 cursor-pointer">
+      <button onclick="toggleModalManual(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 cursor-pointer">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <div class="w-12 h-12 bg-orange-500/20 text-orange-400 rounded-2xl flex items-center justify-center mx-auto text-xl">
-        <i class="fa-brands fa-apple"></i>
+        <i class="fa-solid fa-mobile-screen-button"></i>
       </div>
-      <h3 class="font-bold text-white text-base">Instalar Maviko en iPhone</h3>
-      <div class="text-xs text-zinc-300 space-y-3 text-left bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-        <p class="flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-          <span>Abre esta tienda en <strong>Safari</strong>.</span>
-        </p>
-        <p class="flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
-          <span>Toca el botón <strong>Compartir</strong> <i class="fa-solid fa-arrow-up-from-bracket text-orange-400"></i> en la barra inferior.</span>
-        </p>
-        <p class="flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-orange-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
-          <span>Selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="fa-regular fa-square-plus text-orange-400"></i>.</span>
-        </p>
-      </div>
-      <button onclick="toggleModalIOS(false)" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-2.5 rounded-xl font-bold text-xs cursor-pointer transition-colors">
+      <h3 class="font-bold text-white text-base">Instalar App Maviko</h3>
+      <div id="textoInstruccionManual" class="text-xs text-zinc-300 space-y-3 text-left bg-zinc-950 p-4 rounded-xl border border-zinc-800"></div>
+      <button onclick="toggleModalManual(false)" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-2.5 rounded-xl font-bold text-xs cursor-pointer transition-colors">
         Entendido
       </button>
     </div>
@@ -485,7 +484,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE CÓDIGO QR PARA PAGO MÓVIL (IMAGEN OFICIAL MAVIKO) -->
+  <!-- MODAL DE CÓDIGO QR PARA PAGO MÓVIL -->
   <div id="modalQR" onclick="cerrarQRPorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl relative">
       <button onclick="toggleModalQR()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1">
@@ -511,13 +510,11 @@
   <div id="modalDetalle" onclick="cerrarDetallePorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full p-6 relative space-y-6 shadow-2xl my-8">
       
-      <!-- BOTÓN DE CIERRE FLOTANTE SIEMPRE VISIBLE -->
       <button onclick="cerrarDetalle()" class="fixed top-4 right-4 sm:absolute sm:top-4 sm:right-4 z-50 bg-zinc-800/90 hover:bg-zinc-700 active:scale-95 text-white w-10 h-10 rounded-full flex items-center justify-center border border-zinc-700 shadow-xl cursor-pointer" aria-label="Cerrar detalle">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Visualizador Multimedia con carrusel a 3.2s -->
         <div class="space-y-3" onmouseenter="pausarAutoSlider()" onmouseleave="reanudarAutoSlider()">
           <div 
             id="contenedorVisor" 
@@ -536,7 +533,6 @@
           <div id="galeriaMiniaturas" class="flex gap-2 overflow-x-auto pb-1"></div>
         </div>
 
-        <!-- Información y Selección -->
         <div class="flex flex-col justify-between space-y-4">
           <div class="space-y-2">
             <div class="flex items-center gap-2">
@@ -554,13 +550,11 @@
               <span id="precioModalBS" class="text-xs text-zinc-400"></span>
             </div>
 
-            <!-- GATILLO DE URGENCIA -->
             <div class="flex items-center gap-2 py-1 text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
               <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas consultando este artículo</span>
             </div>
 
-            <!-- Selector de Tallas / Opciones -->
             <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
               <div class="flex justify-between items-center">
                 <span class="text-xs font-bold text-zinc-300">Selecciona tu talla u opción:</span>
@@ -569,7 +563,6 @@
               <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
             </div>
 
-            <!-- Pestañas Descripción / Ficha Técnica -->
             <div class="pt-4 border-t border-zinc-800">
               <div class="flex gap-4 border-b border-zinc-800 text-xs font-bold mb-2">
                 <button id="tabDescBtn" onclick="cambiarTab('desc')" class="tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors">Descripción</button>
@@ -590,13 +583,11 @@
               <span>Agregar al Carrito</span>
             </button>
 
-            <!-- CONSULTA DIRECTA POR WHATSAPP -->
             <button id="btnPreguntarWhatsApp" class="w-full bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-xs">
               <i class="fa-brands fa-whatsapp text-sm"></i>
               <span>Consultar por WhatsApp ahora</span>
             </button>
 
-            <!-- MICRO-GARANTÍAS EN MODAL -->
             <div class="grid grid-cols-3 gap-1 pt-1 text-center text-[9px] text-zinc-400 border-t border-zinc-800/60">
               <div><i class="fa-solid fa-camera text-orange-400"></i> Fotos Reales</div>
               <div><i class="fa-solid fa-shield-halved text-emerald-400"></i> Cero Réplicas</div>
@@ -627,13 +618,9 @@
       </div>
     </div>
 
-    <!-- BARRA DINÁMICA DE META DE DESPACHO -->
     <div id="barraMetaEnvio" class="p-3 bg-zinc-950 border-b border-zinc-800"></div>
-
-    <!-- LISTA DE ARTÍCULOS EN EL CARRITO -->
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
 
-    <!-- FORMULARIO DE CHECKOUT -->
     <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[55vh]">
       <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2.5 flex items-center gap-2 text-[11px] text-amber-200">
         <i class="fa-solid fa-circle-exclamation text-amber-400 shrink-0"></i>
@@ -693,7 +680,6 @@
         <span>Confirmar Disponibilidad por WhatsApp</span>
       </button>
 
-      <!-- MICRO-GARANTÍAS EN CARRITO -->
       <div class="flex justify-around pt-1 text-[10px] text-zinc-500 text-center">
         <span><i class="fa-solid fa-lock text-emerald-400"></i> Compra Directa</span>
         <span><i class="fa-solid fa-truck-ramp-box text-orange-400"></i> Despacho en 24h</span>
@@ -727,7 +713,7 @@
     </div>
   </div>
 
-  <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP CON MENSAJE OPTIMIZADO -->
+  <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
   <div class="fixed bottom-6 left-6 z-40 group flex items-center">
     <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
       <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping pointer-events-none"></span>
@@ -739,19 +725,14 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-zinc-900 border-t border-zinc-800 py-6 text-center text-xs text-zinc-400 space-y-2 mt-auto">
-    <div class="max-w-6xl mx-auto px-4 space-y-1.5">
+  <footer class="bg-zinc-900 border-t border-zinc-800 py-6 text-center text-xs text-zinc-400 space-y-1.5 mt-auto">
+    <div class="max-w-6xl mx-auto px-4">
       <p class="font-bold text-white flex items-center justify-center gap-1.5">
         <span>MAVIKO — Grandes cosas en camino</span>
         <span class="text-emerald-400 text-[11px]">(Productos 100% Originales)</span>
       </p>
       <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca con cobro en destino.</p>
       <p class="text-zinc-500">Atención Directa: <strong>+58 412-7701750</strong> | Pago Móvil: <strong>0102 - V-20.907.946 - 04127701750</strong></p>
-      <div class="pt-2">
-        <button onclick="toggleModalIOS(true)" class="text-zinc-400 hover:text-orange-400 underline text-[11px] cursor-pointer transition-colors">
-          <i class="fa-brands fa-apple"></i> ¿Usas iPhone? Ver cómo agregar la App a tu pantalla
-        </button>
-      </div>
     </div>
   </footer>
 
@@ -766,6 +747,7 @@
     let tasaBCV = 44.50;
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
+    let listaEncargos = JSON.parse(localStorage.getItem('maviko_encargos')) || [];
     let favoritos = JSON.parse(localStorage.getItem('maviko_favoritos')) || [];
     let historialLocalPedidos = JSON.parse(localStorage.getItem('maviko_pedidos_locales')) || [];
     let categoriaActual = 'todas';
@@ -786,6 +768,165 @@
       telefono: "04127701750"
     };
 
+    // --- GESTIÓN DE LISTA DE ENCARGOS (TIPO CARRITO) ---
+    function toggleEncargoDrawer(forceOpen = false) {
+      const drawer = document.getElementById('encargoDrawer');
+      const overlay = document.getElementById('encargoOverlay');
+
+      if (drawer.classList.contains('translate-x-full') || forceOpen) {
+        if (navigator.vibrate) navigator.vibrate(15);
+        const savedNombre = localStorage.getItem('maviko_usuario_nombre');
+        const savedTel = localStorage.getItem('maviko_usuario_tel');
+        if (savedNombre) document.getElementById('encargoClienteNombre').value = savedNombre;
+        if (savedTel) document.getElementById('encargoClienteTel').value = savedTel;
+
+        renderListaEncargosUI();
+        drawer.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+      } else {
+        drawer.classList.add('translate-x-full');
+        overlay.classList.add('opacity-0');
+        document.body.classList.remove('overflow-hidden');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+      }
+    }
+
+    function agregarItemAListaEncargo() {
+      const nombreInput = document.getElementById('encargoItemNombre');
+      const detalleInput = document.getElementById('encargoItemDetalle');
+      const cantInput = document.getElementById('encargoItemCant');
+
+      const nombre = nombreInput.value.trim();
+      const detalle = detalleInput.value.trim();
+      const cantidad = parseInt(cantInput.value) || 1;
+
+      if (!nombre) {
+        alert("Escribe el nombre o marca del artículo que deseas encargar.");
+        nombreInput.focus();
+        return;
+      }
+
+      if (navigator.vibrate) navigator.vibrate(20);
+      listaEncargos.push({
+        id: Date.now(),
+        nombre: nombre,
+        detalle: detalle || "Estándar",
+        cantidad: cantidad
+      });
+
+      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
+      nombreInput.value = '';
+      detalleInput.value = '';
+      cantInput.value = '1';
+      renderListaEncargosUI();
+    }
+
+    function eliminarItemEncargo(id) {
+      if (navigator.vibrate) navigator.vibrate(15);
+      listaEncargos = listaEncargos.filter(item => item.id !== id);
+      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
+      renderListaEncargosUI();
+    }
+
+    function vaciarEncargos() {
+      if (listaEncargos.length === 0) return;
+      if (confirm("¿Deseas vaciar tu lista de encargos?")) {
+        listaEncargos = [];
+        localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
+        renderListaEncargosUI();
+      }
+    }
+
+    function renderListaEncargosUI() {
+      const countEl = document.getElementById('encargoCount');
+      const totalItems = listaEncargos.reduce((acc, item) => acc + item.cantidad, 0);
+      if (countEl) countEl.innerText = totalItems;
+
+      const listContainer = document.getElementById('encargoItemsList');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      if (listaEncargos.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-12 text-zinc-500 space-y-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-3xl text-zinc-700"></i>
+            <p class="text-xs font-medium">Tu lista de encargos está vacía.</p>
+            <p class="text-[11px] text-zinc-600">Añade arriba los artículos que buscas.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listaEncargos.forEach(item => {
+        const el = document.createElement('div');
+        el.className = "py-2.5 flex items-center justify-between gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/80";
+        el.innerHTML = `
+          <div class="min-w-0">
+            <h4 class="font-bold text-xs text-white truncate">${item.nombre}</h4>
+            <p class="text-[11px] text-orange-400">Detalle: ${item.detalle} · <strong class="text-white">Cant: ${item.cantidad}</strong></p>
+          </div>
+          <button onclick="eliminarItemEncargo(${item.id})" class="text-zinc-500 hover:text-rose-400 p-1.5 cursor-pointer transition-colors" title="Quitar">
+            <i class="fa-regular fa-trash-can text-sm"></i>
+          </button>
+        `;
+        listContainer.appendChild(el);
+      });
+    }
+
+    function enviarListaEncargosWhatsApp() {
+      if (listaEncargos.length === 0) {
+        alert("Agrega al menos un artículo a tu lista de encargos arriba.");
+        document.getElementById('encargoItemNombre').focus();
+        return;
+      }
+
+      const cliente = document.getElementById('encargoClienteNombre').value.trim();
+      const telefono = document.getElementById('encargoClienteTel').value.trim();
+
+      if (!cliente || !telefono) {
+        alert("Por favor completa tu Nombre y Teléfono WhatsApp.");
+        return;
+      }
+
+      localStorage.setItem('maviko_usuario_nombre', cliente);
+      localStorage.setItem('maviko_usuario_tel', telefono);
+
+      const resumenTexto = listaEncargos.map(i => `${i.nombre} (${i.detalle}) [x${i.cantidad}]`).join(' | ');
+
+      if (WEBHOOK_APPSCRIPT_URL) {
+        fetch(WEBHOOK_APPSCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: "encargo_pedido",
+            cliente: cliente,
+            telefono: telefono,
+            producto: resumenTexto,
+            detalles: `Total artículos: ${listaEncargos.length}`
+          })
+        }).catch(err => console.warn("Error guardando encargo:", err));
+      }
+
+      let msg = `*¡Hola Maviko! Quiero cotizar esta LISTA DE ENCARGOS:*\n\n`;
+      msg += `👤 *Cliente:* ${cliente}\n`;
+      msg += `📱 *Teléfono:* ${telefono}\n\n`;
+      msg += `🛍️ *Artículos solicitados:*\n`;
+      listaEncargos.forEach(i => {
+        msg += `• ${i.nombre} (${i.detalle}) [x${i.cantidad}]\n`;
+      });
+      msg += `\nPor favor indíquenme precios estimados y tiempo de entrega. ¡Muchas gracias!`;
+
+      listaEncargos = [];
+      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
+      renderListaEncargosUI();
+      toggleEncargoDrawer(false);
+
+      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
     // --- GESTIÓN DE FAVORITOS ---
     function toggleFavorito(e, id) {
       e.stopPropagation();
@@ -802,62 +943,6 @@
       localStorage.setItem('maviko_favoritos', JSON.stringify(favoritos));
       generarBotonesCategoriasDinamicos();
       renderProductos(obtenerProductosFiltrados());
-    }
-
-    // --- MODALES DE ENCARGO Y RASTREO ---
-    function toggleModalEncargo(abrir = true) {
-      const modal = document.getElementById('modalEncargo');
-      if (!modal) return;
-      if (abrir) {
-        // Pre-llenar datos si el usuario ya los guardó
-        const savedNombre = localStorage.getItem('maviko_usuario_nombre');
-        const savedTel = localStorage.getItem('maviko_usuario_tel');
-        if (savedNombre) document.getElementById('encargoNombre').value = savedNombre;
-        if (savedTel) document.getElementById('encargoTelefono').value = savedTel;
-        modal.classList.remove('hidden');
-      } else {
-        modal.classList.add('hidden');
-      }
-    }
-
-    async function procesarEncargoProducto(e) {
-      e.preventDefault();
-      const cliente = document.getElementById('encargoNombre').value.trim();
-      const telefono = document.getElementById('encargoTelefono').value.trim();
-      const producto = document.getElementById('encargoProducto').value.trim();
-      const detalles = document.getElementById('encargoDetalles').value.trim();
-
-      localStorage.setItem('maviko_usuario_nombre', cliente);
-      localStorage.setItem('maviko_usuario_tel', telefono);
-
-      // Registrar en Google Sheets
-      if (WEBHOOK_APPSCRIPT_URL) {
-        fetch(WEBHOOK_APPSCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: "encargo_pedido",
-            cliente: cliente,
-            telefono: telefono,
-            producto: producto,
-            detalles: detalles || "Sin detalles adicionales"
-          })
-        }).catch(err => console.warn("Error registrando encargo:", err));
-      }
-
-      // Abrir WhatsApp con el mensaje estructurado
-      let msg = `*¡Hola Maviko! Quiero cotizar un ENCARGO especial:*\n\n`;
-      msg += `👤 *Cliente:* ${cliente}\n`;
-      msg += `📱 *Teléfono:* ${telefono}\n`;
-      msg += `🛍️ *Artículo solicitado:* ${producto}\n`;
-      if (detalles) msg += `📝 *Talla / Color / Detalles:* ${detalles}\n`;
-      msg += `\nPor favor indíquenme precio estimado y tiempo de entrega. ¡Gracias!`;
-
-      toggleModalEncargo(false);
-      document.getElementById('encargoProducto').value = '';
-      document.getElementById('encargoDetalles').value = '';
-      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     // --- SUSCRIPCIÓN VIP ---
@@ -956,7 +1041,6 @@
           mostrarPedidosLocalesFallback(tel, contenedor, boxPuntos);
         }
       } catch (e) {
-        // Respaldo con historial guardado en el dispositivo si el script aún no tiene doGet desplegado
         mostrarPedidosLocalesFallback(tel, contenedor, boxPuntos);
       }
     }
@@ -986,11 +1070,28 @@
       }
     }
 
-    function toggleModalIOS(abrir = true) {
-      const modal = document.getElementById('modalInstalarIOS');
+    function toggleModalManual(abrir = true) {
+      const modal = document.getElementById('modalInstalarManual');
       if (!modal) return;
-      if (abrir) modal.classList.remove('hidden');
-      else modal.classList.add('hidden');
+      if (abrir) {
+        const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const boxTexto = document.getElementById('textoInstruccionManual');
+        if (esIOS) {
+          boxTexto.innerHTML = `
+            <p>1. Abre esta página en <strong>Safari</strong>.</p>
+            <p>2. Toca el botón <strong>Compartir</strong> <i class="fa-solid fa-arrow-up-from-bracket text-orange-400"></i> abajo.</p>
+            <p>3. Selecciona <strong>"Agregar a pantalla de inicio"</strong>.</p>
+          `;
+        } else {
+          boxTexto.innerHTML = `
+            <p>1. Toca los <strong>3 puntos (⋮)</strong> en la esquina superior de Chrome.</p>
+            <p>2. Selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>.</p>
+          `;
+        }
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
     }
 
     function guardarCarritoEnStorage() {
@@ -1427,23 +1528,27 @@
       }
     }
 
-    // --- PROGRAMACIÓN PWA VERIFICADA (SIN VENTANAS INVASIVAS NI MENSAJES DE TEXTO) ---
+    // --- PROGRAMACIÓN DE DESCARGA DE APP ---
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       eventoInstalacionDirecta = e;
-      const btn = document.getElementById('btnInstalarApp');
-      if (btn) btn.classList.remove('hidden');
     });
 
     async function accionInstalarApp() {
-      if (!eventoInstalacionDirecta) return;
-      eventoInstalacionDirecta.prompt();
-      const { outcome } = await eventoInstalacionDirecta.userChoice;
-      if (outcome === 'accepted') {
-        const btn = document.getElementById('btnInstalarApp');
-        if (btn) btn.classList.add('hidden');
+      // Si el instalador directo nativo está listo (Android/Chrome), lo lanza al instante sin mensajes
+      if (eventoInstalacionDirecta) {
+        eventoInstalacionDirecta.prompt();
+        const { outcome } = await eventoInstalacionDirecta.userChoice;
+        if (outcome === 'accepted') {
+          const btn = document.getElementById('btnInstalarApp');
+          if (btn) btn.classList.add('hidden');
+        }
+        eventoInstalacionDirecta = null;
+        return;
       }
-      eventoInstalacionDirecta = null;
+
+      // Si estamos en iPhone o el navegador bloqueó el evento automático, muestra guía rápida
+      toggleModalManual(true);
     }
 
     window.addEventListener('appinstalled', () => {
@@ -1459,8 +1564,15 @@
       mostrarDatosPago();
       iniciarValidacionSocial();
       comprobarCarritoPendiente();
+      renderListaEncargosUI();
 
-      // Cargar datos guardados del cliente en el checkout si existen
+      // Si ya está abierta como app instalada en pantalla completa, ocultar el botón de instalar
+      const esAppInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (esAppInstalada) {
+        const btn = document.getElementById('btnInstalarApp');
+        if (btn) btn.classList.add('hidden');
+      }
+
       const savedNombre = localStorage.getItem('maviko_usuario_nombre');
       const savedTel = localStorage.getItem('maviko_usuario_tel');
       if (savedNombre && document.getElementById('nombreCliente')) document.getElementById('nombreCliente').value = savedNombre;
@@ -1470,15 +1582,14 @@
         if (e.key === "Escape") {
           cerrarDetalle();
           toggleCarrito(false);
+          toggleEncargoDrawer(false);
           document.getElementById('modalQR').classList.add('hidden');
-          toggleModalEncargo(false);
           toggleModalRastreo(false);
-          toggleModalIOS(false);
+          toggleModalManual(false);
         }
       });
     });
 
-    // INTERCEPTAR EL BOTÓN FÍSICO O GESTO "ATRÁS" DEL TELÉFONO
     window.addEventListener('popstate', () => {
       const modal = document.getElementById('modalDetalle');
       if (modal && !modal.classList.contains('hidden')) {
@@ -1529,7 +1640,6 @@
             <div class="h-48 rounded-xl bg-zinc-950 overflow-hidden mb-3 relative cursor-pointer flex items-center justify-center p-2" onclick="abrirDetalleProducto('${p.id}')">
               <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
               
-              <!-- BOTÓN FAVORITO CORAZÓN -->
               <button onclick="toggleFavorito(event, '${p.id}')" class="absolute top-2 left-2 z-10 w-8 h-8 rounded-full bg-black/75 hover:bg-black border border-zinc-800 flex items-center justify-center transition-transform active:scale-90 cursor-pointer" title="Agregar a favoritos">
                 <i class="${esFav ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart text-zinc-400 hover:text-white'} text-xs"></i>
               </button>
@@ -2107,7 +2217,6 @@
         return `${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}`;
       }).join(' | ');
 
-      // Guardar respaldo local para consulta instantánea de perfil
       historialLocalPedidos.push({
         fecha: new Date().toLocaleDateString('es-VE'),
         telefono: telefono,
@@ -2116,7 +2225,6 @@
       });
       localStorage.setItem('maviko_pedidos_locales', JSON.stringify(historialLocalPedidos));
 
-      // 1. REGISTRO AUTOMÁTICO DE VENTA EN GOOGLE SHEETS
       if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
         fetch(WEBHOOK_APPSCRIPT_URL, {
           method: 'POST',
@@ -2138,7 +2246,6 @@
         }).catch(err => console.warn("Error enviando registro a Sheets:", err));
       }
 
-      // 2. CONSTRUCCIÓN DE LA COMANDA EN WHATSAPP
       let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
       if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
