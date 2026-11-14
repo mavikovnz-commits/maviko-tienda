@@ -1,23 +1,24 @@
 {
   "name": "Maviko | Tienda Oficial",
   "short_name": "Maviko",
-  "start_url": "./index.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#ea580c",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./apple-touch-icon.png",
+      "src": "./logo.jpg",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/jpeg",
+      "purpose": "any"
     },
     {
-      "src": "./apple-touch-icon.png",
+      "src": "./logo.jpg",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/jpeg",
+      "purpose": "any"
     }
   ]
 }
