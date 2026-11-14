@@ -1,40 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- METADATOS DE VISTA PREVIA (WHATSAPP, INSTAGRAM, FACEBOOK) -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Maviko | Tienda Oficial">
-  <meta property="og:description" content="Calzado, bolsos, skincare y accesorios 100% originales con envíos a toda Venezuela.">
-  <meta property="og:image" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
-  <meta property="og:image:secure_url" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="600">
-  <meta property="og:image:height" content="600">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maviko | Tienda Oficial</title>
 
-  <!-- VISTA PREVIA PARA TWITTER / X -->
+  <!-- VISTA PREVIA PARA REDES / WHATSAPP / INSTAGRAM -->
+  <meta property="og:title" content="Maviko | Tienda Oficial">
+  <meta property="og:description" content="Calzado, bolsos, skincare y accesorios 100% originales en Venezuela.">
+  <meta property="og:image" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Maviko | Tienda Oficial">
   <meta name="twitter:description" content="Calzado, bolsos, skincare y accesorios 100% originales.">
   <meta name="twitter:image" content="https://i.ibb.co/ymDcp5tf/logo.jpg">
 
-  <!-- ÍCONO EN LA PESTAÑA DEL NAVEGADOR -->
-  <link rel="icon" type="image/jpeg" href="./logo.jpg">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maviko | Tienda Oficial</title>
-
-  <!-- SOPORTE PWA (APP MÓVIL) -->
+  <!-- ÍCONO Y SOPORTE PWA (APP MÓVIL) -->
+  <link rel="icon" type="image/png" href="./logo.png">
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#ea580c">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Maviko">
-  <link rel="apple-touch-icon" href="./logo.jpg">
+  <link rel="apple-touch-icon" href="./logo.png">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -58,9 +49,7 @@
       display: inline-flex;
       animation: marquee 25s linear infinite;
     }
-    .animate-marquee:hover {
-      animation-play-state: paused;
-    }
+    .animate-marquee:hover { animation-play-state: paused; }
 
     @keyframes shimmer {
       0% { background-position: -200% 0; }
@@ -75,83 +64,79 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-500 selection:text-white relative">
 
-  <!-- BARRA SUPERIOR: TASA BCV, RASTREO Y SOBRE NOSOTROS -->
+  <!-- BARRA SUPERIOR: TASA BCV, PUNTOS Y NOSOTROS -->
   <div class="bg-black text-white text-xs py-2 px-4 border-b border-zinc-800">
-    <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
         <span class="bg-emerald-500 w-2 h-2 rounded-full inline-block animate-pulse"></span>
         <span>Tasa BCV: <strong><span id="displayTasa">Cargando...</span> Bs/USD</strong></span>
       </div>
       <div class="flex items-center gap-3 text-xs">
-        <div class="hidden md:flex items-center gap-1.5 text-zinc-400 text-[11px]" title="Hora en que el BCV emite la tasa oficial para el siguiente día hábil">
+        <div class="hidden md:flex items-center gap-1.5 text-zinc-400 text-[11px]" title="Hora habitual en la que el BCV emite la tasa oficial">
           <i class="fa-regular fa-clock text-orange-400"></i>
           <span>Cierre 17:00:</span>
           <span id="timerBCV" class="font-mono text-zinc-200 font-bold">--:--:--</span>
         </div>
-        <span class="text-zinc-700 hidden md:inline">|</span>
-        <button onclick="toggleModalRastreo(true)" class="text-emerald-400 hover:text-emerald-300 font-bold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
-          <i class="fa-solid fa-user-check"></i> <span>Mis Pedidos / Puntos</span>
+        <span class="text-zinc-600 hidden md:inline">|</span>
+        <button onclick="toggleModalPedidos(true)" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
+          <i class="fa-solid fa-gift"></i> Mis Puntos y Cupones
         </button>
-        <span class="text-zinc-700">|</span>
+        <span class="text-zinc-600">|</span>
         <button onclick="toggleEmpresaInfo()" class="text-orange-400 hover:text-orange-300 font-semibold cursor-pointer flex items-center gap-1 text-[11px] transition-colors">
-          <i class="fa-solid fa-building-columns"></i> <span class="hidden sm:inline">Sobre</span> Nosotros
+          <i class="fa-solid fa-building-columns"></i> Nosotros
         </button>
       </div>
     </div>
   </div>
 
-  <!-- CABECERA -->
+  <!-- CABECERA CON LOGO, INSTALAR APP DIRECTO Y CARRITO -->
   <header class="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
-      <div class="flex items-center gap-2.5">
-        <img src="./logo.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/ymDcp5tf/logo.jpg';" alt="Logo Maviko" class="w-11 h-11 sm:w-12 sm:h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img src="./logo.png" onerror="this.onerror=null; this.src='./logo.jpg';" alt="Logo Maviko" class="w-12 h-12 object-cover rounded-xl border border-orange-500/30 shadow-md">
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
-            <span class="hidden md:inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <h1 class="text-xl font-extrabold tracking-wider text-white uppercase">MAVIKO</h1>
+            <span class="hidden sm:inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
               <i class="fa-solid fa-shield-check"></i> 100% Originales
             </span>
           </div>
-          <p class="text-[10px] sm:text-[11px] text-orange-400 font-medium">Grandes cosas en camino</p>
+          <p class="text-[11px] text-orange-400 font-medium">Grandes cosas en camino</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 sm:gap-2.5">
-        <!-- BOTÓN INSTALAR APP DIRECTO (SIN MENSAJES NI VENTANAS, CON ESTADO TIPO PLAY STORE) -->
-        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer">
+      <div class="flex items-center gap-2.5">
+        <!-- BOTÓN INSTALAR APP (SOLO APARECE CUANDO ANDROID HABILITA DESCARGA AUTOMÁTICA) -->
+        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer">
           <i id="iconoInstalarApp" class="fa-solid fa-download text-xs"></i>
           <span id="textoInstalarApp">Instalar</span>
-        <!-- BOTÓN INSTALAR APP ESTILO PLAY STORE -->
-        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer">
-          <i id="iconoInstalarApp" class="fa-solid fa-mobile-screen-button text-xs"></i>
-          <span id="textoInstalarApp">Instalar App</span>
         </button>
 
-        <!-- BOTÓN CARRITO UNIFICADO -->
-        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-3.5 sm:px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
-          <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
-          <span class="hidden sm:inline font-bold text-xs">Carrito / Encargos</span>
+        <!-- BOTÓN CARRITO / ENCARGOS -->
+        <button onclick="vibrar(); toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
+          <i class="fa-solid fa-basket-shopping text-base"></i>
+          <span class="hidden sm:inline font-bold text-xs">Carrito</span>
           <span id="cartCount" class="bg-black text-orange-400 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border border-orange-500">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- CINTILLO ANIMADO EN MOVIMIENTO -->
+  <!-- CINTILLO ANIMADO -->
   <div class="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-orange-500/30">
     <div class="inline-flex gap-8 animate-marquee">
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
+      <span>🎁 GANA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>💳 ENCARGA EN 1 PAGO O EN 2 PARTES (50% ABONO)</span>
-      <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
+      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
+      <span>🎁 GANA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>💳 ENCARGA EN 1 PAGO O EN 2 PARTES (50% ABONO)</span>
-      <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
+      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
     </div>
   </div>
 
-  <!-- SECCIÓN INSTITUCIONAL (DESPLEGABLE) -->
+  <!-- SECCIÓN INSTITUCIONAL -->
   <section id="seccionEmpresa" class="hidden bg-zinc-900 border-b border-zinc-800 py-6 px-4 transition-all duration-300">
     <div class="max-w-6xl mx-auto space-y-6">
       <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
@@ -173,25 +158,25 @@
             <h3>Productos 100% Originales</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Garantizamos la originalidad total de cada artículo en calzado, bolsos, morrales y dermocosmética. Cero réplicas.
+            Garantizamos la originalidad total de cada artículo que comercializamos en calzado, accesorios, morrales y dermocosmética. Cero réplicas.
           </p>
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
-          <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <h3>Encargos Flexibles (50% / 50%)</h3>
+          <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+            <i class="fa-solid fa-crown"></i>
+            <h3>Programa Maviko Club</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Aparta tus encargos abonando el 50% al confirmar y cancela el 50% restante al recibir tu mercancía.
+            Acumula 1 punto por cada $1 en compras confirmadas. Al llegar a 50, 100 o 200 puntos desbloqueas cupones de regalo de $3, $8 y $20 USD.
           </p>
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
           <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
             <i class="fa-solid fa-truck-fast"></i>
-            <h3>Despacho Nacional Blindado</h3>
+            <h3>Despacho Nacional</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Envíos asegurados por MRW, Zoom y Tealca con cobro en destino a nivel nacional, además de entregas locales.
+            Envíos asegurados por MRW, Zoom y Tealca con cobro en destino a nivel nacional, además de entregas personales o mensajería local.
           </p>
         </div>
       </div>
@@ -201,193 +186,95 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
 
-    <!-- SECCIÓN DE CONTACTO, DATOS DE PAGO Y QR EN PORTADA -->
+    <!-- TARJETA DE CONTACTO, CLUB VIP Y DATOS DE PAGO -->
     <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 text-white rounded-2xl p-6 border border-zinc-800 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-6 relative overflow-hidden">
       <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-orange-600/10 rounded-full blur-2xl pointer-events-none"></div>
-
-      <!-- Contacto Directo y Encargos -->
+      
       <div class="flex flex-col justify-between space-y-3">
         <div>
           <h2 class="text-lg font-bold mb-1 flex items-center gap-2 text-orange-400">
-            <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Encargos
+            <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Club VIP
           </h2>
-          <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden, consulta stock o solicita un artículo externo por encargo:</p>
+          <p class="text-xs text-zinc-300 mb-3">Suscríbete gratis al Club VIP para recibir <strong>10 puntos de bienvenida</strong>, alertas de ofertas y cupones:</p>
           <div class="flex flex-wrap gap-2">
-            <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
-              <i class="fa-brands fa-whatsapp text-base"></i> +58 412-7701750
-            </a>
-            <button onclick="abrirEncargoExternoEnCarrito()" class="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer active:scale-95">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Encargar artículo no publicado
+            <button onclick="toggleClubVIP(true)" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black text-xs font-extrabold px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer active:scale-95">
+              <i class="fa-solid fa-crown"></i> Suscribirme (+10 Pts)
             </button>
+            <a href="https://wa.me/584127701750" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
+              <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp
+            </a>
           </div>
         </div>
-
-        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start gap-2.5">
-          <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 shrink-0"></i>
-          <p class="text-[11px] text-amber-200 leading-snug">
-            <strong>Importante:</strong> Antes de realizar cualquier pago o transferencia, <strong>confirma siempre la disponibilidad física o fecha de llegada</strong> con nosotros vía WhatsApp.
-          </p>
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 text-[11px] text-amber-200 flex items-start gap-2">
+          <i class="fa-solid fa-circle-exclamation text-amber-400 mt-0.5"></i>
+          <span><strong>Importante:</strong> Confirma disponibilidad física y tiempo de entrega por WhatsApp antes de transferir.</span>
         </div>
       </div>
 
-      <!-- Datos de Pago Móvil con Botón Copiar y Modal QR -->
       <div class="bg-black/60 p-4 rounded-xl border border-zinc-800 flex flex-col justify-between">
         <div>
           <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">
-              <i class="fa-solid fa-mobile-screen-button text-orange-300"></i> Datos para Pago Móvil
+              <i class="fa-solid fa-mobile-screen-button text-orange-300"></i> Datos de Pago Móvil
             </h2>
-            <div class="flex items-center gap-2">
-              <button onclick="toggleModalQR()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer" title="Ver código QR">
-                <i class="fa-solid fa-qrcode text-orange-400"></i> <span>Ver QR</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="toggleQRModal(true)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-qrcode text-orange-400"></i> <span>QR</span>
               </button>
-              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
+              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-regular fa-copy text-orange-400"></i> <span>Copiar</span>
               </button>
             </div>
           </div>
-          <ul class="text-xs space-y-1.5 text-zinc-300">
+          <ul class="text-xs space-y-1 text-zinc-300">
             <li><strong>Banco:</strong> Banco de Venezuela (0102)</li>
             <li><strong>Cédula / RIF:</strong> V-20.907.946</li>
             <li><strong>Teléfono:</strong> 0412-7701750</li>
           </ul>
         </div>
-        <p class="text-[10px] text-zinc-500 mt-2 border-t border-zinc-800/80 pt-2 flex items-center gap-1">
-          <i class="fa-solid fa-circle-check text-emerald-400"></i> Monto calculado en Bolívares a tasa oficial BCV.
-        </p>
       </div>
     </div>
+    
+    <!-- BUSCADOR INTELIGENTE, ORDEN Y CATEGORÍAS -->
+    <div class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-3 justify-between">
+        <div class="relative flex-grow max-w-md">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="filtrarProductos()" 
+            placeholder="Buscar (ej. zapatos hombre, bolsos, skincare)..." 
+            class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
+          >
+        </div>
 
-    <!-- BARRA DE BÚSQUEDA Y FILTRO DE PRECIOS -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="relative w-full sm:max-w-md">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
-        <input 
-          type="text" 
-          id="searchInput" 
-          oninput="filtrarProductos()" 
-          placeholder="Buscar zapatos hombre, bolsos, kits, marcas..." 
-          class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
-        >
-      </div>
-
-      <!-- SELECTOR DE ORDEN -->
-      <div class="w-full sm:w-auto flex items-center gap-2">
-        <i class="fa-solid fa-arrow-down-short-wide text-zinc-500 text-xs"></i>
-        <select id="ordenarPrecios" onchange="ordenarProductos(this.value)" class="w-full sm:w-auto bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500 cursor-pointer">
-          <option value="destacados">Ordenar por: Novedades</option>
-          <option value="ofertas">🔥 En Oferta / Descuentos</option>
-          <option value="menor">Precio: Menor a Mayor</option>
-          <option value="mayor">Precio: Mayor a Menor</option>
+        <select id="ordenSelect" onchange="filtrarProductos()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-orange-500 cursor-pointer">
+          <option value="destacados">Destacados</option>
+          <option value="ofertas">🔥 Solo Ofertas</option>
+          <option value="menor-precio">Precio: Menor a Mayor</option>
+          <option value="mayor-precio">Precio: Mayor a Menor</option>
         </select>
       </div>
-    </div>
 
-    <!-- BOTONES DE CATEGORÍA Y FAVORITOS -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="contenedorFiltros">
-      <button onclick="filtrarCategoria('todas')" class="cat-btn bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap">
-        Todas
-      </button>
-    </div>
-
-    <!-- CUADRÍCULA DE PRODUCTOS (SKELETON LOADERS) -->
-    <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4">
-        <div class="h-48 rounded-xl skeleton-box"></div>
-        <div class="h-4 w-3/4 rounded skeleton-box"></div>
-        <div class="h-3 w-1/2 rounded skeleton-box"></div>
-        <div class="h-8 rounded-xl skeleton-box"></div>
-      </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4">
-        <div class="h-48 rounded-xl skeleton-box"></div>
-        <div class="h-4 w-3/4 rounded skeleton-box"></div>
-        <div class="h-3 w-1/2 rounded skeleton-box"></div>
-        <div class="h-8 rounded-xl skeleton-box"></div>
-      </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4 hidden sm:block">
-        <div class="h-48 rounded-xl skeleton-box"></div>
-        <div class="h-4 w-3/4 rounded skeleton-box"></div>
-        <div class="h-3 w-1/2 rounded skeleton-box"></div>
-        <div class="h-8 rounded-xl skeleton-box"></div>
-      </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-4 hidden lg:block">
-        <div class="h-48 rounded-xl skeleton-box"></div>
-        <div class="h-4 w-3/4 rounded skeleton-box"></div>
-        <div class="h-3 w-1/2 rounded skeleton-box"></div>
-        <div class="h-8 rounded-xl skeleton-box"></div>
-      </div>
-    </div>
-
-    <!-- SECCIÓN DE SUSCRIPCIÓN VIP -->
-    <section class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black border border-zinc-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-      <div class="max-w-3xl mx-auto text-center space-y-3">
-        <span class="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-          <i class="fa-solid fa-bell"></i> Club VIP Maviko
-        </span>
-        <h2 class="text-lg sm:text-xl font-extrabold text-white">Entérate primero cuando llegue mercancía nueva</h2>
-        <p class="text-xs text-zinc-400 max-w-lg mx-auto">
-          Suscríbete con tu WhatsApp y recibe avisos exclusivos de restock, lanzamientos y ofertas relámpago antes de que se agoten.
-        </p>
-
-        <form onsubmit="enviarSuscripcionVIP(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 pt-2 max-w-2xl mx-auto">
-          <input type="text" id="subNombre" required placeholder="Tu Nombre *" class="bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-          <input type="tel" id="subTelefono" required placeholder="WhatsApp (0412...) *" class="bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-          <select id="subInteres" class="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-300 focus:outline-none focus:border-orange-500 cursor-pointer">
-            <option value="Todo el catálogo">Todo el catálogo</option>
-            <option value="Calzado">Calzado</option>
-            <option value="Bolsos y Morrales">Bolsos y Morrales</option>
-            <option value="Skincare / Dermocosmética">Skincare</option>
-            <option value="Ofertas Relámpago">Solo Ofertas</option>
-          </select>
-          <button type="submit" id="btnSubSubmit" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-all shadow-lg shadow-orange-600/20 cursor-pointer active:scale-95">
-            Suscribirme
-          </button>
-        </form>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- MODAL: MI CUENTA, RASTREO DE PEDIDOS Y PUNTOS MAVIKO -->
-  <div id="modalRastreo" onclick="if(event.target.id==='modalRastreo') toggleModalRastreo(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 relative space-y-5 shadow-2xl">
-      <button onclick="toggleModalRastreo(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 cursor-pointer">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
-
-      <div class="space-y-1">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-user-shield text-orange-400"></i> Mi Perfil, Pedidos y Puntos
-        </h3>
-        <p class="text-xs text-zinc-400">Ingresa tu número de WhatsApp para revisar el estatus de tus compras y tus puntos acumulados ($1 = 1 punto).</p>
-      </div>
-
-      <div class="flex gap-2">
-        <input type="tel" id="inputTelefonoRastreo" placeholder="Ingresa tu teléfono (ej. 04121234567)" class="flex-grow px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500">
-        <button onclick="consultarPerfilYPedidos()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition-colors shrink-0">
-          Consultar
+      <!-- CATEGORÍAS DINÁMICAS -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="contenedorFiltros">
+        <button onclick="filtrarCategoria('todas')" class="cat-btn bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap">
+          Todas
         </button>
       </div>
-
-      <div id="boxPuntosCliente" class="hidden bg-gradient-to-r from-orange-600/20 via-amber-600/10 to-zinc-950 border border-orange-500/30 rounded-xl p-4 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-orange-400">Maviko Club Puntos</span>
-          <h4 id="nombrePerfilDisplay" class="text-sm font-bold text-white mt-0.5">Cliente Maviko</h4>
-          <p class="text-[11px] text-zinc-400 mt-0.5">Canjeables por descuentos en futuras compras</p>
-        </div>
-        <div class="text-right bg-black/50 px-3.5 py-2 rounded-xl border border-orange-500/30">
-          <span id="saldoPuntosDisplay" class="text-xl font-black text-orange-400">0</span>
-          <span class="block text-[9px] text-zinc-400 uppercase font-bold">Puntos</span>
-        </div>
-      </div>
-
-      <div id="listaResultadosRastreo" class="space-y-2.5 max-h-60 overflow-y-auto text-xs">
-        <p class="text-center text-zinc-500 py-6">Introduce tu teléfono arriba para consultar tu historial.</p>
-      </div>
     </div>
-  </div>
 
-  <!-- BANNER FLOTANTE DE RETORNO / RECUPERACIÓN DE CARRITO -->
+    <!-- CUADRÍCULA DE PRODUCTOS -->
+    <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden sm:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden lg:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden xl:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+    </div>
+  </main>
+
+  <!-- BANNER FLOTANTE DE RETORNO / CARRITO PENDIENTE -->
   <div id="bannerCarritoPendiente" class="hidden fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-zinc-900/95 border border-orange-500/50 backdrop-blur-md p-4 rounded-2xl shadow-2xl transition-all duration-500">
     <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
@@ -400,8 +287,8 @@
         </div>
       </div>
       <div class="flex items-center gap-1.5">
-        <button onclick="toggleCarrito(true); descartarAvisoCarrito();" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl cursor-pointer shadow-md">
-          Ver Carrito
+        <button onclick="toggleCarrito(true); descartarAvisoCarrito();" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl cursor-pointer">
+          Ver
         </button>
         <button onclick="descartarAvisoCarrito()" class="text-zinc-500 hover:text-white p-1.5 cursor-pointer">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -410,45 +297,24 @@
     </div>
   </div>
 
-  <!-- MODAL DE CÓDIGO QR PARA PAGO MÓVIL -->
-  <div id="modalQR" onclick="cerrarQRPorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl relative">
-      <button onclick="toggleModalQR()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
-      <h3 class="font-bold text-white text-base flex items-center justify-center gap-2">
-        <i class="fa-solid fa-qrcode text-orange-400"></i> Código QR Pago Móvil
-      </h3>
-      <div class="bg-white p-3 rounded-2xl inline-block shadow-md">
-        <img src="https://i.ibb.co/Lz9kvW77/Whats-App-Image-2026-11-09-at-01-43-19.jpg" alt="QR Pago Móvil Maviko" class="w-56 h-56 mx-auto object-contain rounded-xl shadow-inner">
-      </div>
-      <div class="text-[11px] text-zinc-400 space-y-0.5">
-        <p><strong>BDV (0102)</strong> · V-20.907.946</p>
-        <p><strong>0412-7701750</strong></p>
-      </div>
-      <button onclick="toggleModalQR()" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-2 rounded-xl font-bold text-xs cursor-pointer transition-colors">
-        Cerrar
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL DE DETALLE Y MULTIMEDIA -->
+  <!-- MODAL DETALLE PRODUCTO -->
   <div id="modalDetalle" onclick="cerrarDetallePorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full p-6 relative space-y-6 shadow-2xl my-8">
-
-      <button onclick="cerrarDetalle()" class="fixed top-4 right-4 sm:absolute sm:top-4 sm:right-4 z-50 bg-zinc-800/90 hover:bg-zinc-700 active:scale-95 text-white w-10 h-10 rounded-full flex items-center justify-center border border-zinc-700 shadow-xl cursor-pointer" aria-label="Cerrar detalle">
-        <i class="fa-solid fa-xmark text-lg"></i>
+      <button onclick="cerrarDetalle()" class="absolute top-4 right-4 bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 hover:text-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer z-20 border border-zinc-700">
+        <i class="fa-solid fa-xmark text-base"></i>
       </button>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-3" onmouseenter="pausarAutoSlider()" onmouseleave="reanudarAutoSlider()">
+        <div class="space-y-3">
           <div 
             id="contenedorVisor" 
             class="zoom-container h-72 sm:h-80 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center relative p-2"
+            onmouseenter="pausarPaseAutomatico()"
+            onmouseleave="resetearZoom(); iniciarPaseAutomatico()"
             onmousemove="aplicarZoom(event)" 
-            onmouseleave="resetearZoom()"
+            ontouchstart="pausarPaseAutomatico()"
             ontouchmove="aplicarZoomTouch(event)" 
-            ontouchend="resetearZoom()"
+            ontouchend="resetearZoom(); iniciarPaseAutomatico()"
           >
             <img id="fotoPrincipalModal" src="" alt="Producto" class="zoom-image max-w-full max-h-full object-contain pointer-events-none select-none">
             <video id="videoPrincipalModal" controls playsinline class="hidden max-w-full max-h-full object-contain rounded-xl"></video>
@@ -461,42 +327,27 @@
 
         <div class="flex flex-col justify-between space-y-4">
           <div class="space-y-2">
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <span id="categoriaModal" class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-md capitalize border border-orange-500/30"></span>
-              <span class="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                <i class="fa-solid fa-shield-check"></i> 100% Original
-              </span>
               <span id="skuModal" class="text-zinc-500 text-[11px] font-mono"></span>
+              <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-500/20">100% Original</span>
             </div>
             <h2 id="tituloModal" class="text-lg font-bold text-white"></h2>
 
-            <div class="flex items-baseline gap-2 pt-1">
-              <span id="precioModalUSD" class="text-2xl font-black text-orange-400"></span>
-              <span id="precioAnteriorModalUSD" class="text-xs text-zinc-500 line-through hidden"></span>
-              <span id="precioModalBS" class="text-xs text-zinc-400"></span>
-            </div>
-
-            <div class="flex items-center gap-2 py-1 text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg">
+            <div class="flex items-center gap-1.5 text-[11px] text-amber-400">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-              <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas consultando este artículo</span>
+              <span id="vistasActivasModal">3 personas están viendo este artículo ahora</span>
             </div>
-
-            <!-- SELECTOR DE MODALIDAD EN MODAL -->
-            <div class="pt-2">
-              <span class="block text-[11px] font-bold text-zinc-400 mb-1.5">Modalidad de adquisición:</span>
-              <div class="grid grid-cols-2 gap-2" id="selectorModalidadModal">
-                <button type="button" id="btnModInmediataModal" onclick="seleccionarModalidadEnModal('inmediata')" class="py-2 px-3 rounded-xl text-xs font-bold border border-emerald-500/50 bg-emerald-500/15 text-emerald-400 cursor-pointer transition-all flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-bolt"></i> Compra Inmediata
-                </button>
-                <button type="button" id="btnModEncargoModal" onclick="seleccionarModalidadEnModal('encargo')" class="py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-clock-rotate-left"></i> Por Encargo
-                </button>
-              </div>
+            
+            <div class="flex items-baseline gap-2 pt-1">
+              <span id="precioAnteriorModal" class="hidden text-sm text-zinc-500 line-through"></span>
+              <span id="precioModalUSD" class="text-2xl font-black text-orange-400"></span>
+              <span id="precioModalBS" class="text-xs text-zinc-400"></span>
             </div>
 
             <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
               <div class="flex justify-between items-center">
-                <span class="text-xs font-bold text-zinc-300">Selecciona tu talla u opción:</span>
+                <span class="text-xs font-bold text-zinc-300">Selecciona tu opción / talla:</span>
                 <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
               </div>
               <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
@@ -507,33 +358,122 @@
                 <button id="tabDescBtn" onclick="cambiarTab('desc')" class="tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors">Descripción</button>
                 <button id="tabFichaBtn" onclick="cambiarTab('ficha')" class="tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors">Ficha Técnica</button>
               </div>
-              <div id="tabDescripcion" class="text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+              <div id="tabDescripcion" class="text-xs text-zinc-300 leading-relaxed max-h-28 overflow-y-auto">
                 <p id="descModalText"></p>
               </div>
-              <div id="tabFicha" class="hidden text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+              <div id="tabFicha" class="hidden text-xs text-zinc-300 leading-relaxed max-h-28 overflow-y-auto">
                 <ul id="fichaModalList" class="list-disc list-inside space-y-1"></ul>
               </div>
             </div>
+
+            <div class="grid grid-cols-3 gap-1.5 pt-2 text-[10px] text-zinc-400 text-center">
+              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📸 Fotos Reales</div>
+              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📦 Embalaje Seguro</div>
+              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">🚚 Envío Asegurado</div>
+            </div>
           </div>
 
-          <div class="space-y-2">
-            <button id="btnAgregarModal" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
+          <div class="flex gap-2">
+            <a id="btnConsultaDirectaModal" href="#" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 px-3.5 py-3.5 rounded-xl transition-all flex items-center justify-center" title="Consultar duda por WhatsApp">
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+            </a>
+            <button id="btnAgregarModal" class="flex-grow bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
               <i class="fa-solid fa-cart-plus text-sm"></i>
               <span>Agregar al Carrito</span>
             </button>
-
-            <button id="btnPreguntarWhatsApp" class="w-full bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-xs">
-              <i class="fa-brands fa-whatsapp text-sm"></i>
-              <span>Consultar por WhatsApp ahora</span>
-            </button>
-
-            <div class="grid grid-cols-3 gap-1 pt-1 text-center text-[9px] text-zinc-400 border-t border-zinc-800/60">
-              <div><i class="fa-solid fa-camera text-orange-400"></i> Fotos Reales</div>
-              <div><i class="fa-solid fa-shield-halved text-emerald-400"></i> Cero Réplicas</div>
-              <div><i class="fa-solid fa-box text-orange-400"></i> Envío Blindado</div>
-            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL QR PAGO MÓVIL -->
+  <div id="modalQR" onclick="if(event.target.id==='modalQR') toggleQRModal(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 relative shadow-2xl">
+      <button onclick="toggleQRModal(false)" class="absolute top-3 right-3 text-zinc-400 hover:text-white p-1.5 cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="text-sm font-bold text-white">Pago Móvil Maviko</h3>
+      <div class="bg-white p-3 rounded-xl inline-block mx-auto">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0102-V20907946-04127701750" alt="QR Pago Móvil" class="w-40 h-40">
+      </div>
+      <div class="text-xs text-zinc-300 space-y-0.5">
+        <p><strong>Banco:</strong> Venezuela (0102)</p>
+        <p><strong>Cédula:</strong> V-20.907.946</p>
+        <p><strong>Teléfono:</strong> 0412-7701750</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MIS PEDIDOS, PUNTOS Y CUPONES DE REGALO -->
+  <div id="modalPedidos" onclick="if(event.target.id==='modalPedidos') toggleModalPedidos(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-4 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="toggleModalPedidos(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div>
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-gift text-amber-400"></i> Maviko Club: Puntos y Regalos
+        </h3>
+        <p class="text-xs text-zinc-400 mt-1">Consulta tus puntos acumulados, guías de envío y desbloquea cupones de regalo ($3, $8 y $20 USD).</p>
+      </div>
+      <div class="flex gap-2">
+        <input type="tel" id="inputTelefonoConsulta" placeholder="Tu WhatsApp (Ej: 04121234567)" class="flex-grow px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-white focus:outline-none focus:border-orange-500">
+        <button onclick="consultarPedidosCliente()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">
+          Consultar
+        </button>
+      </div>
+      <div id="resultadoPedidosCliente" class="text-xs text-zinc-300 space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- MODAL CLUB VIP -->
+  <div id="modalClubVIP" onclick="if(event.target.id==='modalClubVIP') toggleClubVIP(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 space-y-4 relative shadow-2xl">
+      <button onclick="toggleClubVIP(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div>
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-crown text-amber-400"></i> Únete al Club VIP Maviko
+        </h3>
+        <p class="text-xs text-zinc-400 mt-1">Gana <strong>10 puntos de bienvenida</strong> al instante y recibe alertas de ofertas exclusivas.</p>
+      </div>
+      <div class="space-y-2 text-xs">
+        <input type="text" id="vipNombre" placeholder="Tu Nombre *" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-orange-500">
+        <input type="tel" id="vipTelefono" placeholder="Tu WhatsApp (Ej: 04121234567) *" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-orange-500">
+        <select id="vipInteres" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-orange-500">
+          <option value="Todo el Catálogo">Interés: Todo el Catálogo</option>
+          <option value="Solo Ofertas">🔥 Solo Ofertas y Liquidaciones</option>
+          <option value="Calzado">Calzado Original</option>
+          <option value="Bolsos y Morrales">Bolsos y Morrales</option>
+          <option value="Skincare y Cosméticos">Skincare y Cosméticos</option>
+        </select>
+        <button onclick="registrarSuscriptorVIP()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2.5 rounded-xl transition-all cursor-pointer mt-2">
+          Registrarme y Sumar 10 Puntos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ENCARGO EXTERNO (ARTÍCULO QUE NO ESTÁ EN LA TIENDA) -->
+  <div id="modalEncargoExterno" onclick="if(event.target.id==='modalEncargoExterno') toggleEncargoExterno(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 space-y-4 relative shadow-2xl">
+      <button onclick="toggleEncargoExterno(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div>
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-box-open text-amber-400"></i> Encargar Artículo Especial
+        </h3>
+        <p class="text-xs text-zinc-400 mt-1">¿Buscas un modelo, talla o producto que no ves publicado? Agrégalo a tu carrito como encargo.</p>
+      </div>
+      <div class="space-y-2.5 text-xs">
+        <input type="text" id="extNombreProd" placeholder="Nombre o descripción del producto *" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-orange-500">
+        <input type="text" id="extTallaColor" placeholder="Talla, color o referencia (opcional)" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-orange-500">
+        <button onclick="agregarEncargoExternoAlCarrito()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition-all cursor-pointer">
+          Agregar a mi Lista de Encargo
+        </button>
       </div>
     </div>
   </div>
@@ -542,81 +482,69 @@
   <div id="cartOverlay" onclick="toggleCarrito(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
 
   <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
-    <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-black/40">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-basket-shopping text-orange-500 text-lg"></i>
-        <div>
-          <h3 class="font-bold text-white text-sm">Tu Carrito y Encargos</h3>
-          <p class="text-[10px] text-zinc-400">Configura entrega inmediata o encargo</p>
+    <div class="p-4 border-b border-zinc-800 space-y-2">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping text-orange-500"></i>
+          <h3 class="font-bold text-white text-sm">Tu Pedido / Encargos</h3>
         </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <button onclick="vaciarCarrito()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Carrito">
-          <i class="fa-regular fa-trash-can"></i> Vaciar
-        </button>
-        <button onclick="toggleCarrito(false)" class="text-zinc-400 hover:text-white cursor-pointer p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- BOTÓN DESPLEGABLE PARA ENCARGO EXTERNO NO PUBLICADO -->
-    <div class="bg-zinc-950 border-b border-zinc-800 px-3 py-2">
-      <button type="button" onclick="toggleFormularioEncargoExterno()" class="w-full text-left text-[11px] font-bold text-orange-400 hover:text-orange-300 flex items-center justify-between cursor-pointer py-1">
-        <span><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> + Encargar artículo que no está en la tienda</span>
-        <i id="iconoToggleExterno" class="fa-solid fa-chevron-down text-[10px]"></i>
-      </button>
-
-      <div id="boxEncargoExterno" class="hidden pt-2 pb-1 space-y-2 text-xs border-t border-zinc-900 mt-1.5">
-        <input type="text" id="externoNombreInput" placeholder="Producto / Marca deseada (ej. Tenis Nike Air...)" class="w-full px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-        <div class="grid grid-cols-3 gap-2">
-          <input type="text" id="externoDetalleInput" placeholder="Talla / Color" class="col-span-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-          <button type="button" onclick="agregarEncargoExternoAlCarrito()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg cursor-pointer transition-colors">
-            Añadir
+        <div class="flex items-center gap-3">
+          <button onclick="toggleEncargoExterno(true)" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer">
+            + Encargo Especial
+          </button>
+          <button onclick="vaciarCarrito()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Carrito">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+          <button onclick="toggleCarrito(false)" class="text-zinc-400 hover:text-white cursor-pointer">
+            <i class="fa-solid fa-xmark text-lg"></i>
           </button>
         </div>
       </div>
+
+      <!-- Barra de Meta de Envío -->
+      <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 space-y-1">
+        <p id="textoMetaEnvio" class="text-[10px] text-zinc-300 font-medium">Agrega $60.00 para despacho prioritario sin costo de embalaje</p>
+        <div class="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barraMetaEnvio" class="bg-orange-500 h-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- BARRA DINÁMICA DE META DE DESPACHO -->
-    <div id="barraMetaEnvio" class="p-2.5 bg-zinc-950/70 border-b border-zinc-800"></div>
+    <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800"></div>
 
-    <!-- LISTA DE ARTÍCULOS EN EL CARRITO -->
-    <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
-
-    <!-- FORMULARIO DE CHECKOUT -->
-    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[55vh]">
-
-      <!-- BLOQUE ESPECIAL PARA ENCARGOS: FECHA TENTATIVA Y PLAN DE PAGO (1 O 2 PARTES) -->
-      <div id="panelOpcionesEncargo" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
-            <i class="fa-solid fa-calendar-check"></i> Configuración de Encargo
-          </span>
-          <span class="text-[10px] text-amber-400/80 font-semibold">Flexible</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[10px] text-zinc-400 mb-1">¿Para cuándo lo necesitas? (Tentativo):</label>
-            <input type="date" id="fechaTentativaEncargo" class="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-[11px] focus:outline-none focus:border-amber-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-zinc-400 mb-1">Modalidad de Pago Encargo:</label>
-            <select id="planPagoEncargo" onchange="actualizarCarritoUI()" class="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-[11px] focus:outline-none focus:border-amber-500 cursor-pointer">
-              <option value="2_pagos">2 Pagos (50% Abono / 50% Entrega)</option>
-              <option value="1_pago">1 Pago Único (100% Adelantado)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- RESUMEN FINANCIERO DEL ABONO VS SALDO -->
-        <div id="resumenCuotasEncargo" class="bg-black/50 p-2 rounded-lg border border-zinc-800/80 text-[11px] space-y-1"></div>
-      </div>
-
+    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-2.5 text-xs max-h-[62vh] overflow-y-auto">
       <div class="space-y-2">
-        <input type="text" id="nombreCliente" oninput="agendarEnvioLead()" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-        <input type="tel" id="telefonoCliente" oninput="agendarEnvioLead()" placeholder="Teléfono WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="nombreCliente" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+          <input type="tel" id="telefonoCliente" oninput="programarCapturaAbandono()" placeholder="Tu WhatsApp *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Opciones dinámicas si hay al menos un producto "Por Encargo" -->
+        <div id="boxOpcionesEncargo" class="hidden bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-amber-300 font-bold block mb-0.5">Fecha tentativa requerida:</label>
+              <input type="date" id="fechaEncargo" class="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-700 rounded-lg text-white text-[11px]">
+            </div>
+            <div>
+              <label class="text-[10px] text-amber-300 font-bold block mb-0.5">Plan de Pago Encargo:</label>
+              <select id="planPagoEncargo" onchange="actualizarCarritoUI()" class="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-700 rounded-lg text-white text-[11px]">
+                <option value="2 Partes (50% Abono / 50% Entrega)">2 Partes (50% Abono)</option>
+                <option value="Pago Único (100%)">Pago Único (100%)</option>
+              </select>
+            </div>
+          </div>
+          <p id="resumenCuotasEncargo" class="text-[10px] text-zinc-200 font-medium"></p>
+        </div>
+
+        <!-- Casilla de Cupón VIP -->
+        <div class="flex gap-1.5">
+          <input type="text" id="inputCodigoCupon" placeholder="¿Tienes un Cupón VIP? (Ej: MAVIKO3-...)" class="flex-grow px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 uppercase focus:outline-none focus:border-amber-500">
+          <button onclick="validarYAplicarCupon()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-3 py-2 rounded-xl cursor-pointer shrink-0">
+            Aplicar
+          </button>
+        </div>
+        <p id="mensajeCuponEstado" class="hidden text-[11px] font-semibold"></p>
 
         <div class="grid grid-cols-2 gap-2">
           <select id="empresaEnvio" onchange="actualizarCostoEnvio()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-orange-500">
@@ -624,7 +552,7 @@
             <option value="Zoom (Cobro en Destino)" data-costo="0">Zoom (Cobro en Destino)</option>
             <option value="Tealca (Cobro en Destino)" data-costo="0">Tealca (Cobro en Destino)</option>
             <option value="Delivery Local" data-costo="3">Delivery Local (+$3)</option>
-            <option value="Retiro en Persona" data-costo="0">Retiro en Persona (Gratis)</option>
+            <option value="Retiro en Tienda" data-costo="0">Retiro en Tienda (Gratis)</option>
           </select>
 
           <select id="metodoPago" onchange="mostrarDatosPago()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-orange-500">
@@ -635,25 +563,29 @@
         </div>
 
         <input type="text" id="direccionEnvio" placeholder="Ciudad, Estado o Dirección de Agencia" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-
+        
         <div id="campoReferencia">
-          <input type="text" id="referenciaPago" placeholder="Nº de Referencia (si ya acordaste el pago)" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+          <input type="text" id="referenciaPago" placeholder="Nº de Referencia (opcional antes de confirmar)" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
         </div>
 
-        <div id="infoPagoBox" class="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-[11px] space-y-1"></div>
+        <div id="infoPagoBox" class="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-[11px] space-y-1"></div>
       </div>
 
       <div class="space-y-1 pt-2 border-t border-zinc-800">
         <div class="flex justify-between text-zinc-400">
-          <span>Subtotal Artículos:</span>
+          <span>Subtotal:</span>
           <span>$<span id="subtotalUSD">0.00</span></span>
+        </div>
+        <div id="filaDescuentoCupon" class="hidden flex justify-between text-emerald-400 font-bold">
+          <span>Descuento Cupón VIP:</span>
+          <span>-$<span id="montoDescuentoCupon">0.00</span></span>
         </div>
         <div class="flex justify-between text-zinc-400">
           <span>Envío:</span>
           <span id="costoEnvioText">Cobro en destino</span>
         </div>
         <div class="flex justify-between text-base font-bold text-white pt-1">
-          <span>Total Pedido USD:</span>
+          <span>Total Estimado USD:</span>
           <span class="text-orange-400">$<span id="totalUSD">0.00</span></span>
         </div>
         <div class="flex justify-between text-xs font-semibold text-zinc-300">
@@ -662,41 +594,30 @@
         </div>
       </div>
 
-      <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
+      <button onclick="vibrar(); enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
         <i class="fa-brands fa-whatsapp text-base"></i>
-        <span>Enviar Pedido / Encargos por WhatsApp</span>
+        <span>Confirmar Pedido por WhatsApp</span>
       </button>
     </div>
   </div>
 
-  <!-- NOTIFICACIÓN TOAST FLOTANTE -->
-  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl">
+  <!-- NOTIFICACIÓN TOAST -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl max-w-xs">
     <div id="toastIcon" class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0">
       <i class="fa-solid fa-check text-lg"></i>
     </div>
     <div>
       <h4 id="toastTitle" class="text-xs font-bold text-white">¡Producto agregado!</h4>
-      <p id="toastMessage" class="text-[11px] text-zinc-400 line-clamp-1"></p>
+      <p id="toastMessage" class="text-[11px] text-zinc-400 line-clamp-2"></p>
     </div>
-    <button id="toastBtnAccion" onclick="toggleCarrito(true)" class="ml-2 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">
+    <button id="toastBtnAccion" onclick="toggleCarrito(true)" class="ml-1 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg cursor-pointer shrink-0">
       Ver Carrito
     </button>
   </div>
 
-  <!-- TOAST DE VALIDACIÓN SOCIAL -->
-  <div id="toastSocialProof" class="fixed bottom-24 left-6 z-40 transform -translate-x-full opacity-0 pointer-events-none transition-all duration-500 flex items-center gap-3 bg-zinc-900/95 backdrop-blur-md border border-zinc-800 px-4 py-3 rounded-2xl shadow-2xl max-w-xs">
-    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-      <i class="fa-solid fa-bag-shopping text-sm"></i>
-    </div>
-    <div>
-      <h5 id="socialProofTitle" class="text-[11px] font-bold text-white">Consulta reciente</h5>
-      <p id="socialProofMsg" class="text-[10px] text-zinc-400 line-clamp-1"></p>
-    </div>
-  </div>
-
   <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
   <div class="fixed bottom-6 left-6 z-40 group flex items-center">
-    <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
+    <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Tengo%20una%20consulta%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
       <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping pointer-events-none"></span>
       <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
@@ -706,451 +627,151 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-zinc-900 border-t border-zinc-800 py-6 text-center text-xs text-zinc-400 space-y-1.5 mt-auto">
+  <footer class="bg-zinc-900 border-t border-zinc-800 py-6 text-center text-xs text-zinc-400 space-y-1 mt-auto">
     <div class="max-w-6xl mx-auto px-4">
-      <p class="font-bold text-white flex items-center justify-center gap-1.5">
-        <span>MAVIKO — Grandes cosas en camino</span>
-        <span class="text-emerald-400 text-[11px]">(Productos 100% Originales)</span>
-      </p>
-      <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca con cobro en destino.</p>
+      <p class="font-bold text-white">MAVIKO — Grandes cosas en camino</p>
+      <p>© Maviko. Envíos garantizados por MRW, Zoom y Tealca.</p>
       <p class="text-zinc-500">Atención Directa: <strong>+58 412-7701750</strong> | Pago Móvil: <strong>0102 - V-20.907.946 - 04127701750</strong></p>
     </div>
   </footer>
 
-  <!-- SCRIPT DE SINCRONIZACIÓN Y LÓGICA DEL SITIO -->
+  <!-- SCRIPT COMPLETO -->
   <script>
     const GOOGLE_SHEET_ID = "1COZTlUBgqv2GPT6TMG1mfkkvliprvBGZw4-0-PTw5dM";
     const GID_CATALOGO_WEB = "1599022863";
+    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-d3N1C4wJ3c3wT5C7d6q4G8u5Gzl8apGjg/exec";
     const NUMERO_WHATSAPP = "584127701750";
+    const META_ENVIO_USD = 60;
 
-    // URL OFICIAL ACTUALIZADA DE TU APPS SCRIPT
-    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbxze6MIeN0kn7sn8hs-p0FTifN7qpxLuruzLQCD_EcU2H_Ml4BtlYCa55DVcGzl8apGjg/exec";
-
-    let tasaBCV = 44.50;
+    let tasaBCV = 36.50;
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
-    let favoritos = JSON.parse(localStorage.getItem('maviko_favoritos')) || [];
-    let historialLocalPedidos = JSON.parse(localStorage.getItem('maviko_pedidos_locales')) || [];
     let categoriaActual = 'todas';
-    let ordenActual = 'destacados';
     let tallaSeleccionadaActual = "";
-    let modalidadSeleccionadaModal = "inmediata";
     let costoEnvioAdicional = 0;
+    let cuponAplicado = null; // { codigo, descuentoUSD, minCompraUSD }
     let toastTimeout;
-    let timerLeadDebounce = null;
+    let timerEsperaJSONP;
+    let timerAbandonoLead;
     let eventoInstalacionDirecta = null;
-    let autoSliderTimer = null;
-    let indiceFotoActual = 0;
-    let galeriaFotosActual = [];
+    let intervaloCarruselModal = null;
+    let fotosModalActuales = [];
+    let indiceFotoModalActual = 0;
 
     const DATOS_PAGO_MOVIL = {
       banco: "Banco de Venezuela (0102)",
-      codigoBanco: "0102",
       cedula: "V-20.907.946",
-      telefono: "04127701750"
+      telefono: "0412-7701750"
     };
 
-    // --- NORMALIZADOR INTELIGENTE PARA BUSCADOR (SINGULAR / PLURAL / TILDES) ---
-    function normalizarTextoBusqueda(texto) {
-      return texto
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .split(/\s+/)
-        .filter(Boolean)
-        .map(palabra => {
-          if (palabra.length > 4 && palabra.endsWith('es')) return palabra.slice(0, -2);
-          if (palabra.length > 3 && palabra.endsWith('s')) return palabra.slice(0, -1);
-          return palabra;
-        });
-    }
-
-    // --- FUNCIONES DE ENCARGO UNIFICADO EN CARRITO ---
-    function toggleFormularioEncargoExterno() {
-      const box = document.getElementById('boxEncargoExterno');
-      const icon = document.getElementById('iconoToggleExterno');
-      box.classList.toggle('hidden');
-      icon.classList.toggle('fa-chevron-down');
-      icon.classList.toggle('fa-chevron-up');
-    }
-
-    function abrirEncargoExternoEnCarrito() {
-      toggleCarrito(true);
-      const box = document.getElementById('boxEncargoExterno');
-      if (box.classList.contains('hidden')) {
-        toggleFormularioEncargoExterno();
-      }
-      setTimeout(() => document.getElementById('externoNombreInput').focus(), 200);
-    }
-
-    function agregarEncargoExternoAlCarrito() {
-      const nombre = document.getElementById('externoNombreInput').value.trim();
-      const detalle = document.getElementById('externoDetalleInput').value.trim();
-
-      if (!nombre) {
-        alert("Por favor escribe el nombre o marca del producto que buscas.");
-        document.getElementById('externoNombreInput').focus();
-        return;
-      }
-
-      if (navigator.vibrate) navigator.vibrate(20);
-      const idUnico = 'EXT-' + Date.now();
-      carrito.push({
-        id: idUnico,
-        clave: idUnico,
-        nombre: nombre,
-        precioUSD: 0,
-        imagen: 'https://i.ibb.co/ymDcp5tf/logo.jpg',
-        tallaSeleccionada: detalle || 'A cotizar',
-        cantidad: 1,
-        modalidad: 'encargo',
-        esExterno: true,
-        stockTotal: 999
-      });
-
-      document.getElementById('externoNombreInput').value = '';
-      document.getElementById('externoDetalleInput').value = '';
-      guardarCarritoEnStorage();
-      actualizarCarritoUI();
-      mostrarToast("Agregado a tu lista como Encargo", "¡Encargo añadido!", true);
-    }
-
-    function cambiarModalidadItemCarrito(clave, nuevaModalidad) {
-      const item = carrito.find(i => i.clave === clave);
-      if (!item || item.esExterno) return;
-
-      const prod = productos.find(p => p.id === item.id);
-      const limiteStock = prod ? (item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal) : 99;
-
-      if (nuevaModalidad === 'inmediata' && limiteStock <= 0) {
-        alert("Este artículo está agotado actualmente; debe mantenerse como 'Por Encargo'.");
-        actualizarCarritoUI();
-        return;
-      }
-
-      if (nuevaModalidad === 'inmediata' && item.cantidad > limiteStock) {
-        item.cantidad = limiteStock;
-      }
-
-      item.modalidad = nuevaModalidad;
-      guardarCarritoEnStorage();
-      actualizarCarritoUI();
-    }
-
-    function seleccionarModalidadEnModal(mod) {
-      modalidadSeleccionadaModal = mod;
-      const btnInm = document.getElementById('btnModInmediataModal');
-      const btnEnc = document.getElementById('btnModEncargoModal');
-
-      if (mod === 'inmediata') {
-        btnInm.className = "py-2 px-3 rounded-xl text-xs font-bold border border-emerald-500/50 bg-emerald-500/15 text-emerald-400 cursor-pointer transition-all flex items-center justify-center gap-1.5";
-        btnEnc.className = "py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5";
-      } else {
-        btnEnc.className = "py-2 px-3 rounded-xl text-xs font-bold border border-amber-500/50 bg-amber-500/15 text-amber-400 cursor-pointer transition-all flex items-center justify-center gap-1.5";
-        btnInm.className = "py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5";
-      }
-    }
-
-    // --- GESTIÓN DE FAVORITOS ---
-    function toggleFavorito(e, id) {
-      e.stopPropagation();
-      if (navigator.vibrate) navigator.vibrate(15);
-      const idStr = id.toString();
-      const idx = favoritos.indexOf(idStr);
-      if (idx > -1) {
-        favoritos.splice(idx, 1);
-        mostrarToast("Eliminado de tus favoritos", "Favoritos", true);
-      } else {
-        favoritos.push(idStr);
-        mostrarToast("Guardado en tus favoritos ❤️", "¡Me gusta!", true);
-      }
-      localStorage.setItem('maviko_favoritos', JSON.stringify(favoritos));
-      generarBotonesCategoriasDinamicos();
-      renderProductos(obtenerProductosFiltrados());
-    }
-
-    // --- SUSCRIPCIÓN VIP ---
-    async function enviarSuscripcionVIP(e) {
-      e.preventDefault();
-      const nombre = document.getElementById('subNombre').value.trim();
-      const telefono = document.getElementById('subTelefono').value.trim();
-      const interes = document.getElementById('subInteres').value;
-      const btn = document.getElementById('btnSubSubmit');
-
-      localStorage.setItem('maviko_usuario_nombre', nombre);
-      localStorage.setItem('maviko_usuario_tel', telefono);
-
-      btn.disabled = true;
-      btn.innerText = "Guardando...";
-
-      if (WEBHOOK_APPSCRIPT_URL) {
-        try {
-          await fetch(WEBHOOK_APPSCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              tipo: "suscripcion_vip",
-              nombre: nombre,
-              telefono: telefono,
-              interes: interes
-            })
-          });
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-
-      btn.disabled = false;
-      btn.innerText = "¡Suscrito!";
-      document.getElementById('subNombre').value = '';
-      document.getElementById('subTelefono').value = '';
-      mostrarToast("¡Ya eres parte del Club VIP Maviko!", "Suscripción Exitosa", true);
-      setTimeout(() => { btn.innerText = "Suscribirme"; }, 2500);
-    }
-
-    // --- RASTREO DE PEDIDOS Y PUNTOS MAVIKO ---
-    function toggleModalRastreo(abrir = true) {
-      const modal = document.getElementById('modalRastreo');
-      if (!modal) return;
-      if (abrir) {
-        const savedTel = localStorage.getItem('maviko_usuario_tel');
-        if (savedTel) {
-          document.getElementById('inputTelefonoRastreo').value = savedTel;
-          consultarPerfilYPedidos();
-        }
-        modal.classList.remove('hidden');
-      } else {
-        modal.classList.add('hidden');
-      }
-    }
-
-    async function consultarPerfilYPedidos() {
-      const tel = document.getElementById('inputTelefonoRastreo').value.trim().replace(/[^0-9]/g, '');
-      const contenedor = document.getElementById('listaResultadosRastreo');
-      const boxPuntos = document.getElementById('boxPuntosCliente');
-
-      if (tel.length < 7) {
-        alert("Por favor ingresa un número de teléfono válido (al menos 7 dígitos).");
-        return;
-      }
-
-      localStorage.setItem('maviko_usuario_tel', tel);
-      contenedor.innerHTML = `<div class="text-center py-6 text-zinc-400"><i class="fa-solid fa-circle-notch fa-spin text-orange-400 text-xl mb-2"></i><p>Consultando tus pedidos y puntos...</p></div>`;
-
-      try {
-        const res = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(tel)}`);
-        const data = await res.json();
-
-        boxPuntos.classList.remove('hidden');
-        const nombreGuardado = localStorage.getItem('maviko_usuario_nombre') || `Cliente (${tel})`;
-        document.getElementById('nombrePerfilDisplay').innerText = nombreGuardado;
-        document.getElementById('saldoPuntosDisplay').innerText = data.puntosTotales || 0;
-
-        if (data.pedidos && data.pedidos.length > 0) {
-          contenedor.innerHTML = data.pedidos.reverse().map(p => `
-            <div class="bg-zinc-950 border border-zinc-800 p-3.5 rounded-xl space-y-1.5">
-              <div class="flex justify-between items-center">
-                <span class="text-[10px] text-zinc-500 font-mono">${p.fecha}</span>
-                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">${p.estado}</span>
-              </div>
-              <p class="text-white font-semibold line-clamp-2">${p.productos}</p>
-              <div class="flex justify-between items-center pt-1 border-t border-zinc-900 text-[11px]">
-                <span class="text-orange-400 font-bold">Total: $${p.totalUSD} (+${p.puntos} pts)</span>
-                <span class="text-zinc-400">Guía: <strong class="text-zinc-200">${p.guia}</strong></span>
-              </div>
-            </div>
-          `).join('');
-        } else {
-          mostrarPedidosLocalesFallback(tel, contenedor, boxPuntos);
-        }
-      } catch (e) {
-        mostrarPedidosLocalesFallback(tel, contenedor, boxPuntos);
-      }
-    }
-
-    function mostrarPedidosLocalesFallback(tel, contenedor, boxPuntos) {
-      const locales = historialLocalPedidos.filter(p => p.telefono.replace(/[^0-9]/g, '').endsWith(tel.slice(-7)));
-      boxPuntos.classList.remove('hidden');
-      const puntosLocales = locales.reduce((acc, p) => acc + Math.floor(parseFloat(p.totalUSD || 0)), 0);
-      document.getElementById('saldoPuntosDisplay').innerText = puntosLocales;
-
-      if (locales.length > 0) {
-        contenedor.innerHTML = locales.reverse().map(p => `
-          <div class="bg-zinc-950 border border-zinc-800 p-3.5 rounded-xl space-y-1.5">
-            <div class="flex justify-between items-center">
-              <span class="text-[10px] text-zinc-500 font-mono">${p.fecha}</span>
-              <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Enviado a WhatsApp</span>
-            </div>
-            <p class="text-white font-semibold line-clamp-2">${p.productos}</p>
-            <div class="flex justify-between items-center pt-1 border-t border-zinc-900 text-[11px]">
-              <span class="text-orange-400 font-bold">Monto: $${p.totalUSD}</span>
-              <span class="text-emerald-400 font-semibold">+${Math.floor(parseFloat(p.totalUSD || 0))} pts estimados</span>
-            </div>
-          </div>
-        `).join('');
-      } else {
-        contenedor.innerHTML = `<p class="text-center text-zinc-500 py-6">No encontramos pedidos registrados con el número <strong>${tel}</strong> todavía.</p>`;
-      }
+    function vibrar() {
+      if (navigator.vibrate) navigator.vibrate(25);
     }
 
     function guardarCarritoEnStorage() {
       localStorage.setItem('maviko_carrito', JSON.stringify(carrito));
-      localStorage.setItem('maviko_carrito_hora', Date.now().toString());
-    }
-
-    function comprobarCarritoPendiente() {
       if (carrito.length > 0) {
-        const banner = document.getElementById('bannerCarritoPendiente');
-        if (banner && !sessionStorage.getItem('aviso_carrito_descartado')) {
-          setTimeout(() => {
-            banner.classList.remove('hidden');
-          }, 1800);
-        }
+        localStorage.setItem('maviko_carrito_timestamp', Date.now().toString());
+      } else {
+        localStorage.removeItem('maviko_carrito_timestamp');
       }
     }
 
-    function descartarAvisoCarrito() {
-      const banner = document.getElementById('bannerCarritoPendiente');
-      if (banner) banner.classList.add('hidden');
-      sessionStorage.setItem('aviso_carrito_descartado', 'true');
-    }
-
-    function agendarEnvioLead() {
-      clearTimeout(timerLeadDebounce);
-      timerLeadDebounce = setTimeout(() => {
-        enviarLeadSilencioso();
-      }, 5000);
-    }
-
-    async function enviarLeadSilencioso() {
-      if (!WEBHOOK_APPSCRIPT_URL || carrito.length === 0) return;
-      const tel = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
-      const nom = document.getElementById('nombreCliente') ? document.getElementById('nombreCliente').value.trim() : "";
-
-      if (tel.length >= 7) {
-        const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-        const totalUSD = subtotalUSD + costoEnvioAdicional;
-        const totalBS = (totalUSD * tasaBCV).toFixed(2);
-        const listaProd = carrito.map(i => `[${i.modalidad === 'encargo' ? 'ENCARGO' : 'INMEDIATA'}] ${i.nombre} (${i.tallaSeleccionada || 'Única'} x${i.cantidad})`).join(', ');
-
-        try {
-          await fetch(WEBHOOK_APPSCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              tipo: "lead_abandonado",
-              nombre: nom || "Interesado Web",
-              telefono: tel,
-              totalUSD: totalUSD.toFixed(2),
-              totalBS: totalBS,
-              productos: listaProd
-            })
-          });
-        } catch (e) {
-          console.warn("Fallo en envío de lead silencioso", e);
-        }
-      }
+    // Normalizar texto para buscador inteligente (singular/plural y tildes)
+    function normalizarTextoBusqueda(txt) {
+      return (txt || '')
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .split(/\s+/)
+        .map(palabra => palabra.replace(/(es|s)$/, ''))
+        .filter(Boolean);
     }
 
     function barajarProductos(lista) {
-      for (let i = lista.length - 1; i > 0; i--) {
+      const copia = [...lista];
+      for (let i = copia.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [lista[i], lista[j]] = [lista[j], lista[i]];
+        [copia[i], copia[j]] = [copia[j], copia[i]];
       }
-      return lista;
+      return copia;
     }
 
-    function parseCSV(text) {
-      const textoLimpio = text.replace(/\r/g, '').replace(/\t/g, ' ');
-      const lineas = textoLimpio.trim().split('\n');
-      if (lineas.length < 2) return [];
+    // Notificar ofertas nuevas en App PWA
+    function verificarYNotificarOfertasNuevas(listaProductos) {
+      const ofertasActivas = listaProductos.filter(p => p.precioAnteriorUSD > p.precioUSD);
+      if (ofertasActivas.length === 0) return;
 
-      const cabeceras = lineas[0].split(',').map(h =>
-        h.trim().replace(/^"|"$/g, '').toLowerCase().replace(/\s+/g, '_')
-      );
-      const items = [];
+      const idsVistos = JSON.parse(localStorage.getItem('maviko_ofertas_vistas') || '[]');
+      const nuevasOfertas = ofertasActivas.filter(p => !idsVistos.includes(p.id));
 
-      for (let i = 1; i < lineas.length; i++) {
-        const linea = lineas[i].trim();
-        if (!linea) continue;
+      if (nuevasOfertas.length > 0) {
+        const ofertaDestacada = nuevasOfertas[0];
+        localStorage.setItem('maviko_ofertas_vistas', JSON.stringify(ofertasActivas.map(p => p.id)));
 
-        const fila = [];
-        let dentroComillas = false;
-        let entrada = '';
-
-        for (let char of linea) {
-          if (char === '"') {
-            dentroComillas = !dentroComillas;
-          } else if (char === ',' && !dentroComillas) {
-            fila.push(entrada.trim().replace(/^"|"$/g, ''));
-            entrada = '';
-          } else {
-            entrada += char;
+        if ("Notification" in window) {
+          if (Notification.permission === "granted") {
+            new Notification("🔥 ¡Nueva Oferta en Maviko!", {
+              body: `${ofertaDestacada.nombre} ahora en $${ofertaDestacada.precioUSD.toFixed(2)} (Antes $${ofertaDestacada.precioAnteriorUSD.toFixed(2)})`,
+              icon: "./logo.png"
+            });
+          } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(perm => {
+              if (perm === "granted") {
+                new Notification("🔥 ¡Nueva Oferta en Maviko!", {
+                  body: `${ofertaDestacada.nombre} ahora en $${ofertaDestacada.precioUSD.toFixed(2)}`,
+                  icon: "./logo.png"
+                });
+              }
+            });
           }
         }
-        fila.push(entrada.trim().replace(/^"|"$/g, ''));
-
-        if (fila.length >= cabeceras.length) {
-          let obj = {};
-          cabeceras.forEach((cab, idx) => {
-            obj[cab] = fila[idx] !== undefined ? fila[idx] : '';
-          });
-          items.push(obj);
-        }
+        mostrarToast(`🔥 Oferta: ${ofertaDestacada.nombre} en $${ofertaDestacada.precioUSD.toFixed(2)}`, "¡Nueva Rebaja Disponible!", true);
       }
-      return items;
     }
 
-    async function cargarCatalogoDesdeHoja() {
-      const container = document.getElementById('gridProductos');
-      let csvTexto = "";
+    function cargarCatalogoDesdeHoja() {
+      const callbackName = "manejarRespuestaGoogleSheets";
+      const scriptUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${GID_CATALOGO_WEB}&_t=${Date.now()}`;
 
-      const fuentes = [
-        `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID_CATALOGO_WEB}&_t=${Date.now()}`,
-        `https://docs.google.com/spreadsheets/d/e/2PACX-1vQaqeY3SDZTYjq0-JjsKEh-gVkl5mECXlGdDBMo7seNJszsnPN13SJXMJaNyxqo4JtkpJI7PWk3QJpv/pub?gid=${GID_CATALOGO_WEB}&single=true&output=csv&_t=${Date.now()}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID_CATALOGO_WEB}`)}`
-      ];
-
-      for (let url of fuentes) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4500);
-          const res = await fetch(url, { signal: controller.signal });
-          clearTimeout(timeoutId);
-
-          if (res.ok) {
-            const txt = await res.text();
-            if (txt && txt.trim().length > 30) {
-              csvTexto = txt;
-              break;
-            }
-          }
-        } catch (e) {
-          console.warn("Reintentando con fuente alternativa:", url);
-        }
-      }
-
-      if (!csvTexto) {
-        if (container) {
+      timerEsperaJSONP = setTimeout(() => {
+        const container = document.getElementById('gridProductos');
+        if (container && (!productos || productos.length === 0)) {
           container.innerHTML = `
             <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
               <i class="fa-solid fa-triangle-exclamation text-amber-400 text-3xl"></i>
               <h3 class="text-white font-bold">Aviso de Sincronización</h3>
-              <p class="text-zinc-400 text-xs max-w-md mx-auto">
-                No se pudo conectar con Google Sheets en este momento. Por favor recarga la página (<kbd>Ctrl</kbd> + <kbd>F5</kbd>).
+              <p class="text-rose-400 font-mono text-xs max-w-lg mx-auto bg-black/50 p-2.5 rounded-lg border border-rose-900/40">
+                Google Sheets tardó en responder. Verifica tu conexión a internet.
               </p>
             </div>
           `;
         }
-        return;
-      }
+      }, 9000);
+
+      const script = document.createElement('script');
+      script.src = scriptUrl;
+      script.id = 'jsonp-sheets';
+      document.body.appendChild(script);
+    }
+
+    window.manejarRespuestaGoogleSheets = function(data) {
+      clearTimeout(timerEsperaJSONP);
 
       try {
-        const filas = parseCSV(csvTexto);
+        if (!data || !data.table || !data.table.rows) return;
+
+        const cabeceras = data.table.cols.map(c => (c.label || '').trim().toLowerCase().replace(/\s+/g, '_'));
+        const filas = data.table.rows;
 
         productos = filas
+          .map(r => {
+            let obj = {};
+            r.c.forEach((celda, idx) => {
+              const cab = cabeceras[idx] || `col_${idx}`;
+              obj[cab] = celda && celda.v !== null && celda.v !== undefined ? String(celda.v) : '';
+            });
+            return obj;
+          })
           .filter(f => {
             const val = (f.activo || '').trim().toUpperCase();
             return val === 'TRUE' || val === 'VERDADERO' || val === 'SI' || val === '1';
@@ -1176,24 +797,22 @@
             const galeriaFotos = [f.foto_1, f.foto_2, f.foto_3, f.foto_4].filter(url => url && url.trim().length > 0);
             const ficha = f.ficha_tecnica ? f.ficha_tecnica.split('|').map(item => item.trim()).filter(Boolean) : [];
             let precioLimpio = (f.preciousd || f.precio || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
-            let precioAnterior = (f.precio_anterior || f.descuento || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
+            let precioAnteriorLimpio = (f.precio_anterior || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
+
+            const precioActualNum = parseFloat(precioLimpio) || 0;
+            const precioAnteriorNum = parseFloat(precioAnteriorLimpio) || 0;
             const catLimpia = (f.categoria || "otros").trim().toLowerCase();
 
-            const pUSD = parseFloat(precioLimpio) || 0;
-            const pAnt = parseFloat(precioAnterior) || 0;
-            const enOferta = pAnt > pUSD;
-
             return {
-              id: f.id || '',
+              id: (f.id || '').trim(),
               nombre: f.nombre || 'Sin nombre',
               categoria: catLimpia,
-              precioUSD: pUSD,
-              precioAnteriorUSD: pAnt,
-              enOferta: enOferta,
+              precioUSD: precioActualNum,
+              precioAnteriorUSD: precioAnteriorNum > precioActualNum ? precioAnteriorNum : 0,
               mapaTallas: mapaTallas,
               tieneTallas: Object.keys(mapaTallas).length > 0,
               stockTotal: stockTotal,
-              imagen: galeriaFotos[0] || 'https://via.placeholder.com/300x300?text=Sin+Imagen',
+              imagen: galeriaFotos[0] || './logo.png',
               galeriaFotos: galeriaFotos,
               videoURL: f.video_url ? f.video_url.trim() : null,
               descripcion: f.descripcion || '',
@@ -1201,27 +820,21 @@
             };
           });
 
-        if (productos.length === 0) {
-          if (container) {
-            container.innerHTML = `
-              <div class="col-span-full bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center space-y-3">
-                <i class="fa-solid fa-box-open text-zinc-600 text-3xl"></i>
-                <h3 class="text-white font-bold">Catálogo sin productos activos</h3>
-                <p class="text-zinc-400 text-xs max-w-md mx-auto">Revisa que tus productos tengan <b>TRUE</b> en la columna M de Google Sheets.</p>
-              </div>
-            `;
-          }
-          return;
-        }
-
         productos = barajarProductos(productos);
         generarBotonesCategoriasDinamicos();
         renderProductos(obtenerProductosFiltrados());
-        revisarAperturaDirectaURL();
+        verificarYNotificarOfertasNuevas(productos);
+
+        const params = new URLSearchParams(window.location.search);
+        const idUrl = params.get('id');
+        if (idUrl) {
+          const encontrado = productos.find(p => p.id.toLowerCase() === idUrl.trim().toLowerCase());
+          if (encontrado) abrirDetalleProducto(encontrado.id);
+        }
       } catch (err) {
-        console.error("Error al procesar el archivo:", err);
+        console.error("Error interpretando datos:", err);
       }
-    }
+    };
 
     function generarBotonesCategoriasDinamicos() {
       const contenedor = document.getElementById('contenedorFiltros');
@@ -1230,21 +843,18 @@
       const categoriasUnicas = [...new Set(productos.map(p => p.categoria).filter(Boolean))].sort();
 
       let html = `
-        <button onclick="filtrarCategoria('todas')" class="cat-btn ${categoriaActual === 'todas' ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-zinc-900 text-zinc-300 hover:text-white'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-zinc-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-border-all"></i> Todas (${productos.length})
-        </button>
-        <button onclick="filtrarCategoria('favoritos')" class="cat-btn ${categoriaActual === 'favoritos' ? 'bg-rose-600 text-white font-bold shadow-md' : 'bg-zinc-900 text-rose-400 hover:text-rose-300'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-zinc-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-heart"></i> Favoritos (${favoritos.length})
+        <button onclick="filtrarCategoria('todas')" class="cat-btn ${categoriaActual === 'todas' ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-zinc-900 text-zinc-300 hover:text-white'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-zinc-800">
+          Todas (${productos.length})
         </button>
       `;
 
       categoriasUnicas.forEach(cat => {
+        const count = productos.filter(p => p.categoria === cat).length;
         const nombreVisible = cat.charAt(0).toUpperCase() + cat.slice(1);
         const activo = (categoriaActual === cat);
-        const cantidadCat = productos.filter(p => p.categoria === cat).length;
         html += `
-          <button onclick="filtrarCategoria('${cat}')" class="cat-btn ${activo ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-zinc-900 text-zinc-300 hover:text-white'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-zinc-800 flex items-center gap-1.5">
-            ${nombreVisible} <span class="text-[10px] opacity-75">(${cantidadCat})</span>
+          <button onclick="filtrarCategoria('${cat}')" class="cat-btn ${activo ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-zinc-900 text-zinc-300 hover:text-white'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-zinc-800">
+            ${nombreVisible} (${count})
           </button>
         `;
       });
@@ -1253,7 +863,7 @@
     }
 
     function filtrarCategoria(cat) {
-      if (navigator.vibrate) navigator.vibrate(10);
+      vibrar();
       categoriaActual = cat;
       generarBotonesCategoriasDinamicos();
       renderProductos(obtenerProductosFiltrados());
@@ -1263,45 +873,26 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
-    function ordenarProductos(orden) {
-      if (navigator.vibrate) navigator.vibrate(10);
-      ordenActual = orden;
-      renderProductos(obtenerProductosFiltrados());
-    }
-
     function obtenerProductosFiltrados() {
-      const busquedaRaw = document.getElementById('searchInput').value.trim();
-      const palabrasBusqueda = normalizarTextoBusqueda(busquedaRaw);
+      const textoRaw = document.getElementById('searchInput').value.trim();
+      const tokensBusqueda = normalizarTextoBusqueda(textoRaw);
+      const orden = document.getElementById('ordenSelect').value;
 
-      let resultado = productos.filter(p => {
-        let coincideCat = false;
-        if (categoriaActual === 'todas') {
-          coincideCat = true;
-        } else if (categoriaActual === 'favoritos') {
-          coincideCat = favoritos.includes(p.id.toString());
-        } else {
-          coincideCat = p.categoria === categoriaActual;
-        }
-
-        if (!coincideCat) return false;
-        if (palabrasBusqueda.length === 0) return true;
-
-        const textoProductoNormalizado = normalizarTextoBusqueda(
-          `${p.nombre} ${p.id} ${p.categoria} ${p.descripcion}`
-        ).join(' ');
-
-        return palabrasBusqueda.every(raiz => textoProductoNormalizado.includes(raiz));
+      let filtrados = productos.filter(p => {
+        const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
+        const textoProducto = `${p.nombre} ${p.categoria} ${p.id} ${p.descripcion}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const coincideBusqueda = tokensBusqueda.length === 0 || tokensBusqueda.every(tok => textoProducto.includes(tok));
+        const coincideOferta = orden !== 'ofertas' || p.precioAnteriorUSD > 0;
+        return coincideCat && coincideBusqueda && coincideOferta;
       });
 
-      if (ordenActual === 'menor') {
-        resultado.sort((a, b) => a.precioUSD - b.precioUSD);
-      } else if (ordenActual === 'mayor') {
-        resultado.sort((a, b) => b.precioUSD - a.precioUSD);
-      } else if (ordenActual === 'ofertas') {
-        resultado = resultado.filter(p => p.enOferta);
+      if (orden === 'menor-precio') {
+        filtrados.sort((a, b) => a.precioUSD - b.precioUSD);
+      } else if (orden === 'mayor-precio') {
+        filtrados.sort((a, b) => b.precioUSD - a.precioUSD);
       }
 
-      return resultado;
+      return filtrados;
     }
 
     function iniciarContadorBCV() {
@@ -1309,10 +900,7 @@
         const ahora = new Date();
         const objetivo = new Date();
         objetivo.setHours(17, 0, 0, 0);
-
-        if (ahora >= objetivo) {
-          objetivo.setDate(objetivo.getDate() + 1);
-        }
+        if (ahora >= objetivo) objetivo.setDate(objetivo.getDate() + 1);
 
         const diferencia = objetivo - ahora;
         const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
@@ -1328,8 +916,18 @@
       setInterval(actualizarTimer, 1000);
     }
 
+    function iniciarSocialProof() {
+      const ciudades = ["Caracas", "Valencia", "Barquisimeto", "Maracaibo", "Lechería", "Maracay", "Puerto Ordaz", "Mérida"];
+      setInterval(() => {
+        if (!productos || productos.length === 0) return;
+        const prodRandom = productos[Math.floor(Math.random() * productos.length)];
+        const ciudadRandom = ciudades[Math.floor(Math.random() * ciudades.length)];
+        mostrarToast(`Alguien en ${ciudadRandom} consultó "${prodRandom.nombre}"`, "Actividad reciente", true);
+      }, 45000);
+    }
+
     function copiarDatosPagoMovil(btn) {
-      if (navigator.vibrate) navigator.vibrate(20);
+      vibrar();
       const texto = `Banco: ${DATOS_PAGO_MOVIL.banco}\nCédula: ${DATOS_PAGO_MOVIL.cedula}\nTeléfono: ${DATOS_PAGO_MOVIL.telefono}`;
       navigator.clipboard.writeText(texto).then(() => {
         const textoOriginal = btn.innerHTML;
@@ -1339,27 +937,223 @@
       });
     }
 
-    function toggleModalQR() {
-      if (navigator.vibrate) navigator.vibrate(10);
-      document.getElementById('modalQR').classList.toggle('hidden');
+    function toggleQRModal(abrir) {
+      document.getElementById('modalQR').classList.toggle('hidden', !abrir);
     }
 
-    function cerrarQRPorOverlay(e) {
-      if (e.target.id === 'modalQR') toggleModalQR();
+    function toggleModalPedidos(abrir) {
+      document.getElementById('modalPedidos').classList.toggle('hidden', !abrir);
     }
 
-    function mostrarToast(mensaje, titulo = "¡Producto agregado!", esCopiado = false) {
+    function toggleClubVIP(abrir) {
+      document.getElementById('modalClubVIP').classList.toggle('hidden', !abrir);
+    }
+
+    function toggleEncargoExterno(abrir) {
+      document.getElementById('modalEncargoExterno').classList.toggle('hidden', !abrir);
+    }
+
+    function descartarAvisoCarrito() {
+      document.getElementById('bannerCarritoPendiente').classList.add('hidden');
+      sessionStorage.setItem('maviko_banner_descartado', '1');
+    }
+
+    // Consultar Puntos, Pedidos y Cupones Automáticos (50 pts = $3 | 100 pts = $8 | 200 pts = $20)
+    async function consultarPedidosCliente() {
+      const tel = document.getElementById('inputTelefonoConsulta').value.trim();
+      const resBox = document.getElementById('resultadoPedidosCliente');
+      if (!tel) {
+        resBox.innerHTML = `<p class="text-amber-400">Por favor ingresa tu número de WhatsApp.</p>`;
+        return;
+      }
+
+      resBox.innerHTML = `<p class="text-zinc-400"><i class="fa-solid fa-spinner fa-spin"></i> Consultando puntos y premios...</p>`;
+      try {
+        const resp = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(tel)}`);
+        const data = await resp.json();
+        const puntos = parseInt(data.puntosTotales || 0);
+
+        // Determinar meta siguiente y progreso
+        let meta = 50;
+        let premioTexto = "Cupón de $3 USD (compra mín. $25)";
+        if (puntos >= 50 && puntos < 100) {
+          meta = 100;
+          premioTexto = "Cupón de $8 USD (compra mín. $50)";
+        } else if (puntos >= 100) {
+          meta = 200;
+          premioTexto = "Cupón de $20 USD (compra mín. $80)";
+        }
+
+        const pct = Math.min(100, Math.round((puntos / meta) * 100));
+        const faltan = Math.max(0, meta - puntos);
+
+        let html = `
+          <div class="bg-zinc-950 p-3.5 rounded-xl border border-amber-500/30 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-zinc-400 font-semibold">Saldo Maviko Club:</span>
+              <span class="text-lg font-black text-amber-400">${puntos} Puntos</span>
+            </div>
+            <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-orange-500 to-amber-400 h-full" style="width: ${pct}%"></div>
+            </div>
+            <p class="text-[11px] text-zinc-300">
+              ${faltan > 0 ? `Te faltan <strong>${faltan} pts</strong> para desbloquear: <span class="text-amber-400">${premioTexto}</span>` : `🎉 ¡Ya desbloqueaste el nivel máximo!`}
+            </p>
+          </div>
+        `;
+
+        // Cupones generados desde Apps Script o elegibles por umbral
+        const cupones = data.cupones || [];
+        if (cupones.length > 0) {
+          html += `<div class="space-y-1.5"><p class="font-bold text-emerald-400">🎁 Tus Cupones de Regalo Activos:</p>`;
+          cupones.forEach(c => {
+            html += `
+              <div class="bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center">
+                <div>
+                  <p class="font-mono font-bold text-white text-xs">${c.codigo}</p>
+                  <p class="text-[10px] text-emerald-300">Descuento: $${c.descuentoUSD} USD (Mín. $${c.minCompraUSD})</p>
+                </div>
+                <button onclick="aplicarCuponDesdeModal('${c.codigo}', ${c.descuentoUSD}, ${c.minCompraUSD})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] cursor-pointer">
+                  Usar en Carrito
+                </button>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        } else if (puntos >= 50) {
+          const descElegible = puntos >= 200 ? 20 : (puntos >= 100 ? 8 : 3);
+          const minElegible = puntos >= 200 ? 80 : (puntos >= 100 ? 50 : 25);
+          const codAuto = `MAVIKO${descElegible}-${tel.slice(-4)}`;
+          html += `
+            <div class="bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center">
+              <div>
+                <p class="font-mono font-bold text-white text-xs">${codAuto}</p>
+                <p class="text-[10px] text-emerald-300">Premio desbloqueado: -$${descElegible} USD (Mín. $${minElegible})</p>
+              </div>
+              <button onclick="aplicarCuponDesdeModal('${codAuto}', ${descElegible}, ${minElegible})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] cursor-pointer">
+                Usar Ahora
+              </button>
+            </div>
+          `;
+        }
+
+        if (data.pedidos && data.pedidos.length > 0) {
+          html += `<p class="font-bold text-white pt-1">Historial de Pedidos:</p>`;
+          html += data.pedidos.map(p => `
+            <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-1">
+              <div class="flex justify-between font-bold text-white">
+                <span>${p.fecha}</span>
+                <span class="text-amber-400">+${p.puntos || 0} pts</span>
+              </div>
+              <p class="text-zinc-400">${p.productos}</p>
+              <div class="flex justify-between text-[11px] pt-1">
+                <span class="text-zinc-300">Estado: <strong>${p.estado}</strong></span>
+                <span class="text-emerald-400 font-semibold">Guía: ${p.guia || 'Pendiente'}</span>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          html += `<p class="text-zinc-500 text-[11px]">Aún no hay compras registradas con este número. ¡Suscríbete al Club VIP para ganar 10 puntos hoy!</p>`;
+        }
+
+        resBox.innerHTML = html;
+      } catch (e) {
+        resBox.innerHTML = `<p class="text-rose-400">Error al consultar el historial. Intenta nuevamente.</p>`;
+      }
+    }
+
+    function aplicarCuponDesdeModal(codigo, descuentoUSD, minCompraUSD) {
+      cuponAplicado = { codigo, descuentoUSD: parseFloat(descuentoUSD), minCompraUSD: parseFloat(minCompraUSD) };
+      document.getElementById('inputCodigoCupon').value = codigo;
+      toggleModalPedidos(false);
+      toggleCarrito(true);
+      actualizarCarritoUI();
+      mostrarToast(`Cupón ${codigo} (-$${descuentoUSD} USD) listo para aplicar`, "¡Cupón Activado!", true);
+    }
+
+    function validarYAplicarCupon() {
+      const code = document.getElementById('inputCodigoCupon').value.trim().toUpperCase();
+      const msgEl = document.getElementById('mensajeCuponEstado');
+      if (!code) return;
+
+      const match = code.match(/^MAVIKO(3|8|20)-[0-9]{4}$/);
+      if (match) {
+        const desc = parseInt(match[1]);
+        const min = desc === 20 ? 80 : (desc === 8 ? 50 : 25);
+        cuponAplicado = { codigo: code, descuentoUSD: desc, minCompraUSD: min };
+        msgEl.className = "text-[11px] font-semibold text-emerald-400";
+        msgEl.innerText = `✓ Cupón ${code} válido (-$${desc} USD en compras desde $${min}).`;
+        msgEl.classList.remove('hidden');
+        actualizarCarritoUI();
+      } else {
+        cuponAplicado = null;
+        msgEl.className = "text-[11px] font-semibold text-rose-400";
+        msgEl.innerText = "Código no reconocido. Consulta tus cupones disponibles en 'Mis Puntos y Cupones'.";
+        msgEl.classList.remove('hidden');
+        actualizarCarritoUI();
+      }
+    }
+
+    async function registrarSuscriptorVIP() {
+      const nombre = document.getElementById('vipNombre').value.trim();
+      const telefono = document.getElementById('vipTelefono').value.trim();
+      const interes = document.getElementById('vipInteres').value;
+
+      if (!nombre || !telefono) {
+        alert("Completa tu nombre y número de WhatsApp.");
+        return;
+      }
+
+      fetch(WEBHOOK_APPSCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'suscripcion_vip', nombre, telefono, interes })
+      }).catch(() => {});
+
+      toggleClubVIP(false);
+      mostrarToast("¡Sumaste +10 Puntos de bienvenida en Maviko Club!", "¡Bienvenido al Club VIP!", true);
+    }
+
+    // Captura silenciosa si el cliente deja su teléfono y abandona
+    function programarCapturaAbandono() {
+      clearTimeout(timerAbandonoLead);
+      timerAbandonoLead = setTimeout(() => {
+        const tel = document.getElementById('telefonoCliente').value.trim();
+        const nombre = document.getElementById('nombreCliente').value.trim();
+        if (tel.length >= 10 && carrito.length > 0) {
+          const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+          const totalBS = (subtotalUSD * tasaBCV).toFixed(2);
+          const prods = carrito.map(i => `${i.nombre} x${i.cantidad}`).join(', ');
+          fetch(WEBHOOK_APPSCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tipo: 'lead_abandonado',
+              nombre: nombre || 'Cliente Web',
+              telefono: tel,
+              totalUSD: subtotalUSD.toFixed(2),
+              totalBS,
+              productos: prods
+            })
+          }).catch(() => {});
+        }
+      }, 6000);
+    }
+
+    function mostrarToast(mensaje, titulo = "¡Producto agregado!", ocultarBoton = false) {
       const toast = document.getElementById('toastNotification');
       const toastMsg = document.getElementById('toastMessage');
       const toastTitle = document.getElementById('toastTitle');
       const toastBtn = document.getElementById('toastBtnAccion');
       const toastIcon = document.getElementById('toastIcon');
-
+      
       toastTitle.innerText = titulo;
       toastMsg.innerText = mensaje;
-
-      if (esCopiado) {
-        toastIcon.innerHTML = `<i class="fa-solid fa-check text-lg text-emerald-400"></i>`;
+      
+      if (ocultarBoton) {
+        toastIcon.innerHTML = `<i class="fa-solid fa-bell text-base text-emerald-400"></i>`;
         toastIcon.className = "w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0";
         toastBtn.classList.add('hidden');
       } else {
@@ -1375,42 +1169,7 @@
       toastTimeout = setTimeout(() => {
         toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
         toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
-      }, 3000);
-    }
-
-    function iniciarValidacionSocial() {
-      const ciudades = ["Caracas", "Valencia", "Barquisimeto", "Maracay", "Maracaibo", "Puerto La Cruz", "San Cristóbal", "Maturín"];
-      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó encargo de"];
-
-      setInterval(() => {
-        if (!productos || productos.length === 0) return;
-        const toast = document.getElementById('toastSocialProof');
-        const prod = productos[Math.floor(Math.random() * productos.length)];
-        const ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
-        const accion = acciones[Math.floor(Math.random() * acciones.length)];
-
-        document.getElementById('socialProofTitle').innerText = `Cliente desde ${ciudad}`;
-        document.getElementById('socialProofMsg').innerText = `${accion} ${prod.nombre}`;
-
-        toast.classList.remove('-translate-x-full', 'opacity-0', 'pointer-events-none');
-        toast.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
-
-        setTimeout(() => {
-          toast.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
-          toast.classList.add('-translate-x-full', 'opacity-0', 'pointer-events-none');
-        }, 4000);
-      }, 40000);
-    }
-
-    function revisarAperturaDirectaURL() {
-      const params = new URLSearchParams(window.location.search);
-      const prodId = params.get('id') || params.get('prod');
-      if (prodId) {
-        const prod = productos.find(p => p.id.toString().toLowerCase() === prodId.toString().toLowerCase());
-        if (prod) {
-          abrirDetalleProducto(prod.id);
-        }
-      }
+      }, 3200);
     }
 
     function toggleEmpresaInfo() {
@@ -1425,40 +1184,32 @@
           tasaBCV = parseFloat(datos.current.usd);
         }
       } catch (error) {
-        console.warn("Tasa BCV por defecto activa:", tasaBCV);
+        console.warn("Tasa BCV por defecto:", tasaBCV);
       } finally {
         document.getElementById('displayTasa').innerText = tasaBCV.toFixed(2);
         actualizarCarritoUI();
       }
     }
 
-    // --- PROGRAMACIÓN PWA: INSTALACIÓN DIRECTA Y SEÑAL TIPO PLAY STORE ---
+    // INSTALACIÓN AUTOMÁTICA EN ANDROID (SIN VENTANAS DE INSTRUCCIONES)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       eventoInstalacionDirecta = e;
       const btn = document.getElementById('btnInstalarApp');
-      if (btn) {
-        btn.classList.remove('hidden');
-        btn.classList.add('flex');
-      }
+      if (btn) btn.classList.remove('hidden');
     });
 
     async function accionInstalarApp() {
       if (!eventoInstalacionDirecta) return;
 
-      const btn = document.getElementById('btnInstalarApp');
-      const texto = document.getElementById('textoInstalarApp');
-      const icono = document.getElementById('iconoInstalarApp');
-
       eventoInstalacionDirecta.prompt();
       const { outcome } = await eventoInstalacionDirecta.userChoice;
 
       if (outcome === 'accepted') {
-        // Indicador visual tipo Google Play Store mientras el sistema instala la app
-        if (btn && texto && icono) {
-          btn.disabled = true;
-          btn.className = "flex bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 cursor-wait";
-          btn.className = "flex bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 cursor-wait";
+        const btn = document.getElementById('btnInstalarApp');
+        const icono = document.getElementById('iconoInstalarApp');
+        const texto = document.getElementById('textoInstalarApp');
+        if (btn && icono && texto) {
           icono.className = "fa-solid fa-circle-notch fa-spin text-xs";
           texto.innerText = "Instalando...";
         }
@@ -1469,58 +1220,40 @@
     window.addEventListener('appinstalled', () => {
       eventoInstalacionDirecta = null;
       const btn = document.getElementById('btnInstalarApp');
-      const texto = document.getElementById('textoInstalarApp');
-      const icono = document.getElementById('iconoInstalarApp');
-
-      if (btn && texto && icono) {
-        icono.className = "fa-solid fa-check text-xs";
-        texto.innerText = "Instalada";
-        setTimeout(() => {
-          btn.classList.add('hidden');
-          btn.classList.remove('flex');
-        }, 2500);
-      }
+      if (btn) btn.classList.add('hidden');
+      mostrarToast("¡Maviko App instalada en tu pantalla de inicio!", "Instalación Completada", true);
     });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW:', err));
+      });
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       obtenerTasaBCV();
       iniciarContadorBCV();
       cargarCatalogoDesdeHoja();
       mostrarDatosPago();
-      iniciarValidacionSocial();
-      comprobarCarritoPendiente();
+      iniciarSocialProof();
 
-      const inputFecha = document.getElementById('fechaTentativaEncargo');
-      if (inputFecha) {
-        const hoy = new Date().toISOString().split('T')[0];
-        inputFecha.min = hoy;
+      // Mostrar aviso de retorno si hay productos pendientes en carrito
+      if (carrito.length > 0 && !sessionStorage.getItem('maviko_banner_descartado')) {
+        setTimeout(() => {
+          document.getElementById('bannerCarritoPendiente').classList.remove('hidden');
+        }, 2500);
       }
-
-      const savedNombre = localStorage.getItem('maviko_usuario_nombre');
-      const savedTel = localStorage.getItem('maviko_usuario_tel');
-      if (savedNombre && document.getElementById('nombreCliente')) document.getElementById('nombreCliente').value = savedNombre;
-      if (savedTel && document.getElementById('telefonoCliente')) document.getElementById('telefonoCliente').value = savedTel;
 
       document.addEventListener('keydown', (e) => {
         if (e.key === "Escape") {
           cerrarDetalle();
           toggleCarrito(false);
-          document.getElementById('modalQR').classList.add('hidden');
-          toggleModalRastreo(false);
+          toggleQRModal(false);
+          toggleModalPedidos(false);
+          toggleClubVIP(false);
+          toggleEncargoExterno(false);
         }
       });
-    });
-
-    window.addEventListener('popstate', () => {
-      const modal = document.getElementById('modalDetalle');
-      if (modal && !modal.classList.contains('hidden')) {
-        detenerAutoSlider();
-        const video = document.getElementById('videoPrincipalModal');
-        if (video) video.pause();
-        modal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-        resetearZoom();
-      }
     });
 
     function renderProductos(lista) {
@@ -1528,60 +1261,50 @@
       container.innerHTML = '';
 
       if (lista.length === 0) {
-        container.innerHTML = `<div class="col-span-full text-center py-16 text-zinc-500">No se encontraron artículos en esta sección.</div>`;
+        container.innerHTML = `<div class="col-span-full text-center py-16 text-zinc-500">No se encontraron artículos con esos filtros.</div>`;
         return;
       }
 
       lista.forEach(p => {
         const precioBs = (p.precioUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const esFav = favoritos.includes(p.id.toString());
         const card = document.createElement('div');
         card.className = "bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-lg hover:border-orange-500/50 transition-all flex flex-col justify-between group";
-
+        
         let stockTag = '';
         if (p.stockTotal <= 0) {
-          stockTag = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Bajo Encargo</span>`;
+          stockTag = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Por Encargo</span>`;
         } else if (p.stockTotal <= 3) {
-          stockTag = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Últimas ${p.stockTotal} und</span>`;
+          stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">Últimas ${p.stockTotal} und</span>`;
         }
 
-        let ofertaTag = '';
+        let descuentoBadge = '';
         let precioAnteriorHTML = '';
-        if (p.enOferta) {
-          const porcDescuento = Math.round(((p.precioAnteriorUSD - p.precioUSD) / p.precioAnteriorUSD) * 100);
-          ofertaTag = `<span class="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md animate-pulse">-${porcDescuento}% OFF</span>`;
-          precioAnteriorHTML = `<span class="text-xs text-zinc-500 line-through">$${p.precioAnteriorUSD.toFixed(2)}</span>`;
+        if (p.precioAnteriorUSD > 0) {
+          const pct = Math.round(((p.precioAnteriorUSD - p.precioUSD) / p.precioAnteriorUSD) * 100);
+          descuentoBadge = `<span class="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">-${pct}% OFF</span>`;
+          precioAnteriorHTML = `<span class="text-xs text-zinc-500 line-through mr-1">$${p.precioAnteriorUSD.toFixed(2)}</span>`;
         }
 
         const tallasDisponibles = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
-        const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Opciones: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'A encargar'}</p>` : '';
-
-        const botonAccionHTML = p.stockTotal <= 0
-          ? `<button onclick="agregarAlCarritoAccionDirecta('${p.id}', 'encargo')" class="flex-grow bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-amber-500/40 cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
-               <i class="fa-solid fa-clock-rotate-left"></i> Encargar
-             </button>`
-          : `<button onclick="agregarAlCarritoAccionDirecta('${p.id}', 'inmediata')" class="flex-grow bg-orange-600 hover:bg-orange-500 text-white cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
-               <i class="fa-solid fa-plus"></i> Agregar
-             </button>`;
+        const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Opciones: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'Por encargo'}</p>` : '';
 
         card.innerHTML = `
           <div>
             <div class="h-48 rounded-xl bg-zinc-950 overflow-hidden mb-3 relative cursor-pointer flex items-center justify-center p-2" onclick="abrirDetalleProducto('${p.id}')">
-              <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+              <img src="${p.imagen}" alt="${p.nombre}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
               
-              <button onclick="toggleFavorito(event, '${p.id}')" class="absolute top-2 left-2 z-10 w-8 h-8 rounded-full bg-black/75 hover:bg-black border border-zinc-800 flex items-center justify-center transition-transform active:scale-90 cursor-pointer" title="Agregar a favoritos">
-                <i class="${esFav ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart text-zinc-400 hover:text-white'} text-xs"></i>
-              </button>
+              <div class="absolute top-2 left-2 flex flex-col gap-1">
+                ${descuentoBadge}
+              </div>
 
               <div class="absolute top-2 right-2 flex flex-col items-end gap-1">
                 <span class="bg-black/80 backdrop-blur-md text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize border border-orange-500/30">${p.categoria}</span>
-                ${ofertaTag}
                 ${stockTag}
               </div>
 
               ${p.videoURL ? `<span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded-md flex items-center gap-1 border border-zinc-700"><i class="fa-solid fa-circle-play text-orange-400"></i> Video</span>` : ''}
 
-              <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+              <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span class="bg-black/90 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg border border-orange-500/50 shadow-md">Ver detalles</span>
               </div>
             </div>
@@ -1590,16 +1313,18 @@
             <p class="text-xs text-zinc-400 mb-3 line-clamp-2">${p.descripcion}</p>
           </div>
           <div>
-            <div class="flex items-baseline gap-1.5 mb-3">
-              <span class="text-lg font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
+            <div class="flex items-baseline gap-1 mb-3 flex-wrap">
               ${precioAnteriorHTML}
+              <span class="text-lg font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
               <span class="text-xs text-zinc-500">/ ${precioBs} Bs.</span>
             </div>
             <div class="flex gap-2">
               <button onclick="abrirDetalleProducto('${p.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer" title="Ver más detalles">
                 <i class="fa-solid fa-eye"></i>
               </button>
-              ${botonAccionHTML}
+              <button onclick="agregarAlCarritoAccionDirecta('${p.id}')" class="flex-grow ${p.stockTotal <= 0 ? 'bg-amber-600 hover:bg-amber-500' : 'bg-orange-600 hover:bg-orange-500'} text-white cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid ${p.stockTotal <= 0 ? 'fa-clock' : 'fa-plus'}"></i> ${p.stockTotal <= 0 ? 'Encargar' : 'Agregar'}
+              </button>
             </div>
           </div>
         `;
@@ -1607,87 +1332,73 @@
       });
     }
 
-    function iniciarAutoSlider() {
-      detenerAutoSlider();
-      if (galeriaFotosActual.length <= 1) return;
-      autoSliderTimer = setInterval(() => {
-        indiceFotoActual = (indiceFotoActual + 1) % galeriaFotosActual.length;
-        cambiarFotoPrincipal(galeriaFotosActual[indiceFotoActual], indiceFotoActual);
+    function iniciarPaseAutomatico() {
+      pausarPaseAutomatico();
+      if (fotosModalActuales.length <= 1) return;
+      intervaloCarruselModal = setInterval(() => {
+        const video = document.getElementById('videoPrincipalModal');
+        if (video && !video.classList.contains('hidden')) return;
+        indiceFotoModalActual = (indiceFotoModalActual + 1) % fotosModalActuales.length;
+        seleccionarFotoModalPorIndice(indiceFotoModalActual);
       }, 3200);
     }
 
-    function detenerAutoSlider() {
-      if (autoSliderTimer) {
-        clearInterval(autoSliderTimer);
-        autoSliderTimer = null;
-      }
+    function pausarPaseAutomatico() {
+      if (intervaloCarruselModal) clearInterval(intervaloCarruselModal);
     }
 
-    function pausarAutoSlider() { detenerAutoSlider(); }
-    function reanudarAutoSlider() { iniciarAutoSlider(); }
-
-    function cambiarFotoPrincipal(url, idx) {
-      const foto = document.getElementById('fotoPrincipalModal');
-      const video = document.getElementById('videoPrincipalModal');
+    function seleccionarFotoModalPorIndice(idx) {
+      const fotoPrincipal = document.getElementById('fotoPrincipalModal');
+      const videoPrincipal = document.getElementById('videoPrincipalModal');
       const zoomHint = document.getElementById('zoomHint');
+      const galeria = document.getElementById('galeriaMiniaturas');
 
-      video.pause();
-      video.classList.add('hidden');
-      foto.classList.remove('hidden');
+      videoPrincipal.pause();
+      videoPrincipal.classList.add('hidden');
+      fotoPrincipal.classList.remove('hidden');
       zoomHint.classList.remove('hidden');
-      foto.src = url;
+      fotoPrincipal.src = fotosModalActuales[idx];
+      indiceFotoModalActual = idx;
       resetearZoom();
 
-      const galeria = document.getElementById('galeriaMiniaturas');
       Array.from(galeria.children).forEach((el, i) => {
+        el.className = el.className.replace(/border-orange-500 ring-2 ring-orange-500\/20/g, 'border-zinc-800');
         if (i === idx) {
           el.className = el.className.replace('border-zinc-800', 'border-orange-500 ring-2 ring-orange-500/20');
-        } else {
-          el.className = el.className.replace(/border-orange-500 ring-2 ring-orange-500\/20/g, 'border-zinc-800');
         }
       });
     }
 
     function abrirDetalleProducto(id) {
-      const prod = productos.find(p => p.id.toString() === id.toString());
+      const prod = productos.find(p => p.id === id);
       if (!prod) return;
 
-      if (navigator.vibrate) navigator.vibrate(15);
       tallaSeleccionadaActual = "";
-      galeriaFotosActual = prod.galeriaFotos;
-      indiceFotoActual = 0;
-
-      seleccionarModalidadEnModal(prod.stockTotal > 0 ? 'inmediata' : 'encargo');
-
-      history.pushState({ modalAbierto: true }, "");
+      fotosModalActuales = prod.galeriaFotos;
+      indiceFotoModalActual = 0;
 
       document.getElementById('skuModal').innerText = `Ref: ${prod.id}`;
       document.getElementById('tituloModal').innerText = prod.nombre;
       document.getElementById('categoriaModal').innerText = prod.categoria;
 
+      const vistasRandom = Math.floor(Math.random() * 5) + 2;
+      document.getElementById('vistasActivasModal').innerText = `${vistasRandom} personas están viendo este artículo ahora`;
+
+      const precioAntEl = document.getElementById('precioAnteriorModal');
+      if (prod.precioAnteriorUSD > 0) {
+        precioAntEl.innerText = `$${prod.precioAnteriorUSD.toFixed(2)}`;
+        precioAntEl.classList.remove('hidden');
+      } else {
+        precioAntEl.classList.add('hidden');
+      }
+      
       const precioBs = (prod.precioUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       document.getElementById('precioModalUSD').innerText = `$${prod.precioUSD.toFixed(2)}`;
       document.getElementById('precioModalBS').innerText = `/ ${precioBs} Bs.`;
       document.getElementById('descModalText').innerText = prod.descripcion;
 
-      const pAntModal = document.getElementById('precioAnteriorModalUSD');
-      if (prod.enOferta) {
-        pAntModal.innerText = `$${prod.precioAnteriorUSD.toFixed(2)}`;
-        pAntModal.classList.remove('hidden');
-      } else {
-        pAntModal.classList.add('hidden');
-      }
-
-      const countEl = document.getElementById('personasViendoCount');
-      if (countEl) countEl.innerText = Math.floor(Math.random() * 4) + 2;
-
-      const btnDirectoWA = document.getElementById('btnPreguntarWhatsApp');
-      if (btnDirectoWA) {
-        btnDirectoWA.onclick = () => {
-          const mensajeWA = `¡Hola Maviko! Tengo una consulta sobre este producto: *${prod.nombre}* (Ref: ${prod.id}) - $${prod.precioUSD.toFixed(2)}. ¿Tienen disponibilidad?`;
-          window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensajeWA)}`, '_blank');
-        };
-      }
+      const msgConsulta = `¡Hola Maviko! Me interesa el producto *${prod.nombre}* (Ref: ${prod.id}) de $${prod.precioUSD.toFixed(2)}. ¿Tienen disponibilidad?`;
+      document.getElementById('btnConsultaDirectaModal').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(msgConsulta)}`;
 
       const boxTallas = document.getElementById('boxTallasModal');
       const gridTallas = document.getElementById('gridTallasModal');
@@ -1700,12 +1411,10 @@
         Object.entries(prod.mapaTallas).forEach(([talla, stockTalla]) => {
           const btnTalla = document.createElement('button');
           btnTalla.type = "button";
-
           btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
           btnTalla.innerText = stockTalla > 0 ? `${talla} (${stockTalla})` : `${talla} (Encargo)`;
-
           btnTalla.onclick = () => {
-            if (navigator.vibrate) navigator.vibrate(10);
+            vibrar();
             document.querySelectorAll('.btn-talla').forEach(b => {
               b.classList.remove('bg-orange-600', 'text-white', 'border-orange-500');
               b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
@@ -1713,13 +1422,7 @@
             btnTalla.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
             btnTalla.classList.add('bg-orange-600', 'text-white', 'border-orange-500');
             tallaSeleccionadaActual = talla;
-
-            if (stockTalla <= 0) {
-              seleccionarModalidadEnModal('encargo');
-              labelTalla.innerText = `Opción: ${talla} (Por Encargo)`;
-            } else {
-              labelTalla.innerText = `Opción: ${talla} (${stockTalla} disp.)`;
-            }
+            labelTalla.innerText = stockTalla > 0 ? `Opción: ${talla} (${stockTalla} disp.)` : `Opción: ${talla} (Por encargo)`;
           };
           gridTallas.appendChild(btnTalla);
         });
@@ -1727,42 +1430,47 @@
         boxTallas.classList.add('hidden');
       }
 
+      const fotoPrincipal = document.getElementById('fotoPrincipalModal');
+      const videoPrincipal = document.getElementById('videoPrincipalModal');
+      const zoomHint = document.getElementById('zoomHint');
+
+      videoPrincipal.pause();
+      videoPrincipal.classList.add('hidden');
+      fotoPrincipal.classList.remove('hidden');
+      zoomHint.classList.remove('hidden');
+      fotoPrincipal.src = prod.galeriaFotos[0] || './logo.png';
+      resetearZoom();
+
       const galeria = document.getElementById('galeriaMiniaturas');
       galeria.innerHTML = '';
 
       prod.galeriaFotos.forEach((imgUrl, idx) => {
         const thumb = document.createElement('div');
-        thumb.className = `w-14 h-14 rounded-xl border flex items-center justify-center p-1 bg-zinc-950 cursor-pointer transition-all ${idx === 0 ? 'border-orange-500 ring-2 ring-orange-500/20' : 'border-zinc-800 hover:border-zinc-600'}`;
+        thumb.className = `w-14 h-14 rounded-xl border flex items-center justify-center p-1 bg-zinc-950 cursor-pointer transition-all shrink-0 ${idx === 0 ? 'border-orange-500 ring-2 ring-orange-500/20' : 'border-zinc-800 hover:border-zinc-600'}`;
         thumb.innerHTML = `<img src="${imgUrl}" class="max-w-full max-h-full object-contain pointer-events-none">`;
-
-        thumb.onclick = () => {
-          indiceFotoActual = idx;
-          cambiarFotoPrincipal(imgUrl, idx);
-        };
+        thumb.onclick = () => seleccionarFotoModalPorIndice(idx);
         galeria.appendChild(thumb);
       });
 
       if (prod.videoURL) {
         const thumbVideo = document.createElement('div');
-        thumbVideo.className = "w-14 h-14 rounded-xl border border-zinc-800 hover:border-zinc-600 flex flex-col items-center justify-center p-1 bg-zinc-950 text-orange-400 cursor-pointer transition-all";
+        thumbVideo.className = "w-14 h-14 rounded-xl border border-zinc-800 hover:border-zinc-600 flex flex-col items-center justify-center p-1 bg-zinc-950 text-orange-400 cursor-pointer transition-all shrink-0";
         thumbVideo.innerHTML = `<i class="fa-solid fa-play text-sm"></i><span class="text-[9px] font-bold mt-0.5 text-zinc-300">Video</span>`;
-
+        
         thumbVideo.onclick = () => {
-          detenerAutoSlider();
-          const foto = document.getElementById('fotoPrincipalModal');
-          const video = document.getElementById('videoPrincipalModal');
-          const zoomHint = document.getElementById('zoomHint');
-          foto.classList.add('hidden');
+          pausarPaseAutomatico();
+          fotoPrincipal.classList.add('hidden');
           zoomHint.classList.add('hidden');
-          video.classList.remove('hidden');
-          video.src = prod.videoURL;
-          video.play();
+          videoPrincipal.classList.remove('hidden');
+          videoPrincipal.src = prod.videoURL;
+          videoPrincipal.play();
+          Array.from(galeria.children).forEach(el => {
+            el.className = el.className.replace(/border-orange-500 ring-2 ring-orange-500\/20/g, 'border-zinc-800');
+          });
+          thumbVideo.className = thumbVideo.className.replace('border-zinc-800', 'border-orange-500 ring-2 ring-orange-500/20');
         };
         galeria.appendChild(thumbVideo);
       }
-
-      cambiarFotoPrincipal(prod.galeriaFotos[0] || '', 0);
-      iniciarAutoSlider();
 
       const fichaList = document.getElementById('fichaModalList');
       fichaList.innerHTML = '';
@@ -1777,22 +1485,25 @@
       }
 
       const btnAgregar = document.getElementById('btnAgregarModal');
-      btnAgregar.disabled = false;
-      btnAgregar.className = "w-full bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
-      btnAgregar.innerHTML = `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
-
+      btnAgregar.className = "flex-grow bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
+      btnAgregar.innerHTML = prod.stockTotal <= 0 
+        ? `<i class="fa-solid fa-clock text-base"></i> <span>Solicitar por Encargo</span>`
+        : `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
+      
       btnAgregar.onclick = () => {
         if (prod.tieneTallas && !tallaSeleccionadaActual) {
-          alert("Por favor selecciona una opción o talla.");
+          alert("Por favor selecciona una opción / talla.");
           return;
         }
-        agregarAlCarrito(prod.id, tallaSeleccionadaActual, modalidadSeleccionadaModal);
+        vibrar();
+        agregarAlCarrito(prod.id, tallaSeleccionadaActual);
         cerrarDetalle();
       };
 
       cambiarTab('desc');
       document.getElementById('modalDetalle').classList.remove('hidden');
       document.body.classList.add('overflow-hidden');
+      iniciarPaseAutomatico();
     }
 
     function aplicarZoom(e) {
@@ -1837,24 +1548,21 @@
     }
 
     function cerrarDetalle() {
-      detenerAutoSlider();
+      pausarPaseAutomatico();
       const video = document.getElementById('videoPrincipalModal');
       if (video) video.pause();
       document.getElementById('modalDetalle').classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
       resetearZoom();
-
-      if (history.state && history.state.modalAbierto) {
-        history.back();
-      }
     }
 
-    function agregarAlCarritoAccionDirecta(id, modalidad = "inmediata") {
+    function agregarAlCarritoAccionDirecta(id) {
+      vibrar();
       const prod = productos.find(p => p.id === id);
       if (prod && prod.tieneTallas) {
         abrirDetalleProducto(id);
       } else {
-        agregarAlCarrito(id, "", modalidad);
+        agregarAlCarrito(id, "");
       }
     }
 
@@ -1877,22 +1585,17 @@
       }
     }
 
-    function agregarAlCarrito(id, talla = "", modalidad = "inmediata") {
-      if (navigator.vibrate) navigator.vibrate(25);
-
+    function agregarAlCarrito(id, talla = "") {
       const prod = productos.find(p => p.id === id);
-      let limiteStock = prod.tieneTallas ? (prod.mapaTallas[talla] || 0) : prod.stockTotal;
-
-      if (limiteStock <= 0) {
-        modalidad = "encargo";
-      }
-
-      const claveCarrito = `${id}-${talla}-${modalidad}`;
+      const claveCarrito = `${id}-${talla}`;
       const existe = carrito.find(item => item.clave === claveCarrito);
 
+      let limiteStock = prod.tieneTallas ? (prod.mapaTallas[talla] || 0) : prod.stockTotal;
+      const modalidadInicial = limiteStock <= 0 ? 'Encargo' : 'Inmediata';
+
       if (existe) {
-        if (modalidad === "inmediata" && existe.cantidad + 1 > limiteStock) {
-          alert(`Solo quedan ${limiteStock} unidades para compra inmediata. Si deseas más unidades, agrégalas en modalidad 'Por Encargo'.`);
+        if (existe.modalidad === 'Inmediata' && existe.cantidad + 1 > limiteStock) {
+          alert(`Solo quedan ${limiteStock} unidades para entrega inmediata. Puedes cambiar su modalidad a "Por Encargo" dentro del carrito.`);
           return;
         }
         existe.cantidad++;
@@ -1901,9 +1604,8 @@
           ...prod,
           clave: claveCarrito,
           tallaSeleccionada: talla,
-          modalidad: modalidad,
-          esExterno: false,
-          cantidad: 1
+          cantidad: 1,
+          modalidad: modalidadInicial
         });
       }
 
@@ -1911,36 +1613,68 @@
       actualizarCarritoUI();
 
       const textoTalla = talla ? ` (${talla})` : '';
-      const etiquetaMod = modalidad === 'encargo' ? ' [Por Encargo]' : ' [Compra Inmediata]';
-      mostrarToast(`${prod.nombre}${textoTalla}${etiquetaMod}`);
+      mostrarToast(`${prod.nombre}${textoTalla}`);
+    }
+
+    function agregarEncargoExternoAlCarrito() {
+      const nombre = document.getElementById('extNombreProd').value.trim();
+      const detalle = document.getElementById('extTallaColor').value.trim();
+      if (!nombre) {
+        alert("Escribe el nombre o descripción del artículo que deseas encargar.");
+        return;
+      }
+      const idExt = `EXT-${Date.now().toString().slice(-4)}`;
+      carrito.push({
+        id: idExt,
+        clave: idExt,
+        nombre: `${nombre} (Por cotizar)`,
+        precioUSD: 0,
+        imagen: './logo.png',
+        tallaSeleccionada: detalle,
+        cantidad: 1,
+        modalidad: 'Encargo',
+        esExterno: true
+      });
+      document.getElementById('extNombreProd').value = '';
+      document.getElementById('extTallaColor').value = '';
+      toggleEncargoExterno(false);
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
+      mostrarToast("Artículo especial añadido a tu lista de encargo", "Encargo Agregado", true);
+    }
+
+    function cambiarModalidadItem(clave, nuevaModalidad) {
+      const item = carrito.find(i => i.clave === clave);
+      if (item) {
+        item.modalidad = nuevaModalidad;
+        guardarCarritoEnStorage();
+        actualizarCarritoUI();
+      }
     }
 
     function cambiarCantidad(clave, delta) {
-      if (navigator.vibrate) navigator.vibrate(15);
+      vibrar();
       const item = carrito.find(i => i.clave === clave);
       if (item) {
-        if (!item.esExterno && item.modalidad === 'inmediata') {
-          const prod = productos.find(p => p.id === item.id);
-          const limiteStock = item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal;
+        const prod = productos.find(p => p.id === item.id);
+        const limiteStock = prod ? (item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal) : 99;
 
-          if (delta > 0 && item.cantidad + 1 > limiteStock) {
-            alert(`Límite disponible para entrega inmediata: ${limiteStock} und. Puedes cambiar el artículo a 'Por Encargo' si necesitas más.`);
-            return;
-          }
+        if (delta > 0 && item.modalidad === 'Inmediata' && item.cantidad + 1 > limiteStock) {
+          alert(`Límite disponible en entrega inmediata: ${limiteStock} und.`);
+          return;
         }
 
         item.cantidad += delta;
         if (item.cantidad <= 0) {
-          eliminarDelCarrito(clave);
-          return;
+          carrito = carrito.filter(i => i.clave !== clave);
         }
       }
       guardarCarritoEnStorage();
       actualizarCarritoUI();
     }
 
-    function eliminarDelCarrito(clave) {
-      if (navigator.vibrate) navigator.vibrate(15);
+    function eliminarItemCarrito(clave) {
+      vibrar();
       carrito = carrito.filter(i => i.clave !== clave);
       guardarCarritoEnStorage();
       actualizarCarritoUI();
@@ -1950,6 +1684,7 @@
       if (carrito.length === 0) return;
       if (confirm("¿Estás seguro de que deseas vaciar tu carrito?")) {
         carrito = [];
+        cuponAplicado = null;
         guardarCarritoEnStorage();
         actualizarCarritoUI();
       }
@@ -1964,7 +1699,7 @@
       const textoCosto = document.getElementById('costoEnvioText');
       if (costo > 0) {
         textoCosto.innerText = `+$${costo.toFixed(2)}`;
-      } else if (select.value === 'Retiro en Persona') {
+      } else if (select.value === 'Retiro en Tienda') {
         textoCosto.innerText = "Gratis";
       } else {
         textoCosto.innerText = "Cobro en destino";
@@ -1983,136 +1718,107 @@
       if (carrito.length === 0) {
         listContainer.innerHTML = `
           <div class="text-center py-16 text-zinc-500 space-y-2">
-            <i class="fa-solid fa-basket-shopping text-4xl mb-2 text-zinc-600"></i>
+            <i class="fa-solid fa-basket-shopping text-3xl mb-2 text-zinc-600"></i>
             <p class="text-sm font-medium">Tu carrito está vacío</p>
-            <p class="text-[11px] text-zinc-600">Agrega productos del catálogo o solicita un encargo arriba.</p>
           </div>
         `;
       } else {
         carrito.forEach(i => {
           const itemEl = document.createElement('div');
-          itemEl.className = "py-3 flex flex-col gap-2 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/80";
-          const textoTalla = i.tallaSeleccionada ? `<span class="bg-zinc-800 text-zinc-300 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">${i.tallaSeleccionada}</span>` : '';
-
-          const precioTexto = i.esExterno
-            ? `<span class="text-amber-400 text-[11px] font-bold">Precio por cotizar</span>`
-            : `$${(i.precioUSD * i.cantidad).toFixed(2)} <span class="text-zinc-500 font-normal text-[10px]">($${i.precioUSD.toFixed(2)} c/u)</span>`;
-
-          const selectorModalidadHTML = i.esExterno
-            ? `<span class="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Encargo Especial</span>`
-            : `<select onchange="cambiarModalidadItemCarrito('${i.clave}', this.value)" class="text-[10px] font-bold rounded-lg px-2 py-1 border cursor-pointer focus:outline-none ${i.modalidad === 'encargo' ? 'bg-amber-500/15 text-amber-400 border-amber-500/40' : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40'}">
-                 <option value="inmediata" class="bg-zinc-900 text-emerald-400" ${i.modalidad === 'inmediata' ? 'selected' : ''}>⚡ Compra Inmediata</option>
-                 <option value="encargo" class="bg-zinc-900 text-amber-400" ${i.modalidad === 'encargo' ? 'selected' : ''}>📦 Por Encargo</option>
-               </select>`;
+          itemEl.className = "py-3 flex items-center justify-between gap-3";
+          const textoTalla = i.tallaSeleccionada ? `<span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">${i.tallaSeleccionada}</span>` : '';
 
           itemEl.innerHTML = `
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="w-14 h-14 bg-zinc-950 rounded-xl border border-zinc-800 flex items-center justify-center p-1 shrink-0 overflow-hidden">
-                  <img src="${i.imagen}" class="max-w-full max-h-full object-contain">
-                </div>
-                <div class="min-w-0">
-                  <h4 class="font-bold text-xs text-white truncate">${i.nombre}</h4>
-                  <div class="mt-0.5 flex flex-wrap items-center gap-1">${textoTalla}</div>
-                  <p class="text-xs text-orange-400 font-extrabold mt-1">${precioTexto}</p>
-                </div>
+            <div class="flex items-center gap-3">
+              <div class="w-16 h-16 bg-zinc-950 rounded-xl border border-zinc-800 flex items-center justify-center p-1.5 shrink-0">
+                <img src="${i.imagen}" class="max-w-full max-h-full object-contain">
               </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5">
-                  <button onclick="cambiarCantidad('${i.clave}', -1)" class="w-6 h-6 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">-</button>
-                  <span class="text-xs font-bold w-6 text-center text-white">${i.cantidad}</span>
-                  <button onclick="cambiarCantidad('${i.clave}', 1)" class="w-6 h-6 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">+</button>
-                </div>
-                <button onclick="eliminarDelCarrito('${i.clave}')" class="text-zinc-500 hover:text-rose-400 p-1 cursor-pointer transition-colors" title="Eliminar producto">
-                  <i class="fa-regular fa-trash-can text-sm"></i>
-                </button>
+              <div class="space-y-1">
+                <h4 class="font-bold text-xs text-white leading-snug">${i.nombre} ${textoTalla}</h4>
+                <p class="text-xs text-orange-400 font-semibold">${i.esExterno ? 'Cotización WhatsApp' : '$' + (i.precioUSD * i.cantidad).toFixed(2)}</p>
+                <select onchange="cambiarModalidadItem('${i.clave}', this.value)" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-0.5 text-[10px] font-bold ${i.modalidad === 'Encargo' ? 'text-amber-400' : 'text-emerald-400'}">
+                  <option value="Inmediata" ${i.modalidad === 'Inmediata' ? 'selected' : ''}>⚡ Compra Inmediata</option>
+                  <option value="Encargo" ${i.modalidad === 'Encargo' ? 'selected' : ''}>📦 Por Encargo</option>
+                </select>
               </div>
             </div>
-            <div class="flex justify-between items-center pt-1.5 border-t border-zinc-900">
-              <span class="text-[10px] text-zinc-500">Modalidad:</span>
-              ${selectorModalidadHTML}
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="cambiarCantidad('${i.clave}', -1)" class="w-6 h-6 bg-zinc-800 rounded text-zinc-300 font-bold text-xs cursor-pointer hover:bg-zinc-700 flex items-center justify-center">-</button>
+              <span class="text-xs font-bold w-4 text-center text-white">${i.cantidad}</span>
+              <button onclick="cambiarCantidad('${i.clave}', 1)" class="w-6 h-6 bg-zinc-800 rounded text-zinc-300 font-bold text-xs cursor-pointer hover:bg-zinc-700 flex items-center justify-center">+</button>
+              <button onclick="eliminarItemCarrito('${i.clave}')" class="w-6 h-6 text-zinc-500 hover:text-rose-400 text-xs cursor-pointer flex items-center justify-center ml-1" title="Eliminar">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
             </div>
           `;
           listContainer.appendChild(itemEl);
         });
       }
 
-      const itemsEncargo = carrito.filter(i => i.modalidad === 'encargo');
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const totalUSD = subtotalUSD + (subtotalUSD > 0 ? costoEnvioAdicional : 0);
+
+      // Validar descuento de Cupón VIP
+      let descuentoUSD = 0;
+      const filaCupon = document.getElementById('filaDescuentoCupon');
+      const msgCupon = document.getElementById('mensajeCuponEstado');
+      if (cuponAplicado && subtotalUSD > 0) {
+        if (subtotalUSD >= cuponAplicado.minCompraUSD) {
+          descuentoUSD = cuponAplicado.descuentoUSD;
+          filaCupon.classList.remove('hidden');
+          document.getElementById('montoDescuentoCupon').innerText = descuentoUSD.toFixed(2);
+          msgCupon.className = "text-[11px] font-semibold text-emerald-400";
+          msgCupon.innerText = `✓ Cupón ${cuponAplicado.codigo} aplicado (-$${descuentoUSD} USD).`;
+          msgCupon.classList.remove('hidden');
+        } else {
+          filaCupon.classList.add('hidden');
+          msgCupon.className = "text-[11px] font-semibold text-amber-400";
+          msgCupon.innerText = `El cupón ${cuponAplicado.codigo} requiere una compra mínima de $${cuponAplicado.minCompraUSD} USD.`;
+          msgCupon.classList.remove('hidden');
+        }
+      } else {
+        filaCupon.classList.add('hidden');
+      }
+
+      const totalUSD = Math.max(0, subtotalUSD - descuentoUSD) + (subtotalUSD > 0 ? costoEnvioAdicional : 0);
       const totalBS = totalUSD * tasaBCV;
+
+      // Mostrar opciones de Encargo si hay ítems marcados como Encargo
+      const itemsEncargo = carrito.filter(i => i.modalidad === 'Encargo');
+      const boxEncargo = document.getElementById('boxOpcionesEncargo');
+      if (itemsEncargo.length > 0) {
+        boxEncargo.classList.remove('hidden');
+        const totalEncargoUSD = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+        const plan = document.getElementById('planPagoEncargo').value;
+        const resumenEl = document.getElementById('resumenCuotasEncargo');
+        if (plan.includes('2 Partes')) {
+          const abono = (totalEncargoUSD * 0.5).toFixed(2);
+          resumenEl.innerText = `Abono Inicial (50%): $${abono} USD | Saldo al llegar (50%): $${abono} USD`;
+        } else {
+          resumenEl.innerText = `Pago Único Total Encargo: $${totalEncargoUSD.toFixed(2)} USD`;
+        }
+      } else {
+        boxEncargo.classList.add('hidden');
+      }
+
+      // Actualizar barra de meta de envío
+      const barraMeta = document.getElementById('barraMetaEnvio');
+      const textoMeta = document.getElementById('textoMetaEnvio');
+      if (barraMeta && textoMeta) {
+        const porcentaje = Math.min(100, (subtotalUSD / META_ENVIO_USD) * 100);
+        barraMeta.style.width = `${porcentaje}%`;
+        if (subtotalUSD >= META_ENVIO_USD) {
+          barraMeta.classList.replace('bg-orange-500', 'bg-emerald-500');
+          textoMeta.innerHTML = `🎉 <strong class="text-emerald-400">¡Despacho prioritario y embalaje blindado desbloqueado!</strong>`;
+        } else {
+          barraMeta.classList.replace('bg-emerald-500', 'bg-orange-500');
+          const faltante = (META_ENVIO_USD - subtotalUSD).toFixed(2);
+          textoMeta.innerHTML = `Te faltan <strong class="text-orange-400">$${faltante}</strong> para despacho prioritario sin costo de embalaje`;
+        }
+      }
 
       document.getElementById('subtotalUSD').innerText = subtotalUSD.toFixed(2);
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
       document.getElementById('totalBS').innerText = totalBS.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-      const panelEncargo = document.getElementById('panelOpcionesEncargo');
-      const resumenCuotas = document.getElementById('resumenCuotasEncargo');
-      const planPago = document.getElementById('planPagoEncargo') ? document.getElementById('planPagoEncargo').value : '2_pagos';
-
-      if (itemsEncargo.length > 0 && panelEncargo) {
-        panelEncargo.classList.remove('hidden');
-        const totalEncargoUSD = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-
-        if (totalEncargoUSD > 0) {
-          if (planPago === '2_pagos') {
-            const abonoUSD = totalEncargoUSD * 0.5;
-            const saldoUSD = totalEncargoUSD - abonoUSD;
-            const abonoBS = (abonoUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            resumenCuotas.innerHTML = `
-              <div class="flex justify-between text-emerald-400 font-bold">
-                <span>1er Pago / Abono (50%):</span>
-                <span>$${abonoUSD.toFixed(2)} (${abonoBS} Bs.)</span>
-              </div>
-              <div class="flex justify-between text-zinc-400">
-                <span>2do Pago al recibir (50%):</span>
-                <span>$${saldoUSD.toFixed(2)}</span>
-              </div>
-            `;
-          } else {
-            const totalEncBS = (totalEncargoUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            resumenCuotas.innerHTML = `
-              <div class="flex justify-between text-emerald-400 font-bold">
-                <span>Pago Único Encargo (100%):</span>
-                <span>$${totalEncargoUSD.toFixed(2)} (${totalEncBS} Bs.)</span>
-              </div>
-            `;
-          }
-        } else {
-          resumenCuotas.innerHTML = `<p class="text-amber-300 text-center">Artículo externo: el monto del abono (50% o 100%) se calculará al cotizar.</p>`;
-        }
-      } else if (panelEncargo) {
-        panelEncargo.classList.add('hidden');
-      }
-
-      const metaDespacho = 40.00;
-      const porcentaje = Math.min((subtotalUSD / metaDespacho) * 100, 100);
-      const restante = metaDespacho - subtotalUSD;
-      const barraBox = document.getElementById('barraMetaEnvio');
-
-      if (barraBox) {
-        if (subtotalUSD === 0) {
-          barraBox.innerHTML = `<p class="text-[10px] text-zinc-400 text-center">Agrega productos para calcular beneficios de despacho.</p>`;
-        } else if (restante > 0) {
-          barraBox.innerHTML = `
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-[10px] font-bold">
-                <span class="text-zinc-300">Agrega <span class="text-orange-400 font-extrabold">$${restante.toFixed(2)}</span> más para despacho preferencial</span>
-                <span class="text-orange-400">${Math.round(porcentaje)}%</span>
-              </div>
-              <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800">
-                <div class="bg-gradient-to-r from-orange-500 to-amber-500 h-full transition-all duration-300" style="width: ${porcentaje}%"></div>
-              </div>
-            </div>
-          `;
-        } else {
-          barraBox.innerHTML = `
-            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 shadow-sm">
-              <i class="fa-solid fa-truck-fast"></i> ¡Calificas para despacho preferencial asegurado!
-            </div>
-          `;
-        }
-      }
     }
 
     function mostrarDatosPago() {
@@ -2125,31 +1831,26 @@
         box.innerHTML = `
           <div class="flex justify-between items-center mb-1">
             <p class="font-bold text-orange-400">Datos para Pago Móvil:</p>
-            <div class="flex items-center gap-1.5">
-              <button onclick="toggleModalQR()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
-                <i class="fa-solid fa-qrcode text-orange-400"></i> QR
-              </button>
-              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
-                <i class="fa-regular fa-copy text-orange-400"></i> Copiar
+            <div class="flex gap-1">
+              <button onclick="toggleQRModal(true)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2 py-0.5 rounded text-[10px] font-semibold border border-zinc-700 cursor-pointer">QR</button>
+              <button onclick="copiarDatosPagoMovil(this)" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2 py-0.5 rounded text-[10px] font-semibold border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer">
+                <i class="fa-regular fa-copy text-orange-400"></i> <span>Copiar</span>
               </button>
             </div>
           </div>
-          <p class="text-zinc-300"><strong>Banco:</strong> ${DATOS_PAGO_MOVIL.banco}</p>
-          <p class="text-zinc-300"><strong>Cédula:</strong> ${DATOS_PAGO_MOVIL.cedula}</p>
-          <p class="text-zinc-300"><strong>Teléfono:</strong> ${DATOS_PAGO_MOVIL.telefono}</p>
+          <p class="text-zinc-300"><strong>Banco:</strong> ${DATOS_PAGO_MOVIL.banco} | <strong>CI:</strong> ${DATOS_PAGO_MOVIL.cedula} | <strong>Tel:</strong> ${DATOS_PAGO_MOVIL.telefono}</p>
         `;
       } else if (metodo === 'Zelle') {
         campoRef.classList.remove('hidden');
         box.innerHTML = `
           <p class="font-bold text-orange-400 mb-0.5">Datos para Zelle:</p>
-          <p class="text-zinc-300"><strong>Correo:</strong> pagos@maviko.com</p>
-          <p class="text-zinc-300"><strong>Titular:</strong> Maviko C.A.</p>
+          <p class="text-zinc-300"><strong>Correo:</strong> pagos@maviko.com | <strong>Titular:</strong> Maviko C.A.</p>
         `;
       } else {
         campoRef.classList.add('hidden');
         box.innerHTML = `
           <p class="font-bold text-orange-400 mb-0.5">Efectivo contra entrega:</p>
-          <p class="text-zinc-300">Pagas en divisas o efectivo al momento de la entrega acordada.</p>
+          <p class="text-zinc-300">Pagas en divisas/efectivo al momento de la entrega acordada.</p>
         `;
       }
     }
@@ -2159,7 +1860,6 @@
       const overlay = document.getElementById('cartOverlay');
 
       if (drawer.classList.contains('translate-x-full') || forceOpen) {
-        if (navigator.vibrate) navigator.vibrate(15);
         drawer.classList.remove('translate-x-full');
         overlay.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
@@ -2179,155 +1879,123 @@
       }
 
       const cliente = document.getElementById('nombreCliente').value.trim();
-      const telefono = document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value.trim() : "";
+      const telefono = document.getElementById('telefonoCliente').value.trim();
       const metodo = document.getElementById('metodoPago').value;
       const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
       const agencia = document.getElementById('empresaEnvio').value;
       const direccion = document.getElementById('direccionEnvio').value.trim();
+      const fechaEncargo = document.getElementById('fechaEncargo').value;
+      const planPagoEncargo = document.getElementById('planPagoEncargo').value;
 
-      if (!cliente) {
-        alert("Por favor ingresa tu Nombre y Apellido.");
-        document.getElementById('nombreCliente').focus();
+      if (!cliente || !telefono) {
+        alert("Por favor ingresa tu Nombre y número de WhatsApp.");
         return;
       }
 
-      if (telefono) {
-        localStorage.setItem('maviko_usuario_nombre', cliente);
-        localStorage.setItem('maviko_usuario_tel', telefono);
-      }
-
-      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-
-      const itemsInmediatos = carrito.filter(i => i.modalidad === 'inmediata');
-      const itemsEncargo = carrito.filter(i => i.modalidad === 'encargo');
-
-      const fechaTentativa = document.getElementById('fechaTentativaEncargo') ? document.getElementById('fechaTentativaEncargo').value : "";
-      const planPago = document.getElementById('planPagoEncargo') ? document.getElementById('planPagoEncargo').value : "2_pagos";
-      const textoPlanPago = planPago === '2_pagos' ? "2 Pagos (50% Abono / 50% Contra Entrega)" : "1 Pago Único (100%)";
-
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const totalUSD = subtotalUSD + costoEnvioAdicional;
+      const descuentoUSD = (cuponAplicado && subtotalUSD >= cuponAplicado.minCompraUSD) ? cuponAplicado.descuentoUSD : 0;
+      const totalUSD = Math.max(0, subtotalUSD - descuentoUSD) + costoEnvioAdicional;
       const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      const totalEncargoUSD = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const abonoInicialUSD = planPago === '2_pagos' ? (totalEncargoUSD * 0.5) : totalEncargoUSD;
-      const saldoPendienteUSD = totalEncargoUSD - abonoInicialUSD;
+      const itemsInmediatos = carrito.filter(i => i.modalidad === 'Inmediata');
+      const itemsEncargo = carrito.filter(i => i.modalidad === 'Encargo');
 
-      const listaProdTexto = carrito.map(i => {
-        const modTag = i.modalidad === 'encargo' ? '[ENCARGO]' : '[INMEDIATA]';
-        const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-        const precioTag = i.esExterno ? 'Por cotizar' : `$${(i.precioUSD * i.cantidad).toFixed(2)}`;
-        return `${modTag} ${i.nombre}${detalleTalla} [x${i.cantidad}] - ${precioTag}`;
-      }).join(' | ');
+      // 1. Registrar Compra Inmediata en Google Sheets ("Registro_Ventas")
+      if (itemsInmediatos.length > 0) {
+        const subInm = itemsInmediatos.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+        const totInm = Math.max(0, subInm - descuentoUSD) + costoEnvioAdicional;
+        const prodsInm = itemsInmediatos.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} x${i.cantidad}`).join(', ');
 
-      historialLocalPedidos.push({
-        fecha: new Date().toLocaleDateString('es-VE'),
-        telefono: telefono,
-        productos: listaProdTexto,
-        totalUSD: totalUSD.toFixed(2)
-      });
-      localStorage.setItem('maviko_pedidos_locales', JSON.stringify(historialLocalPedidos));
-
-      // 1. REGISTRO AUTOMÁTICO EN GOOGLE SHEETS CON TU NUEVA URL
-      if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
-        if (itemsInmediatos.length > 0) {
-          fetch(WEBHOOK_APPSCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              tipo: "venta_confirmada",
-              cliente: cliente,
-              telefono: telefono,
-              metodo: metodo,
-              referencia: ref,
-              agencia: agencia,
-              direccion: direccion,
-              totalUSD: totalUSD.toFixed(2),
-              totalBS: totalBS,
-              tasaBCV: tasaBCV.toFixed(2),
-              productos: listaProdTexto
-            })
-          }).catch(err => console.warn("Error enviando venta:", err));
-        }
-
-        if (itemsEncargo.length > 0) {
-          const resumenEncargos = itemsEncargo.map(i => `${i.nombre} (${i.tallaSeleccionada || 'Única'}) [x${i.cantidad}]`).join(' | ');
-          fetch(WEBHOOK_APPSCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              tipo: "encargo_pedido",
-              cliente: cliente,
-              telefono: telefono,
-              producto: resumenEncargos,
-              fechaTentativa: fechaTentativa || "Lo antes posible",
-              planPago: textoPlanPago,
-              totalEncargoUSD: totalEncargoUSD > 0 ? totalEncargoUSD.toFixed(2) : "Por cotizar",
-              abonoInicialUSD: abonoInicialUSD.toFixed(2),
-              saldoPendiente: saldoPendienteUSD.toFixed(2)
-            })
-          }).catch(err => console.warn("Error registrando encargo:", err));
-        }
+        fetch(WEBHOOK_APPSCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'venta_confirmada',
+            cliente,
+            telefono,
+            metodo,
+            referencia: ref,
+            agencia,
+            direccion,
+            totalUSD: totInm.toFixed(2),
+            totalBS: (totInm * tasaBCV).toFixed(2),
+            tasaBCV: tasaBCV.toFixed(2),
+            productos: prodsInm,
+            cuponUsado: descuentoUSD > 0 ? cuponAplicado.codigo : ''
+          })
+        }).catch(() => {});
       }
 
-      // 2. COMANDA EN WHATSAPP
-      let mensaje = `*¡Hola Maviko! Quiero gestionar la siguiente solicitud:*\n\n`;
+      // 2. Registrar Encargos en Google Sheets ("Encargos_Web")
+      if (itemsEncargo.length > 0) {
+        const totEnc = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+        const abono = planPagoEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : totEnc.toFixed(2);
+        const saldo = planPagoEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : '0.00';
+        const prodsEnc = itemsEncargo.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} x${i.cantidad}`).join(', ');
+
+        fetch(WEBHOOK_APPSCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'encargo_pedido',
+            cliente,
+            telefono,
+            producto: prodsEnc,
+            fechaTentativa: fechaEncargo || 'Sin fecha definida',
+            planPago: planPagoEncargo,
+            totalEncargoUSD: totEnc > 0 ? totEnc.toFixed(2) : 'Por cotizar',
+            abonoInicialUSD: abono,
+            saldoPendiente: saldo
+          })
+        }).catch(() => {});
+      }
+
+      // Construir mensaje de WhatsApp
+      let mensaje = `*¡Hola Maviko! Quiero confirmar mi pedido:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
-      if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
-      mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
-      if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
+      mensaje += `📱 *WhatsApp:* ${telefono}\n`;
+      mensaje += `🚚 *Entrega:* ${agencia}\n`;
+      if (direccion) mensaje += `📍 *Destino:* ${direccion}\n`;
       mensaje += `💳 *Método de Pago:* ${metodo}\n`;
-      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
+      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Referencia:* ${ref}\n`;
 
       if (itemsInmediatos.length > 0) {
         mensaje += `\n⚡ *COMPRA INMEDIATA:*\n`;
         itemsInmediatos.forEach(i => {
-          const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-          mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+          const det = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+          mensaje += `• ${i.nombre}${det} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
         });
       }
 
       if (itemsEncargo.length > 0) {
-        mensaje += `\n📦 *ARTÍCULOS POR ENCARGO:*\n`;
+        mensaje += `\n📦 *POR ENCARGO:*\n`;
         itemsEncargo.forEach(i => {
-          const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-          const precioStr = i.esExterno ? 'Por cotizar' : `$${(i.precioUSD * i.cantidad).toFixed(2)}`;
-          mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - ${precioStr}\n`;
+          const det = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+          mensaje += `• ${i.nombre}${det} [x${i.cantidad}] - ${i.esExterno ? 'Cotizar' : '$' + (i.precioUSD * i.cantidad).toFixed(2)}\n`;
         });
-        if (fechaTentativa) mensaje += `📅 *Fecha Tentativa Deseada:* ${fechaTentativa}\n`;
-        mensaje += `💳 *Plan de Pago Encargo:* ${textoPlanPago}\n`;
-        if (totalEncargoUSD > 0 && planPago === '2_pagos') {
-          mensaje += `💵 *1er Abono (50%):* $${abonoInicialUSD.toFixed(2)} | *Saldo al recibir:* $${saldoPendienteUSD.toFixed(2)}\n`;
-        }
+        if (fechaEncargo) mensaje += `📅 *Fecha tentativa:* ${fechaEncargo}\n`;
+        mensaje += `💰 *Plan Encargo:* ${planPagoEncargo}\n`;
       }
 
+      if (descuentoUSD > 0) {
+        mensaje += `\n🎁 *Cupón VIP Aplicado (${cuponAplicado.codigo}):* -$${descuentoUSD.toFixed(2)} USD`;
+      }
       if (costoEnvioAdicional > 0) {
-        mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
+        mensaje += `\n🚚 *Envío:* +$${costoEnvioAdicional.toFixed(2)}`;
       }
 
-      mensaje += `\n💵 *Total Publicado USD:* $${totalUSD.toFixed(2)}`;
-      mensaje += `\n🇻🇪 *Total Publicado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-      mensaje += `⚠️ *Por favor confírmenme disponibilidad física, fecha exacta de entrega y datos para formalizar.* ¡Muchas gracias!`;
+      mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
+      mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+      mensaje += `⚠️ *Por favor confírmenme disponibilidad para formalizar el pago.* ¡Muchas gracias!`;
 
       carrito = [];
+      cuponAplicado = null;
       guardarCarritoEnStorage();
       actualizarCarritoUI();
 
-      const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-      window.open(urlWhatsApp, '_blank');
-    }
-  </script>
-
-  <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('PWA Service Worker registrado con éxito'))
-          .catch((err) => console.log('Error registrando Service Worker:', err));
-      });
+      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank');
     }
   </script>
 </body>
