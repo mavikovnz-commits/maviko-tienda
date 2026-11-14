@@ -117,10 +117,10 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-2.5">
-        <!-- BOTÓN INSTALAR APP DIRECTO (SIN MENSAJES NI VENTANAS, CON ESTADO TIPO PLAY STORE) -->
-        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer">
-          <i id="iconoInstalarApp" class="fa-solid fa-download text-xs"></i>
-          <span id="textoInstalarApp">Instalar</span>
+        <!-- BOTÓN INSTALAR APP ESTILO PLAY STORE -->
+        <button id="btnInstalarApp" onclick="accionInstalarApp()" class="hidden bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer">
+          <i id="iconoInstalarApp" class="fa-solid fa-mobile-screen-button text-xs"></i>
+          <span id="textoInstalarApp">Instalar App</span>
         </button>
 
         <!-- BOTÓN CARRITO UNIFICADO -->
@@ -1450,10 +1450,9 @@
       const { outcome } = await eventoInstalacionDirecta.userChoice;
 
       if (outcome === 'accepted') {
-        // Indicador visual tipo Google Play Store mientras el sistema instala la app
         if (btn && texto && icono) {
           btn.disabled = true;
-          btn.className = "flex bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 cursor-wait";
+          btn.className = "flex bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 cursor-wait";
           icono.className = "fa-solid fa-circle-notch fa-spin text-xs";
           texto.innerText = "Instalando...";
         }
