@@ -116,24 +116,17 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5 sm:gap-2.5">
-        <!-- BOTÓN INSTALAR APP SIEMPRE VISIBLE -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <!-- BOTÓN INSTALAR APP -->
         <button id="btnInstalarApp" onclick="accionInstalarApp()" class="flex bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 items-center gap-1.5 cursor-pointer" title="Descargar Aplicación">
           <i class="fa-solid fa-mobile-screen-button text-sm"></i>
           <span class="hidden sm:inline">Instalar</span> App
         </button>
 
-        <!-- BOTÓN ENCARGOS / LISTA A PEDIDO -->
-        <button onclick="toggleEncargoDrawer(true)" class="relative bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95" title="Armar lista de encargos">
-          <i class="fa-solid fa-bag-shopping text-orange-400"></i>
-          <span class="hidden sm:inline">Encargar</span>
-          <span id="encargoCount" class="bg-orange-500/20 text-orange-400 border border-orange-500/40 text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
-        </button>
-
-        <!-- BOTÓN CARRITO -->
-        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
+        <!-- BOTÓN CARRITO UNIFICADO (COMPRA INMEDIATA + ENCARGOS) -->
+        <button onclick="toggleCarrito(true)" class="relative bg-orange-600 hover:bg-orange-500 text-white px-3.5 sm:px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-orange-600/20 active:scale-95">
           <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
-          <span class="hidden sm:inline font-bold text-xs">Carrito</span>
+          <span class="hidden sm:inline font-bold text-xs">Carrito / Encargos</span>
           <span id="cartCount" class="bg-black text-orange-400 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border border-orange-500">0</span>
         </button>
       </div>
@@ -145,11 +138,11 @@
     <div class="inline-flex gap-8 animate-marquee">
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
+      <span>🛍️ COMPRA INMEDIATA O POR ENCARGO EN TU CARRITO</span>
       <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
       <span>🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
       <span>✨ PRODUCTOS 100% ORIGINALES</span>
-      <span>💵 TASA OFICIAL BCV GARANTIZADA</span>
+      <span>🛍️ COMPRA INMEDIATA O POR ENCARGO EN TU CARRITO</span>
       <span>🎁 ACUMULA PUNTOS CON CADA COMPRA EN MAVIKO CLUB</span>
     </div>
   </div>
@@ -182,10 +175,10 @@
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
           <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
             <i class="fa-solid fa-bullseye"></i>
-            <h3>Nuestra Misión</h3>
+            <h3>Compra Inmediata o Encargo</h3>
           </div>
           <p class="text-zinc-300 leading-relaxed">
-            Brindar productos seleccionados con la mejor relación calidad-precio y entregas directas y transparentes.
+            Adquiere artículos en entrega inmediata o encarga productos agotados y mercancía especial directamente desde tu carrito.
           </p>
         </div>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
@@ -212,15 +205,15 @@
       <div class="flex flex-col justify-between space-y-3">
         <div>
           <h2 class="text-lg font-bold mb-1 flex items-center gap-2 text-orange-400">
-            <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Pedidos
+            <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Atención Directa y Encargos
           </h2>
-          <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden, consulta stock o arma tu lista de mercancía por encargo:</p>
+          <p class="text-xs text-zinc-300 mb-3">Envíanos tu orden, consulta stock o solicita un artículo externo por encargo:</p>
           <div class="flex flex-wrap gap-2">
             <a href="https://wa.me/584127701750?text=Hola%20Maviko,%20quiero%20hacer%20una%20consulta%20sobre%20un%20producto%20de%20la%20tienda." target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95">
               <i class="fa-brands fa-whatsapp text-base"></i> +58 412-7701750
             </a>
-            <button onclick="toggleEncargoDrawer(true)" class="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer active:scale-95">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Lista de Encargos
+            <button onclick="abrirEncargoExternoEnCarrito()" class="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer active:scale-95">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Encargar artículo no publicado
             </button>
           </div>
         </div>
@@ -228,7 +221,7 @@
         <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start gap-2.5">
           <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 shrink-0"></i>
           <p class="text-[11px] text-amber-200 leading-snug">
-            <strong>Importante:</strong> Antes de realizar cualquier pago o transferencia, <strong>confirma siempre la disponibilidad física y tiempo de entrega</strong> con nosotros vía WhatsApp.
+            <strong>Importante:</strong> Antes de realizar cualquier pago o transferencia, <strong>confirma siempre la disponibilidad física o fecha de llegada</strong> con nosotros vía WhatsApp.
           </p>
         </div>
       </div>
@@ -350,58 +343,6 @@
     </section>
 
   </main>
-
-  <!-- OVERLAY Y DRAWER LATERAL DE ENCARGOS (FUNCIONA IGUAL QUE EL CARRITO) -->
-  <div id="encargoOverlay" onclick="toggleEncargoDrawer(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
-
-  <div id="encargoDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
-    <!-- Cabecera Drawer Encargo -->
-    <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-black/40">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-bag-shopping text-orange-400 text-lg"></i>
-        <div>
-          <h3 class="font-bold text-white text-sm">Lista de Encargos a Pedido</h3>
-          <p class="text-[10px] text-zinc-400">Agrega varios artículos para cotizar juntos</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <button onclick="vaciarEncargos()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Lista">
-          <i class="fa-regular fa-trash-can"></i> Vaciar
-        </button>
-        <button onclick="toggleEncargoDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Formulario rápido para añadir ítems a la lista de encargo -->
-    <div class="p-3.5 bg-zinc-950 border-b border-zinc-800 space-y-2 text-xs">
-      <p class="text-[11px] font-bold text-orange-400 flex items-center gap-1.5">
-        <i class="fa-solid fa-plus-circle"></i> Añadir artículo a tu lista:
-      </p>
-      <input type="text" id="encargoItemNombre" placeholder="Nombre del producto o marca (ej. Nike Air Force 1)" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-      <div class="grid grid-cols-3 gap-2">
-        <input type="text" id="encargoItemDetalle" placeholder="Talla / Color" class="col-span-2 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-        <input type="number" id="encargoItemCant" value="1" min="1" max="50" placeholder="Cant." class="px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white text-center focus:outline-none focus:border-orange-500">
-      </div>
-      <button type="button" onclick="agregarItemAListaEncargo()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-orange-400 border border-orange-500/30 font-bold py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-plus"></i> Agregar a la lista
-      </button>
-    </div>
-
-    <!-- Lista de artículos agregados al encargo -->
-    <div id="encargoItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
-
-    <!-- Datos del cliente y envío final de lista de encargos -->
-    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-2.5 text-xs">
-      <input type="text" id="encargoClienteNombre" placeholder="Tu Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-      <input type="tel" id="encargoClienteTel" placeholder="Tu WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
-      <button onclick="enviarListaEncargosWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
-        <i class="fa-brands fa-whatsapp text-base"></i>
-        <span>Cotizar Lista por WhatsApp</span>
-      </button>
-    </div>
-  </div>
 
   <!-- MODAL: MI CUENTA, RASTREO DE PEDIDOS Y PUNTOS MAVIKO -->
   <div id="modalRastreo" onclick="if(event.target.id==='modalRastreo') toggleModalRastreo(false)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -555,6 +496,19 @@
               <span><i class="fa-solid fa-fire text-orange-400"></i> <strong id="personasViendoCount">3</strong> personas consultando este artículo</span>
             </div>
 
+            <!-- SELECTOR DE MODALIDAD EN MODAL (COMPRA INMEDIATA VS ENCARGO) -->
+            <div class="pt-2">
+              <span class="block text-[11px] font-bold text-zinc-400 mb-1.5">Modalidad de adquisición:</span>
+              <div class="grid grid-cols-2 gap-2" id="selectorModalidadModal">
+                <button type="button" id="btnModInmediataModal" onclick="seleccionarModalidadEnModal('inmediata')" class="py-2 px-3 rounded-xl text-xs font-bold border border-emerald-500/50 bg-emerald-500/15 text-emerald-400 cursor-pointer transition-all flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-bolt"></i> Compra Inmediata
+                </button>
+                <button type="button" id="btnModEncargoModal" onclick="seleccionarModalidadEnModal('encargo')" class="py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-clock-rotate-left"></i> Por Encargo
+                </button>
+              </div>
+            </div>
+
             <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
               <div class="flex justify-between items-center">
                 <span class="text-xs font-bold text-zinc-300">Selecciona tu talla u opción:</span>
@@ -599,14 +553,17 @@
     </div>
   </div>
 
-  <!-- OVERLAY Y DRAWER DEL CARRITO -->
+  <!-- OVERLAY Y DRAWER DEL CARRITO UNIFICADO (COMPRA INMEDIATA + ENCARGOS) -->
   <div id="cartOverlay" onclick="toggleCarrito(false)" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 transition-opacity opacity-0 duration-300"></div>
 
   <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
     <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-black/40">
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-basket-shopping text-orange-500 text-lg"></i>
-        <h3 class="font-bold text-white text-base">Tu Pedido</h3>
+        <div>
+          <h3 class="font-bold text-white text-sm">Tu Carrito y Encargos</h3>
+          <p class="text-[10px] text-zinc-400">Elige compra inmediata o encargo por artículo</p>
+        </div>
       </div>
       <div class="flex items-center gap-3">
         <button onclick="vaciarCarrito()" class="text-zinc-500 hover:text-rose-400 text-xs cursor-pointer transition-colors" title="Vaciar Carrito">
@@ -618,15 +575,32 @@
       </div>
     </div>
 
-    <div id="barraMetaEnvio" class="p-3 bg-zinc-950 border-b border-zinc-800"></div>
+    <!-- BOTÓN DESPLEGABLE PARA AGREGAR ENCARGO EXTERNO NO PUBLICADO -->
+    <div class="bg-zinc-950 border-b border-zinc-800 px-3 py-2">
+      <button type="button" onclick="toggleFormularioEncargoExterno()" class="w-full text-left text-[11px] font-bold text-orange-400 hover:text-orange-300 flex items-center justify-between cursor-pointer py-1">
+        <span><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> + Encargar artículo que no está en la tienda</span>
+        <i id="iconoToggleExterno" class="fa-solid fa-chevron-down text-[10px]"></i>
+      </button>
+
+      <div id="boxEncargoExterno" class="hidden pt-2 pb-1 space-y-2 text-xs border-t border-zinc-900 mt-1.5">
+        <input type="text" id="externoNombreInput" placeholder="Producto / Marca deseada (ej. Tenis Nike Air...)" class="w-full px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+        <div class="grid grid-cols-3 gap-2">
+          <input type="text" id="externoDetalleInput" placeholder="Talla / Color" class="col-span-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
+          <button type="button" onclick="agregarEncargoExternoAlCarrito()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg cursor-pointer transition-colors">
+            Añadir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BARRA DINÁMICA DE META DE DESPACHO -->
+    <div id="barraMetaEnvio" class="p-2.5 bg-zinc-950/70 border-b border-zinc-800"></div>
+
+    <!-- LISTA DE ARTÍCULOS EN EL CARRITO -->
     <div id="cartItemsList" class="p-4 overflow-y-auto flex-grow divide-y divide-zinc-800 space-y-2"></div>
 
-    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[55vh]">
-      <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2.5 flex items-center gap-2 text-[11px] text-amber-200">
-        <i class="fa-solid fa-circle-exclamation text-amber-400 shrink-0"></i>
-        <span>Envíos asegurados por agencia con cobro en destino. Confirma disponibilidad antes de transferir.</span>
-      </div>
-
+    <!-- FORMULARIO DE CHECKOUT -->
+    <div class="p-4 bg-zinc-950 border-t border-zinc-800 space-y-3 text-xs overflow-y-auto max-h-[52vh]">
       <div class="space-y-2">
         <input type="text" id="nombreCliente" oninput="agendarEnvioLead()" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
         <input type="tel" id="telefonoCliente" oninput="agendarEnvioLead()" placeholder="Teléfono WhatsApp (ej. 04121234567) *" class="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500">
@@ -658,7 +632,7 @@
 
       <div class="space-y-1 pt-2 border-t border-zinc-800">
         <div class="flex justify-between text-zinc-400">
-          <span>Subtotal:</span>
+          <span>Subtotal Artículos Publicados:</span>
           <span>$<span id="subtotalUSD">0.00</span></span>
         </div>
         <div class="flex justify-between text-zinc-400">
@@ -666,7 +640,7 @@
           <span id="costoEnvioText">Cobro en destino</span>
         </div>
         <div class="flex justify-between text-base font-bold text-white pt-1">
-          <span>Total USD:</span>
+          <span>Total Estimado USD:</span>
           <span class="text-orange-400">$<span id="totalUSD">0.00</span></span>
         </div>
         <div class="flex justify-between text-xs font-semibold text-zinc-300">
@@ -677,14 +651,8 @@
 
       <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
         <i class="fa-brands fa-whatsapp text-base"></i>
-        <span>Confirmar Disponibilidad por WhatsApp</span>
+        <span>Enviar Pedido / Encargos por WhatsApp</span>
       </button>
-
-      <div class="flex justify-around pt-1 text-[10px] text-zinc-500 text-center">
-        <span><i class="fa-solid fa-lock text-emerald-400"></i> Compra Directa</span>
-        <span><i class="fa-solid fa-truck-ramp-box text-orange-400"></i> Despacho en 24h</span>
-        <span><i class="fa-solid fa-certificate text-emerald-400"></i> Original</span>
-      </div>
     </div>
   </div>
 
@@ -747,12 +715,12 @@
     let tasaBCV = 44.50;
     let productos = [];
     let carrito = JSON.parse(localStorage.getItem('maviko_carrito')) || [];
-    let listaEncargos = JSON.parse(localStorage.getItem('maviko_encargos')) || [];
     let favoritos = JSON.parse(localStorage.getItem('maviko_favoritos')) || [];
     let historialLocalPedidos = JSON.parse(localStorage.getItem('maviko_pedidos_locales')) || [];
     let categoriaActual = 'todas';
     let ordenActual = 'destacados';
     let tallaSeleccionadaActual = "";
+    let modalidadSeleccionadaModal = "inmediata";
     let costoEnvioAdicional = 0;
     let toastTimeout;
     let timerLeadDebounce = null;
@@ -768,163 +736,90 @@
       telefono: "04127701750"
     };
 
-    // --- GESTIÓN DE LISTA DE ENCARGOS (TIPO CARRITO) ---
-    function toggleEncargoDrawer(forceOpen = false) {
-      const drawer = document.getElementById('encargoDrawer');
-      const overlay = document.getElementById('encargoOverlay');
-
-      if (drawer.classList.contains('translate-x-full') || forceOpen) {
-        if (navigator.vibrate) navigator.vibrate(15);
-        const savedNombre = localStorage.getItem('maviko_usuario_nombre');
-        const savedTel = localStorage.getItem('maviko_usuario_tel');
-        if (savedNombre) document.getElementById('encargoClienteNombre').value = savedNombre;
-        if (savedTel) document.getElementById('encargoClienteTel').value = savedTel;
-
-        renderListaEncargosUI();
-        drawer.classList.remove('translate-x-full');
-        overlay.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-      } else {
-        drawer.classList.add('translate-x-full');
-        overlay.classList.add('opacity-0');
-        document.body.classList.remove('overflow-hidden');
-        setTimeout(() => overlay.classList.add('hidden'), 300);
-      }
+    // --- FUNCIONES DE ENCARGO UNIFICADO EN CARRITO ---
+    function toggleFormularioEncargoExterno() {
+      const box = document.getElementById('boxEncargoExterno');
+      const icon = document.getElementById('iconoToggleExterno');
+      box.classList.toggle('hidden');
+      icon.classList.toggle('fa-chevron-down');
+      icon.classList.toggle('fa-chevron-up');
     }
 
-    function agregarItemAListaEncargo() {
-      const nombreInput = document.getElementById('encargoItemNombre');
-      const detalleInput = document.getElementById('encargoItemDetalle');
-      const cantInput = document.getElementById('encargoItemCant');
+    function abrirEncargoExternoEnCarrito() {
+      toggleCarrito(true);
+      const box = document.getElementById('boxEncargoExterno');
+      if (box.classList.contains('hidden')) {
+        toggleFormularioEncargoExterno();
+      }
+      setTimeout(() => document.getElementById('externoNombreInput').focus(), 200);
+    }
 
-      const nombre = nombreInput.value.trim();
-      const detalle = detalleInput.value.trim();
-      const cantidad = parseInt(cantInput.value) || 1;
+    function agregarEncargoExternoAlCarrito() {
+      const nombre = document.getElementById('externoNombreInput').value.trim();
+      const detalle = document.getElementById('externoDetalleInput').value.trim();
 
       if (!nombre) {
-        alert("Escribe el nombre o marca del artículo que deseas encargar.");
-        nombreInput.focus();
+        alert("Por favor escribe el nombre o marca del producto que buscas.");
+        document.getElementById('externoNombreInput').focus();
         return;
       }
 
       if (navigator.vibrate) navigator.vibrate(20);
-      listaEncargos.push({
-        id: Date.now(),
+      const idUnico = 'EXT-' + Date.now();
+      carrito.push({
+        id: idUnico,
+        clave: idUnico,
         nombre: nombre,
-        detalle: detalle || "Estándar",
-        cantidad: cantidad
+        precioUSD: 0,
+        imagen: 'https://i.ibb.co/ymDcp5tf/logo.jpg',
+        tallaSeleccionada: detalle || 'A cotizar',
+        cantidad: 1,
+        modalidad: 'encargo',
+        esExterno: true,
+        stockTotal: 999
       });
 
-      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
-      nombreInput.value = '';
-      detalleInput.value = '';
-      cantInput.value = '1';
-      renderListaEncargosUI();
+      document.getElementById('externoNombreInput').value = '';
+      document.getElementById('externoDetalleInput').value = '';
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
+      mostrarToast("Agregado a tu lista como Encargo", "¡Encargo añadido!", true);
     }
 
-    function eliminarItemEncargo(id) {
-      if (navigator.vibrate) navigator.vibrate(15);
-      listaEncargos = listaEncargos.filter(item => item.id !== id);
-      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
-      renderListaEncargosUI();
-    }
+    function cambiarModalidadItemCarrito(clave, nuevaModalidad) {
+      const item = carrito.find(i => i.clave === clave);
+      if (!item || item.esExterno) return;
 
-    function vaciarEncargos() {
-      if (listaEncargos.length === 0) return;
-      if (confirm("¿Deseas vaciar tu lista de encargos?")) {
-        listaEncargos = [];
-        localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
-        renderListaEncargosUI();
-      }
-    }
+      const prod = productos.find(p => p.id === item.id);
+      const limiteStock = prod ? (item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal) : 99;
 
-    function renderListaEncargosUI() {
-      const countEl = document.getElementById('encargoCount');
-      const totalItems = listaEncargos.reduce((acc, item) => acc + item.cantidad, 0);
-      if (countEl) countEl.innerText = totalItems;
-
-      const listContainer = document.getElementById('encargoItemsList');
-      if (!listContainer) return;
-      listContainer.innerHTML = '';
-
-      if (listaEncargos.length === 0) {
-        listContainer.innerHTML = `
-          <div class="text-center py-12 text-zinc-500 space-y-2">
-            <i class="fa-solid fa-wand-magic-sparkles text-3xl text-zinc-700"></i>
-            <p class="text-xs font-medium">Tu lista de encargos está vacía.</p>
-            <p class="text-[11px] text-zinc-600">Añade arriba los artículos que buscas.</p>
-          </div>
-        `;
+      if (nuevaModalidad === 'inmediata' && limiteStock <= 0) {
+        alert("Este artículo está agotado actualmente; debe mantenerse como 'Por Encargo'.");
+        actualizarCarritoUI();
         return;
       }
 
-      listaEncargos.forEach(item => {
-        const el = document.createElement('div');
-        el.className = "py-2.5 flex items-center justify-between gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/80";
-        el.innerHTML = `
-          <div class="min-w-0">
-            <h4 class="font-bold text-xs text-white truncate">${item.nombre}</h4>
-            <p class="text-[11px] text-orange-400">Detalle: ${item.detalle} · <strong class="text-white">Cant: ${item.cantidad}</strong></p>
-          </div>
-          <button onclick="eliminarItemEncargo(${item.id})" class="text-zinc-500 hover:text-rose-400 p-1.5 cursor-pointer transition-colors" title="Quitar">
-            <i class="fa-regular fa-trash-can text-sm"></i>
-          </button>
-        `;
-        listContainer.appendChild(el);
-      });
+      if (nuevaModalidad === 'inmediata' && item.cantidad > limiteStock) {
+        item.cantidad = limiteStock;
+      }
+
+      item.modalidad = nuevaModalidad;
+      guardarCarritoEnStorage();
+      actualizarCarritoUI();
     }
 
-    function enviarListaEncargosWhatsApp() {
-      if (listaEncargos.length === 0) {
-        alert("Agrega al menos un artículo a tu lista de encargos arriba.");
-        document.getElementById('encargoItemNombre').focus();
-        return;
+    function seleccionarModalidadEnModal(mod) {
+      modalidadSeleccionadaModal = mod;
+      const btnInm = document.getElementById('btnModInmediataModal');
+      const btnEnc = document.getElementById('btnModEncargoModal');
+
+      if (mod === 'inmediata') {
+        btnInm.className = "py-2 px-3 rounded-xl text-xs font-bold border border-emerald-500/50 bg-emerald-500/15 text-emerald-400 cursor-pointer transition-all flex items-center justify-center gap-1.5";
+        btnEnc.className = "py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5";
+      } else {
+        btnEnc.className = "py-2 px-3 rounded-xl text-xs font-bold border border-amber-500/50 bg-amber-500/15 text-amber-400 cursor-pointer transition-all flex items-center justify-center gap-1.5";
+        btnInm.className = "py-2 px-3 rounded-xl text-xs font-bold border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white cursor-pointer transition-all flex items-center justify-center gap-1.5";
       }
-
-      const cliente = document.getElementById('encargoClienteNombre').value.trim();
-      const telefono = document.getElementById('encargoClienteTel').value.trim();
-
-      if (!cliente || !telefono) {
-        alert("Por favor completa tu Nombre y Teléfono WhatsApp.");
-        return;
-      }
-
-      localStorage.setItem('maviko_usuario_nombre', cliente);
-      localStorage.setItem('maviko_usuario_tel', telefono);
-
-      const resumenTexto = listaEncargos.map(i => `${i.nombre} (${i.detalle}) [x${i.cantidad}]`).join(' | ');
-
-      if (WEBHOOK_APPSCRIPT_URL) {
-        fetch(WEBHOOK_APPSCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: "encargo_pedido",
-            cliente: cliente,
-            telefono: telefono,
-            producto: resumenTexto,
-            detalles: `Total artículos: ${listaEncargos.length}`
-          })
-        }).catch(err => console.warn("Error guardando encargo:", err));
-      }
-
-      let msg = `*¡Hola Maviko! Quiero cotizar esta LISTA DE ENCARGOS:*\n\n`;
-      msg += `👤 *Cliente:* ${cliente}\n`;
-      msg += `📱 *Teléfono:* ${telefono}\n\n`;
-      msg += `🛍️ *Artículos solicitados:*\n`;
-      listaEncargos.forEach(i => {
-        msg += `• ${i.nombre} (${i.detalle}) [x${i.cantidad}]\n`;
-      });
-      msg += `\nPor favor indíquenme precios estimados y tiempo de entrega. ¡Muchas gracias!`;
-
-      listaEncargos = [];
-      localStorage.setItem('maviko_encargos', JSON.stringify(listaEncargos));
-      renderListaEncargosUI();
-      toggleEncargoDrawer(false);
-
-      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     // --- GESTIÓN DE FAVORITOS ---
@@ -1132,7 +1027,7 @@
         const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
         const totalUSD = subtotalUSD + costoEnvioAdicional;
         const totalBS = (totalUSD * tasaBCV).toFixed(2);
-        const listaProd = carrito.map(i => `${i.nombre} (${i.tallaSeleccionada || 'Única'} x${i.cantidad})`).join(', ');
+        const listaProd = carrito.map(i => `[${i.modalidad === 'encargo' ? 'ENCARGO' : 'INMEDIATA'}] ${i.nombre} (${i.tallaSeleccionada || 'Única'} x${i.cantidad})`).join(', ');
 
         try {
           await fetch(WEBHOOK_APPSCRIPT_URL, {
@@ -1476,7 +1371,7 @@
 
     function iniciarValidacionSocial() {
       const ciudades = ["Caracas", "Valencia", "Barquisimeto", "Maracay", "Maracaibo", "Puerto La Cruz", "San Cristóbal", "Maturín"];
-      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó envío de"];
+      const acciones = ["consultó disponibilidad de", "agregó al carrito", "solicitó encargo de"];
 
       setInterval(() => {
         if (!productos || productos.length === 0) return;
@@ -1535,7 +1430,6 @@
     });
 
     async function accionInstalarApp() {
-      // Si el instalador directo nativo está listo (Android/Chrome), lo lanza al instante sin mensajes
       if (eventoInstalacionDirecta) {
         eventoInstalacionDirecta.prompt();
         const { outcome } = await eventoInstalacionDirecta.userChoice;
@@ -1546,8 +1440,6 @@
         eventoInstalacionDirecta = null;
         return;
       }
-
-      // Si estamos en iPhone o el navegador bloqueó el evento automático, muestra guía rápida
       toggleModalManual(true);
     }
 
@@ -1564,9 +1456,7 @@
       mostrarDatosPago();
       iniciarValidacionSocial();
       comprobarCarritoPendiente();
-      renderListaEncargosUI();
 
-      // Si ya está abierta como app instalada en pantalla completa, ocultar el botón de instalar
       const esAppInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
       if (esAppInstalada) {
         const btn = document.getElementById('btnInstalarApp');
@@ -1582,7 +1472,6 @@
         if (e.key === "Escape") {
           cerrarDetalle();
           toggleCarrito(false);
-          toggleEncargoDrawer(false);
           document.getElementById('modalQR').classList.add('hidden');
           toggleModalRastreo(false);
           toggleModalManual(false);
@@ -1619,9 +1508,9 @@
         
         let stockTag = '';
         if (p.stockTotal <= 0) {
-          stockTag = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Agotado</span>`;
+          stockTag = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Bajo Encargo</span>`;
         } else if (p.stockTotal <= 3) {
-          stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Últimas ${p.stockTotal} und</span>`;
+          stockTag = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Últimas ${p.stockTotal} und</span>`;
         }
 
         let ofertaTag = '';
@@ -1633,7 +1522,16 @@
         }
 
         const tallasDisponibles = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
-        const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Opciones: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'Agotadas'}</p>` : '';
+        const textoTallas = p.tieneTallas ? `<p class="text-[11px] text-orange-400 font-semibold mb-2">Opciones: ${tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'A encargar'}</p>` : '';
+
+        // Botón dinámico: Agregar (Inmediata) o Encargar (Si está agotado)
+        const botonAccionHTML = p.stockTotal <= 0
+          ? `<button onclick="agregarAlCarritoAccionDirecta('${p.id}', 'encargo')" class="flex-grow bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-amber-500/40 cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
+               <i class="fa-solid fa-clock-rotate-left"></i> Encargar
+             </button>`
+          : `<button onclick="agregarAlCarritoAccionDirecta('${p.id}', 'inmediata')" class="flex-grow bg-orange-600 hover:bg-orange-500 text-white cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
+               <i class="fa-solid fa-plus"></i> Agregar
+             </button>`;
 
         card.innerHTML = `
           <div>
@@ -1670,9 +1568,7 @@
               <button onclick="abrirDetalleProducto('${p.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer" title="Ver más detalles">
                 <i class="fa-solid fa-eye"></i>
               </button>
-              <button ${p.stockTotal <= 0 ? 'disabled' : ''} onclick="agregarAlCarritoAccionDirecta('${p.id}')" class="flex-grow ${p.stockTotal <= 0 ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-500 text-white cursor-pointer shadow-md'} font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus"></i> ${p.stockTotal <= 0 ? 'Agotado' : 'Agregar'}
-              </button>
+              ${botonAccionHTML}
             </div>
           </div>
         `;
@@ -1730,6 +1626,9 @@
       galeriaFotosActual = prod.galeriaFotos;
       indiceFotoActual = 0;
 
+      // Por defecto, si hay stock es compra inmediata; si está agotado, es encargo
+      seleccionarModalidadEnModal(prod.stockTotal > 0 ? 'inmediata' : 'encargo');
+
       history.pushState({ modalAbierto: true }, "");
 
       document.getElementById('skuModal').innerText = `Ref: ${prod.id}`;
@@ -1772,25 +1671,27 @@
           const btnTalla = document.createElement('button');
           btnTalla.type = "button";
           
-          if (stockTalla <= 0) {
-            btnTalla.className = "bg-zinc-950 text-zinc-600 font-medium px-3.5 py-1.5 rounded-xl text-xs border border-zinc-800 line-through cursor-not-allowed";
-            btnTalla.innerText = `${talla} (0)`;
-            btnTalla.disabled = true;
-          } else {
-            btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
-            btnTalla.innerText = `${talla} (${stockTalla})`;
-            btnTalla.onclick = () => {
-              if (navigator.vibrate) navigator.vibrate(10);
-              document.querySelectorAll('.btn-talla').forEach(b => {
-                b.classList.remove('bg-orange-600', 'text-white', 'border-orange-500');
-                b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
-              });
-              btnTalla.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
-              btnTalla.classList.add('bg-orange-600', 'text-white', 'border-orange-500');
-              tallaSeleccionadaActual = talla;
+          // Ahora incluso si stockTalla es 0, el usuario puede seleccionarla para encargo
+          btnTalla.className = "btn-talla bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-1.5 rounded-xl text-xs border border-zinc-700 transition-all cursor-pointer";
+          btnTalla.innerText = stockTalla > 0 ? `${talla} (${stockTalla})` : `${talla} (Encargo)`;
+          
+          btnTalla.onclick = () => {
+            if (navigator.vibrate) navigator.vibrate(10);
+            document.querySelectorAll('.btn-talla').forEach(b => {
+              b.classList.remove('bg-orange-600', 'text-white', 'border-orange-500');
+              b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
+            });
+            btnTalla.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-zinc-700');
+            btnTalla.classList.add('bg-orange-600', 'text-white', 'border-orange-500');
+            tallaSeleccionadaActual = talla;
+
+            if (stockTalla <= 0) {
+              seleccionarModalidadEnModal('encargo');
+              labelTalla.innerText = `Opción: ${talla} (Por Encargo)`;
+            } else {
               labelTalla.innerText = `Opción: ${talla} (${stockTalla} disp.)`;
-            };
-          }
+            }
+          };
           gridTallas.appendChild(btnTalla);
         });
       } else {
@@ -1847,24 +1748,18 @@
       }
 
       const btnAgregar = document.getElementById('btnAgregarModal');
-      if (prod.stockTotal <= 0) {
-        btnAgregar.disabled = true;
-        btnAgregar.className = "w-full bg-zinc-800 text-zinc-500 font-bold py-3.5 rounded-xl cursor-not-allowed flex items-center justify-center gap-2 text-sm";
-        btnAgregar.innerHTML = `<i class="fa-solid fa-ban"></i> <span>Agotado</span>`;
-      } else {
-        btnAgregar.disabled = false;
-        btnAgregar.className = "w-full bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
-        btnAgregar.innerHTML = `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
-        
-        btnAgregar.onclick = () => {
-          if (prod.tieneTallas && !tallaSeleccionadaActual) {
-            alert("Por favor selecciona una opción o talla disponible.");
-            return;
-          }
-          agregarAlCarrito(prod.id, tallaSeleccionadaActual);
-          cerrarDetalle();
-        };
-      }
+      btnAgregar.disabled = false;
+      btnAgregar.className = "w-full bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
+      btnAgregar.innerHTML = `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
+      
+      btnAgregar.onclick = () => {
+        if (prod.tieneTallas && !tallaSeleccionadaActual) {
+          alert("Por favor selecciona una opción o talla.");
+          return;
+        }
+        agregarAlCarrito(prod.id, tallaSeleccionadaActual, modalidadSeleccionadaModal);
+        cerrarDetalle();
+      };
 
       cambiarTab('desc');
       document.getElementById('modalDetalle').classList.remove('hidden');
@@ -1925,12 +1820,12 @@
       }
     }
 
-    function agregarAlCarritoAccionDirecta(id) {
+    function agregarAlCarritoAccionDirecta(id, modalidad = "inmediata") {
       const prod = productos.find(p => p.id === id);
       if (prod && prod.tieneTallas) {
         abrirDetalleProducto(id);
       } else {
-        agregarAlCarrito(id, "");
+        agregarAlCarrito(id, "", modalidad);
       }
     }
 
@@ -1953,46 +1848,57 @@
       }
     }
 
-    function agregarAlCarrito(id, talla = "") {
+    function agregarAlCarrito(id, talla = "", modalidad = "inmediata") {
       if (navigator.vibrate) navigator.vibrate(25);
 
       const prod = productos.find(p => p.id === id);
-      const claveCarrito = `${id}-${talla}`;
-      const existe = carrito.find(item => item.clave === claveCarrito);
-
       let limiteStock = prod.tieneTallas ? (prod.mapaTallas[talla] || 0) : prod.stockTotal;
 
+      // Si no hay stock disponible, cambiar automáticamente a 'encargo'
+      if (limiteStock <= 0) {
+        modalidad = "encargo";
+      }
+
+      const claveCarrito = `${id}-${talla}-${modalidad}`;
+      const existe = carrito.find(item => item.clave === claveCarrito);
+
       if (existe) {
-        if (existe.cantidad + 1 > limiteStock) {
-          alert(`Disculpas, solo quedan ${limiteStock} unidades disponibles en esa opción.`);
+        if (modalidad === "inmediata" && existe.cantidad + 1 > limiteStock) {
+          alert(`Solo quedan ${limiteStock} unidades para compra inmediata. Si deseas más unidades, agrégalas en modalidad 'Por Encargo'.`);
           return;
         }
         existe.cantidad++;
       } else {
-        if (limiteStock <= 0) {
-          alert("Este producto no tiene disponibilidad en este momento.");
-          return;
-        }
-        carrito.push({ ...prod, clave: claveCarrito, tallaSeleccionada: talla, cantidad: 1 });
+        carrito.push({
+          ...prod,
+          clave: claveCarrito,
+          tallaSeleccionada: talla,
+          modalidad: modalidad,
+          esExterno: false,
+          cantidad: 1
+        });
       }
 
       guardarCarritoEnStorage();
       actualizarCarritoUI();
 
-      const textoTalla = talla ? ` (Opción: ${talla})` : '';
-      mostrarToast(`${prod.nombre}${textoTalla}`);
+      const textoTalla = talla ? ` (${talla})` : '';
+      const etiquetaMod = modalidad === 'encargo' ? ' [Por Encargo]' : ' [Compra Inmediata]';
+      mostrarToast(`${prod.nombre}${textoTalla}${etiquetaMod}`);
     }
 
     function cambiarCantidad(clave, delta) {
       if (navigator.vibrate) navigator.vibrate(15);
       const item = carrito.find(i => i.clave === clave);
       if (item) {
-        const prod = productos.find(p => p.id === item.id);
-        const limiteStock = item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal;
+        if (!item.esExterno && item.modalidad === 'inmediata') {
+          const prod = productos.find(p => p.id === item.id);
+          const limiteStock = item.tallaSeleccionada ? (prod.mapaTallas[item.tallaSeleccionada] || 0) : prod.stockTotal;
 
-        if (delta > 0 && item.cantidad + 1 > limiteStock) {
-          alert(`Has alcanzado el límite disponible en almacén (${limiteStock} unidades).`);
-          return;
+          if (delta > 0 && item.cantidad + 1 > limiteStock) {
+            alert(`Límite disponible para entrega inmediata: ${limiteStock} und. Puedes cambiar el artículo a 'Por Encargo' si necesitas más.`);
+            return;
+          }
         }
 
         item.cantidad += delta;
@@ -2048,37 +1954,56 @@
 
       if (carrito.length === 0) {
         listContainer.innerHTML = `
-          <div class="text-center py-20 text-zinc-500 space-y-2">
+          <div class="text-center py-16 text-zinc-500 space-y-2">
             <i class="fa-solid fa-basket-shopping text-4xl mb-2 text-zinc-600"></i>
             <p class="text-sm font-medium">Tu carrito está vacío</p>
+            <p class="text-[11px] text-zinc-600">Agrega productos del catálogo o solicita un encargo arriba.</p>
           </div>
         `;
       } else {
         carrito.forEach(i => {
           const itemEl = document.createElement('div');
-          itemEl.className = "py-3 flex items-center justify-between gap-3 bg-zinc-950/40 p-2.5 rounded-xl border border-zinc-800/60";
-          const textoTalla = i.tallaSeleccionada ? `<span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">Opción: ${i.tallaSeleccionada}</span>` : '';
+          itemEl.className = "py-3 flex flex-col gap-2 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/80";
+          const textoTalla = i.tallaSeleccionada ? `<span class="bg-zinc-800 text-zinc-300 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">${i.tallaSeleccionada}</span>` : '';
+
+          const precioTexto = i.esExterno
+            ? `<span class="text-amber-400 text-[11px] font-bold">Precio por cotizar</span>`
+            : `$${(i.precioUSD * i.cantidad).toFixed(2)} <span class="text-zinc-500 font-normal text-[10px]">($${i.precioUSD.toFixed(2)} c/u)</span>`;
+
+          // Selector de modalidad en cada ítem del carrito
+          const selectorModalidadHTML = i.esExterno
+            ? `<span class="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Encargo Especial</span>`
+            : `<select onchange="cambiarModalidadItemCarrito('${i.clave}', this.value)" class="text-[10px] font-bold rounded-lg px-2 py-1 border cursor-pointer focus:outline-none ${i.modalidad === 'encargo' ? 'bg-amber-500/15 text-amber-400 border-amber-500/40' : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40'}">
+                 <option value="inmediata" class="bg-zinc-900 text-emerald-400" ${i.modalidad === 'inmediata' ? 'selected' : ''}>⚡ Compra Inmediata</option>
+                 <option value="encargo" class="bg-zinc-900 text-amber-400" ${i.modalidad === 'encargo' ? 'selected' : ''}>📦 Por Encargo</option>
+               </select>`;
 
           itemEl.innerHTML = `
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-16 h-16 bg-zinc-950 rounded-xl border border-zinc-800 flex items-center justify-center p-1 shrink-0 overflow-hidden">
-                <img src="${i.imagen}" class="max-w-full max-h-full object-contain">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-14 h-14 bg-zinc-950 rounded-xl border border-zinc-800 flex items-center justify-center p-1 shrink-0 overflow-hidden">
+                  <img src="${i.imagen}" class="max-w-full max-h-full object-contain">
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-bold text-xs text-white truncate">${i.nombre}</h4>
+                  <div class="mt-0.5 flex flex-wrap items-center gap-1">${textoTalla}</div>
+                  <p class="text-xs text-orange-400 font-extrabold mt-1">${precioTexto}</p>
+                </div>
               </div>
-              <div class="min-w-0">
-                <h4 class="font-bold text-xs text-white truncate">${i.nombre}</h4>
-                <div class="mt-0.5">${textoTalla}</div>
-                <p class="text-xs text-orange-400 font-extrabold mt-1">$${(i.precioUSD * i.cantidad).toFixed(2)} <span class="text-zinc-500 font-normal text-[10px]">($${i.precioUSD.toFixed(2)} c/u)</span></p>
+              <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5">
+                  <button onclick="cambiarCantidad('${i.clave}', -1)" class="w-6 h-6 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">-</button>
+                  <span class="text-xs font-bold w-6 text-center text-white">${i.cantidad}</span>
+                  <button onclick="cambiarCantidad('${i.clave}', 1)" class="w-6 h-6 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">+</button>
+                </div>
+                <button onclick="eliminarDelCarrito('${i.clave}')" class="text-zinc-500 hover:text-rose-400 p-1 cursor-pointer transition-colors" title="Eliminar producto">
+                  <i class="fa-regular fa-trash-can text-sm"></i>
+                </button>
               </div>
             </div>
-            <div class="flex items-center gap-3 shrink-0">
-              <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5">
-                <button onclick="cambiarCantidad('${i.clave}', -1)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">-</button>
-                <span class="text-xs font-bold w-6 text-center text-white">${i.cantidad}</span>
-                <button onclick="cambiarCantidad('${i.clave}', 1)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 rounded-md text-zinc-300 font-bold text-xs cursor-pointer flex items-center justify-center transition-colors">+</button>
-              </div>
-              <button onclick="eliminarDelCarrito('${i.clave}')" class="text-zinc-500 hover:text-rose-400 p-1 cursor-pointer transition-colors" title="Eliminar producto">
-                <i class="fa-regular fa-trash-can text-sm"></i>
-              </button>
+            <div class="flex justify-between items-center pt-1.5 border-t border-zinc-900">
+              <span class="text-[10px] text-zinc-500">Modalidad:</span>
+              ${selectorModalidadHTML}
             </div>
           `;
           listContainer.appendChild(itemEl);
@@ -2208,13 +2133,18 @@
 
       if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
+      const itemsInmediatos = carrito.filter(i => i.modalidad === 'inmediata');
+      const itemsEncargo = carrito.filter(i => i.modalidad === 'encargo');
+
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
       const totalUSD = subtotalUSD + costoEnvioAdicional;
       const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       const listaProdTexto = carrito.map(i => {
+        const modTag = i.modalidad === 'encargo' ? '[ENCARGO]' : '[INMEDIATA]';
         const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-        return `${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}`;
+        const precioTag = i.esExterno ? 'Por cotizar' : `$${(i.precioUSD * i.cantidad).toFixed(2)}`;
+        return `${modTag} ${i.nombre}${detalleTalla} [x${i.cantidad}] - ${precioTag}`;
       }).join(' | ');
 
       historialLocalPedidos.push({
@@ -2225,48 +2155,79 @@
       });
       localStorage.setItem('maviko_pedidos_locales', JSON.stringify(historialLocalPedidos));
 
+      // 1. REGISTRO EN GOOGLE SHEETS (Separa venta confirmada y encargos si aplica)
       if (typeof WEBHOOK_APPSCRIPT_URL !== 'undefined' && WEBHOOK_APPSCRIPT_URL.length > 10) {
-        fetch(WEBHOOK_APPSCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: "venta_confirmada",
-            cliente: cliente,
-            telefono: telefono,
-            metodo: metodo,
-            referencia: ref,
-            agencia: agencia,
-            direccion: direccion,
-            totalUSD: totalUSD.toFixed(2),
-            totalBS: totalBS,
-            tasaBCV: tasaBCV.toFixed(2),
-            productos: listaProdTexto
-          })
-        }).catch(err => console.warn("Error enviando registro a Sheets:", err));
+        if (itemsInmediatos.length > 0 || itemsEncargo.length > 0) {
+          fetch(WEBHOOK_APPSCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tipo: "venta_confirmada",
+              cliente: cliente,
+              telefono: telefono,
+              metodo: metodo,
+              referencia: ref,
+              agencia: agencia,
+              direccion: direccion,
+              totalUSD: totalUSD.toFixed(2),
+              totalBS: totalBS,
+              tasaBCV: tasaBCV.toFixed(2),
+              productos: listaProdTexto
+            })
+          }).catch(err => console.warn("Error enviando registro a Sheets:", err));
+        }
+
+        if (itemsEncargo.length > 0) {
+          const resumenEncargos = itemsEncargo.map(i => `${i.nombre} (${i.tallaSeleccionada || 'Única'}) [x${i.cantidad}]`).join(' | ');
+          fetch(WEBHOOK_APPSCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tipo: "encargo_pedido",
+              cliente: cliente,
+              telefono: telefono,
+              producto: resumenEncargos,
+              detalles: `Enviado desde carrito unificado (${agencia})`
+            })
+          }).catch(err => console.warn("Error registrando encargo en Sheets:", err));
+        }
       }
 
-      let mensaje = `*¡Hola Maviko! Quiero consultar y confirmar este pedido:*\n\n`;
+      // 2. CONSTRUCCIÓN DE COMANDA ESTRUCTURADA EN WHATSAPP
+      let mensaje = `*¡Hola Maviko! Quiero gestionar la siguiente solicitud:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
       if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
       mensaje += `🚚 *Modalidad de Entrega:* ${agencia}\n`;
       if (direccion) mensaje += `📍 *Destino / Agencia:* ${direccion}\n`;
-      mensaje += `💳 *Método de Pago Seleccionado:* ${metodo}\n`;
+      mensaje += `💳 *Método de Pago:* ${metodo}\n`;
       if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Nº de Referencia:* ${ref}\n`;
-      
-      mensaje += `\n📦 *Productos solicitados (100% Originales):*\n`;
-      carrito.forEach(i => {
-        const detalleTalla = i.tallaSeleccionada ? ` (Opción: ${i.tallaSeleccionada})` : '';
-        mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
-      });
+
+      if (itemsInmediatos.length > 0) {
+        mensaje += `\n⚡ *COMPRA INMEDIATA:*\n`;
+        itemsInmediatos.forEach(i => {
+          const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+          mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+        });
+      }
+
+      if (itemsEncargo.length > 0) {
+        mensaje += `\n📦 *ARTÍCULOS POR ENCARGO:*\n`;
+        itemsEncargo.forEach(i => {
+          const detalleTalla = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
+          const precioStr = i.esExterno ? 'Por cotizar' : `$${(i.precioUSD * i.cantidad).toFixed(2)}`;
+          mensaje += `• ${i.nombre}${detalleTalla} [x${i.cantidad}] - ${precioStr}\n`;
+        });
+      }
 
       if (costoEnvioAdicional > 0) {
         mensaje += `\n🚚 *Envío / Delivery:* +$${costoEnvioAdicional.toFixed(2)}`;
       }
 
-      mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
-      mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-      mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempo de entrega estimado para formalizar el pago.* ¡Muchas gracias!`;
+      mensaje += `\n💵 *Total Publicado USD:* $${totalUSD.toFixed(2)}`;
+      mensaje += `\n🇻🇪 *Total Publicado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+      mensaje += `⚠️ *Por favor confírmenme disponibilidad física y tiempos de entrega para formalizar.* ¡Muchas gracias!`;
 
       carrito = [];
       guardarCarritoEnStorage();
