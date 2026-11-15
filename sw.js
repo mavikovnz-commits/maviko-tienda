@@ -1,4 +1,4 @@
-const CACHE_NAME = 'maviko-cache-v5';
+const CACHE_NAME = 'maviko-cache-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
