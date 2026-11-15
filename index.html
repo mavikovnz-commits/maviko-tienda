@@ -129,7 +129,7 @@
     </div>
   </header>
 
-  <!-- CINTILLO ANIMADO -->
+  <!-- CINTILLO ANIMADO (CAMBIA SEGÚN LA TEMPORADA EN EXCEL O2) -->
   <div id="barraCintillo" class="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-orange-500/30">
     <div id="textoCintillo" class="inline-flex gap-8 animate-marquee">
       <span>🔥 ENVÍOS ASEGURADOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)</span>
@@ -283,7 +283,6 @@
       </div>
 
       <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Galería Multimedia con Swipe Táctil y Zoom -->
         <div>
           <div onmousemove="aplicarZoom(event)" onmouseleave="resetearZoom()" ontouchstart="iniciarSwipeFoto(event)" ontouchmove="aplicarZoomTouch(event)" ontouchend="finalizarSwipeFoto(event)" class="zoom-container h-72 sm:h-80 bg-zinc-950 rounded-2xl border border-zinc-800 flex items-center justify-center p-3 relative">
             <img id="fotoPrincipalModal" src="" alt="Producto" class="max-w-full max-h-full object-contain select-none">
@@ -296,7 +295,6 @@
           <div id="galeriaMiniaturas" class="flex items-center gap-2 mt-3 overflow-x-auto pb-1"></div>
         </div>
 
-        <!-- Información y Selección -->
         <div class="flex flex-col justify-between space-y-4">
           <div>
             <h2 id="tituloModal" class="text-lg sm:text-xl font-extrabold text-white leading-snug">Nombre del producto</h2>
@@ -353,6 +351,14 @@
         <button onclick="toggleCarrito(false)" class="w-8 h-8 rounded-full bg-zinc-900 text-zinc-300 flex items-center justify-center cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
+      </div>
+    </div>
+
+    <!-- BARRA DE META DE ENVÍO -->
+    <div class="px-5 py-2.5 bg-zinc-900 border-b border-zinc-800">
+      <p id="textoMetaEnvio" class="text-[11px] text-zinc-300 mb-1">Agrega más productos para envío asegurado</p>
+      <div class="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+        <div id="barraMetaEnvio" class="bg-orange-500 h-full transition-all duration-300" style="width: 0%"></div>
       </div>
     </div>
 
@@ -476,7 +482,8 @@
     const GOOGLE_SHEET_ID = "1COZTlUBgqv2GPT6TMG1mfkkvliprvBGZw4-0-PTw5dM";
     const GID_CATALOGO_WEB = "1599022863";
     const NUMERO_WHATSAPP = "584127701750";
-    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbxze6MIeN0kn7sn8hs-p0FTifN7qpxLuruzLQCD_EcU2H_Ml4BtlYCa55DVcGzl8apGjg/exec";
+    const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-d3N1C4wJ3c3wT5C7d6q4G8u5Gzl8apGjg/exec";
+    const META_ENVIO_USD = 50;
 
     let tasaBCV = 50.00;
     let productos = [];
@@ -910,7 +917,7 @@
         if (p.stockTotal <= 0) {
           stockTag = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Agotado</span>`;
         } else if (p.stockTotal <= 3) {
-          stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">Últimas ${p.stockTotal}</span>`;
+          stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Últimas ${p.stockTotal}</span>`;
         }
 
         const tallasDisp = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
@@ -1312,6 +1319,22 @@
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
       const totalUSD = subtotalUSD + (subtotalUSD > 0 ? costoEnvioAdicional : 0);
       const totalBS = totalUSD * tasaBCV;
+
+      // Barra de Meta de Envío
+      const barraMeta = document.getElementById('barraMetaEnvio');
+      const textoMeta = document.getElementById('textoMetaEnvio');
+      if (barraMeta && textoMeta) {
+        const porcentaje = Math.min(100, (subtotalUSD / META_ENVIO_USD) * 100);
+        barraMeta.style.width = `${porcentaje}%`;
+        if (subtotalUSD >= META_ENVIO_USD) {
+          barraMeta.className = "bg-emerald-500 h-full transition-all duration-300";
+          textoMeta.innerHTML = `🎉 <strong class="text-emerald-400">¡Calificas para envío prioritario asegurado!</strong>`;
+        } else {
+          barraMeta.className = "bg-orange-500 h-full transition-all duration-300";
+          const faltante = (META_ENVIO_USD - subtotalUSD).toFixed(2);
+          textoMeta.innerHTML = `Agrega <strong class="text-orange-400">$${faltante}</strong> más para despacho asegurado`;
+        }
+      }
 
       document.getElementById('subtotalUSD').innerText = subtotalUSD.toFixed(2);
       document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
