@@ -1873,129 +1873,74 @@
     }
 
     function enviarPedidoWhatsApp() {
-      if (carrito.length === 0) {
-        alert("Tu carrito está vacío. Agrega al menos un producto.");
+      if (!carrito.length) {
+        alert("Tu carrito está vacío.");
         return;
       }
-
       const cliente = document.getElementById('nombreCliente').value.trim();
       const telefono = document.getElementById('telefonoCliente').value.trim();
       const metodo = document.getElementById('metodoPago').value;
-      const ref = document.getElementById('referenciaPago') ? document.getElementById('referenciaPago').value.trim() : "";
+      const ref = document.getElementById('referenciaPago')?.value.trim() || "";
       const agencia = document.getElementById('empresaEnvio').value;
       const direccion = document.getElementById('direccionEnvio').value.trim();
-      const fechaEncargo = document.getElementById('fechaEncargo').value;
-      const planPagoEncargo = document.getElementById('planPagoEncargo').value;
 
       if (!cliente || !telefono) {
-        alert("Por favor ingresa tu Nombre y número de WhatsApp.");
+        alert("Por favor completa tu Nombre y WhatsApp.");
         return;
       }
 
       const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const descuentoUSD = (cuponAplicado && subtotalUSD >= cuponAplicado.minCompraUSD) ? cuponAplicado.descuentoUSD : 0;
-      const totalUSD = Math.max(0, subtotalUSD - descuentoUSD) + costoEnvioAdicional;
+      const totalUSD = subtotalUSD + costoEnvioAdicional;
       const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const resumenProds = carrito.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}]`).join(' | ');
 
-      const itemsInmediatos = carrito.filter(i => i.modalidad === 'Inmediata');
-      const itemsEncargo = carrito.filter(i => i.modalidad === 'Encargo');
+      // AQUÍ SE ENVÍA EL REGISTRO AUTOMÁTICO A GOOGLE SHEETS
+      fetch(WEBHOOK_APPSCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: "venta_confirmada",
+          cliente: cliente,
+          telefono: telefono,
+          metodo_pago: metodo,
+          referencia: ref,
+          agencia_envio: agencia,
+          direccion: direccion || "No especificada",
+          total_usd: totalUSD.toFixed(2),
+          total_bs: (totalUSD * tasaBCV).toFixed(2),
+          tasa_bcv: tasaBCV.toFixed(2),
+          productos: resumenProds,
+          vendedor: "WEB_DIRECTA"
+        })
+      }).catch(() => {});
 
-      // 1. Registrar Compra Inmediata en Google Sheets ("Registro_Ventas")
-      if (itemsInmediatos.length > 0) {
-        const subInm = itemsInmediatos.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-        const totInm = Math.max(0, subInm - descuentoUSD) + costoEnvioAdicional;
-        const prodsInm = itemsInmediatos.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} x${i.cantidad}`).join(', ');
-
-        fetch(WEBHOOK_APPSCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: 'venta_confirmada',
-            cliente,
-            telefono,
-            metodo,
-            referencia: ref,
-            agencia,
-            direccion,
-            totalUSD: totInm.toFixed(2),
-            totalBS: (totInm * tasaBCV).toFixed(2),
-            tasaBCV: tasaBCV.toFixed(2),
-            productos: prodsInm,
-            cuponUsado: descuentoUSD > 0 ? cuponAplicado.codigo : ''
-          })
-        }).catch(() => {});
-      }
-
-      // 2. Registrar Encargos en Google Sheets ("Encargos_Web")
-      if (itemsEncargo.length > 0) {
-        const totEnc = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-        const abono = planPagoEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : totEnc.toFixed(2);
-        const saldo = planPagoEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : '0.00';
-        const prodsEnc = itemsEncargo.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} x${i.cantidad}`).join(', ');
-
-        fetch(WEBHOOK_APPSCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: 'encargo_pedido',
-            cliente,
-            telefono,
-            producto: prodsEnc,
-            fechaTentativa: fechaEncargo || 'Sin fecha definida',
-            planPago: planPagoEncargo,
-            totalEncargoUSD: totEnc > 0 ? totEnc.toFixed(2) : 'Por cotizar',
-            abonoInicialUSD: abono,
-            saldoPendiente: saldo
-          })
-        }).catch(() => {});
-      }
-
-      // Construir mensaje de WhatsApp
-      let mensaje = `*¡Hola Maviko! Quiero confirmar mi pedido:*\n\n`;
+      let mensaje = `*¡Hola Maviko! Quiero confirmar este pedido:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
-      mensaje += `📱 *WhatsApp:* ${telefono}\n`;
+      mensaje += `📱 *Teléfono:* ${telefono}\n`;
       mensaje += `🚚 *Entrega:* ${agencia}\n`;
       if (direccion) mensaje += `📍 *Destino:* ${direccion}\n`;
-      mensaje += `💳 *Método de Pago:* ${metodo}\n`;
-      if (ref && metodo !== 'Efectivo / Divisas') mensaje += `🔢 *Referencia:* ${ref}\n`;
+      mensaje += `💳 *Pago:* ${metodo}\n`;
+      if (ref) mensaje += `🔢 *Referencia:* ${ref}\n`;
 
-      if (itemsInmediatos.length > 0) {
-        mensaje += `\n⚡ *COMPRA INMEDIATA:*\n`;
-        itemsInmediatos.forEach(i => {
-          const det = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-          mensaje += `• ${i.nombre}${det} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
-        });
-      }
+      mensaje += `\n📦 *Artículos:*\n`;
+      carrito.forEach(i => {
+        mensaje += `• ${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}] - $${(i.precioUSD * i.cantidad).toFixed(2)}\n`;
+      });
 
-      if (itemsEncargo.length > 0) {
-        mensaje += `\n📦 *POR ENCARGO:*\n`;
-        itemsEncargo.forEach(i => {
-          const det = i.tallaSeleccionada ? ` (${i.tallaSeleccionada})` : '';
-          mensaje += `• ${i.nombre}${det} [x${i.cantidad}] - ${i.esExterno ? 'Cotizar' : '$' + (i.precioUSD * i.cantidad).toFixed(2)}\n`;
-        });
-        if (fechaEncargo) mensaje += `📅 *Fecha tentativa:* ${fechaEncargo}\n`;
-        mensaje += `💰 *Plan Encargo:* ${planPagoEncargo}\n`;
-      }
+      if (costoEnvioAdicional > 0) mensaje += `\n🚚 *Envío:* +$${costoEnvioAdicional.toFixed(2)}`;
+      mensaje += `\n💵 *Total USD:* $${totalUSD.toFixed(2)}`;
+      mensaje += `\n🇻🇪 *Total Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
+      mensaje += `⚠️ *Confirmo disponibilidad y tiempo de entrega antes de transferir.*`;
 
-      if (descuentoUSD > 0) {
-        mensaje += `\n🎁 *Cupón VIP Aplicado (${cuponAplicado.codigo}):* -$${descuentoUSD.toFixed(2)} USD`;
-      }
-      if (costoEnvioAdicional > 0) {
-        mensaje += `\n🚚 *Envío:* +$${costoEnvioAdicional.toFixed(2)}`;
-      }
-
-      mensaje += `\n💵 *Total Estimado USD:* $${totalUSD.toFixed(2)}`;
-      mensaje += `\n🇻🇪 *Total Estimado Bs. (Tasa BCV ${tasaBCV}):* ${totalBS} Bs.\n\n`;
-      mensaje += `⚠️ *Por favor confírmenme disponibilidad para formalizar el pago.* ¡Muchas gracias!`;
-
+      vibrar();
       carrito = [];
-      cuponAplicado = null;
       guardarCarritoEnStorage();
       actualizarCarritoUI();
+      toggleCarrito(false);
 
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
     }
   </script>
 </body>
