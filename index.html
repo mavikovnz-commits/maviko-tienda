@@ -1895,23 +1895,46 @@
       const resumenProds = carrito.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}]`).join(' | ');
 
       // REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (REGISTRO_VENTAS)
-      fetch(WEBHOOK_APPSCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tipo: "venta_confirmada", // <--- Esto es lo que le indica al Apps Script que debe guardarlo en Registro_Ventas
-          cliente: cliente,
-          telefono: telefono,
-          metodo_pago: metodo,
-          referencia: ref,
-          agencia_envio: agencia,
-          direccion: direccion || "No especificada",
-          total_usd: totalUSD.toFixed(2),
-          total_bs: (totalUSD * tasaBCV).toFixed(2),
-          tasa_bcv: tasaBCV.toFixed(2),
-          productos: resumenProds,
-          vendedor: "WEB_DIRECTA"
+     // REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (REGISTRO_VENTAS) MEDIANTE IFRAME OCULTO
+      const formData = {
+        tipo: "venta_confirmada",
+        cliente: cliente,
+        telefono: telefono,
+        metodo_pago: metodo,
+        referencia: ref,
+        agencia_envio: agencia,
+        direccion: direccion || "No especificada",
+        total_usd: totalUSD.toFixed(2),
+        total_bs: (totalUSD * tasaBCV).toFixed(2),
+        tasa_bcv: tasaBCV.toFixed(2),
+        productos: resumenProds,
+        vendedor: "WEB_DIRECTA"
+      };
+
+      // Crear un formulario temporal invisible para enviar los datos sin bloqueos de CORS
+      let iframe = document.getElementById('hidden_iframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.id = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = WEBHOOK_APPSCRIPT_URL;
+      form.target = 'hidden_iframe';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'data';
+      input.value = JSON.stringify(formData);
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
         })
       }).catch(() => {});
    
