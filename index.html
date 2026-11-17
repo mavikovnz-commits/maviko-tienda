@@ -1871,8 +1871,8 @@
         setTimeout(() => overlay.classList.add('hidden'), 300);
       }
     }
-
-    function enviarPedidoWhatsApp() {
+    
+ function enviarPedidoWhatsApp() {
       if (!carrito.length) {
         alert("Tu carrito está vacío.");
         return;
@@ -1894,7 +1894,7 @@
       const totalBS = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const resumenProds = carrito.map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}]`).join(' | ');
 
-      // AQUÍ SE ENVÍA EL REGISTRO AUTOMÁTICO A GOOGLE SHEETS
+      // REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (REGISTRO_VENTAS)
       fetch(WEBHOOK_APPSCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -1940,7 +1940,6 @@
       toggleCarrito(false);
 
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank');
-    }
     }
   </script>
 </body>
