@@ -1900,7 +1900,7 @@
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tipo: "venta_confirmada",
+          tipo: "venta_confirmada", // <--- Esto es lo que le indica al Apps Script que debe guardarlo en Registro_Ventas
           cliente: cliente,
           telefono: telefono,
           metodo_pago: metodo,
@@ -1914,7 +1914,7 @@
           vendedor: "WEB_DIRECTA"
         })
       }).catch(() => {});
-
+   
       let mensaje = `*¡Hola Maviko! Quiero confirmar este pedido:*\n\n`;
       mensaje += `👤 *Cliente:* ${cliente}\n`;
       mensaje += `📱 *Teléfono:* ${telefono}\n`;
