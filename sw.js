@@ -1,15 +1,20 @@
-const CACHE_NAME = 'maviko-cache-v9';
+const CACHE_NAME = 'maviko-cache-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './styles.css',
+  './app.js',
   './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
   './logo.jpg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Usa Promise.allSettled para que si un archivo tarda, no aborte toda la PWA
       return Promise.allSettled(
         ASSETS_TO_CACHE.map((url) => cache.add(url))
       );
@@ -36,19 +41,40 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  // Estrategia Network-First: siempre busca la versión más reciente en internet
-  // y usa la caché solo si el cliente está sin conexión
-  if (event.request.url.startsWith(self.location.origin)) {
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // Para imágenes estáticas locales: Stale-While-Revalidate (rápidas y siempre actualizadas)
+  if (/\.(png|jpg|jpeg|webp|svg|ico)$/i.test(url.pathname)) {
     event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
+      caches.match(event.request).then((cached) => {
+        const networkFetch = fetch(event.request)
+          .then((response) => {
+            if (response && response.ok) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached || networkFetch;
+      })
+    );
+    return;
+  }
+
+  // Para HTML, JS, CSS y manifest: Network-First con respaldo en caché
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.ok) {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
           });
-          return networkResponse;
-        })
-        .catch(() => caches.match(event.request))
-    );
-  }
+        }
+        return networkResponse;
+      })
+      .catch(() => caches.match(event.request))
+  );
 });
