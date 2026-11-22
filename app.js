@@ -2399,6 +2399,12 @@ function enviarPedidoWhatsApp() {
 
 // ======================== PUNTOS, CUPONES VERIFICADOS Y CLUB VIP ========================
 
+function normalizarTelefonoConsulta(tel) {
+  const soloDigitos = String(tel || '').replace(/\D/g, '');
+  const sinPais = soloDigitos.length > 10 && soloDigitos.startsWith('58') ? soloDigitos.slice(2) : soloDigitos;
+  return sinPais.replace(/^0+/, '') || soloDigitos;
+}
+
 async function consultarPedidosCliente() {
   const tel = document.getElementById('inputTelefonoConsulta').value.trim();
   const resBox = document.getElementById('resultadoPedidosCliente');
@@ -2407,9 +2413,10 @@ async function consultarPedidosCliente() {
     return;
   }
 
+  const telConsulta = normalizarTelefonoConsulta(tel);
   resBox.innerHTML = `<p class="text-zinc-400"><i class="fa-solid fa-spinner fa-spin"></i> Consultando puntos y premios...</p>`;
   try {
-    const resp = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(tel)}`);
+    const resp = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(telConsulta)}`);
     const data = await resp.json();
     const puntos = parseInt(data.puntosTotales || 0, 10);
 
@@ -2562,7 +2569,8 @@ async function validarYAplicarCupon() {
   msgEl.classList.remove('hidden');
 
   try {
-    const resp = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(tel)}`);
+    const telConsulta = normalizarTelefonoConsulta(tel);
+    const resp = await fetch(`${WEBHOOK_APPSCRIPT_URL}?telefono=${encodeURIComponent(telConsulta)}`);
     const data = await resp.json();
     const puntos = parseInt(data.puntosTotales || 0, 10);
     const cuponesServidor = Array.isArray(data.cupones) ? data.cupones : [];
