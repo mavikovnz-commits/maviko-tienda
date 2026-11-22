@@ -1161,69 +1161,69 @@ function renderProductos(lista) {
     const safeImg = escapeHTML(p.imagen || IMAGEN_RESPALDO);
 
     const card = document.createElement('article');
-    card.className = "product-card bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-lg hover:border-orange-500/50 flex flex-col justify-between group";
+    card.className = "product-card bg-zinc-900 border border-zinc-800 rounded-2xl p-2.5 sm:p-4 shadow-lg hover:border-orange-500/50 flex flex-col justify-between group";
 
     let stockTag = '';
     if (p.stockTotal <= 0) {
-      stockTag = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">Por Encargo</span>`;
+      stockTag = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">Encargo</span>`;
     } else if (p.stockTotal <= 3) {
-      stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">Últimas ${p.stockTotal} und</span>`;
+      stockTag = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full animate-pulse">Últ. ${p.stockTotal}</span>`;
     } else {
-      stockTag = `<span class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">⚡ Inmediata</span>`;
+      stockTag = `<span class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">⚡ Stock</span>`;
     }
 
     let descuentoBadge = '';
     let precioAnteriorHTML = '';
     if (p.precioAnteriorUSD > 0) {
       const pct = Math.round(((p.precioAnteriorUSD - p.precioUSD) / p.precioAnteriorUSD) * 100);
-      descuentoBadge = `<span class="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">-${pct}% OFF</span>`;
-      precioAnteriorHTML = `<span class="text-xs text-zinc-500 line-through mr-1">$${p.precioAnteriorUSD.toFixed(2)}</span>`;
+      descuentoBadge = `<span class="bg-rose-600 text-white text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2 py-0.5 rounded-full shadow">-${pct}%</span>`;
+      precioAnteriorHTML = `<span class="text-[10px] sm:text-xs text-zinc-500 line-through mr-1">$${p.precioAnteriorUSD.toFixed(2)}</span>`;
     }
 
     const tallasDisponibles = p.tieneTallas ? Object.keys(p.mapaTallas).filter(t => p.mapaTallas[t] > 0) : [];
     const textoTallas = p.tieneTallas
-      ? `<p class="text-[11px] text-orange-400 font-semibold mb-1.5">Opciones: ${escapeHTML(tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'Por encargo')}</p>`
+      ? `<p class="text-[10px] sm:text-[11px] text-orange-400 font-semibold mb-1.5 line-clamp-1">Tallas: ${escapeHTML(tallasDisponibles.length > 0 ? tallasDisponibles.join(', ') : 'Encargo')}</p>`
       : '';
 
     card.innerHTML = `
       <div>
-        <div class="h-48 rounded-xl bg-zinc-950 overflow-hidden mb-3 relative cursor-pointer flex items-center justify-center p-2" data-action="detalle" data-id="${safeId}">
+        <div class="h-36 sm:h-48 rounded-xl bg-zinc-950 overflow-hidden mb-2 sm:mb-3 relative cursor-pointer flex items-center justify-center p-1.5 sm:p-2" data-action="detalle" data-id="${safeId}">
           <img src="${safeImg}" alt="${safeNombre}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${IMAGEN_RESPALDO}';" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
 
-          <div class="absolute top-2 left-2 flex flex-col gap-1 z-10">
+          <div class="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 flex flex-col gap-1 z-10">
             <button type="button" data-action="favorito" data-id="${safeId}" class="w-7 h-7 rounded-full bg-black/75 hover:bg-black border border-zinc-700 flex items-center justify-center cursor-pointer transition-colors" title="Guardar en favoritos" aria-label="Guardar en favoritos">
               <i class="${esFav ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart text-zinc-300'} text-xs pointer-events-none"></i>
             </button>
             ${descuentoBadge}
           </div>
 
-          <div class="absolute top-2 right-2 flex flex-col items-end gap-1 pointer-events-none">
-            <span class="bg-black/80 backdrop-blur-md text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize border border-orange-500/30">${safeCat}</span>
+          <div class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex flex-col items-end gap-1 pointer-events-none">
+            <span class="hidden sm:inline-block bg-black/80 backdrop-blur-md text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize border border-orange-500/30">${safeCat}</span>
             ${stockTag}
           </div>
 
-          ${p.videoURL ? `<span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded-md flex items-center gap-1 border border-zinc-700 pointer-events-none"><i class="fa-solid fa-circle-play text-orange-400"></i> Video</span>` : ''}
+          ${p.videoURL ? `<span class="absolute bottom-1.5 right-1.5 sm:bottom-2 sm:right-2 bg-black/80 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md flex items-center gap-1 border border-zinc-700 pointer-events-none"><i class="fa-solid fa-circle-play text-orange-400"></i> Video</span>` : ''}
 
-          <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+          <div class="hidden sm:flex absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center pointer-events-none">
             <span class="bg-black/90 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg border border-orange-500/50 shadow-md">Ver detalles</span>
           </div>
         </div>
 
-        <h3 class="font-bold text-white mb-1 text-sm cursor-pointer hover:text-orange-400 transition-colors line-clamp-1" data-action="detalle" data-id="${safeId}">${safeNombre}</h3>
+        <h3 class="font-bold text-white mb-1 text-xs sm:text-sm cursor-pointer hover:text-orange-400 transition-colors line-clamp-2 sm:line-clamp-1 leading-snug" data-action="detalle" data-id="${safeId}">${safeNombre}</h3>
         ${textoTallas}
-        <p class="text-xs text-zinc-400 mb-3 line-clamp-2">${safeDesc}</p>
+        <p class="hidden sm:line-clamp-2 text-xs text-zinc-400 mb-3">${safeDesc}</p>
       </div>
       <div>
-        <div class="flex items-baseline gap-1 mb-3 flex-wrap">
+        <div class="flex items-baseline gap-1 mb-2 sm:mb-3 flex-wrap leading-tight">
           ${precioAnteriorHTML}
-          <span class="text-lg font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
-          <span class="text-xs text-zinc-500">/ ${escapeHTML(precioBsTexto)}</span>
+          <span class="text-base sm:text-lg font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
+          <span class="text-[10px] sm:text-xs text-zinc-500">/ ${escapeHTML(precioBsTexto)}</span>
         </div>
-        <div class="flex gap-2">
-          <button type="button" data-action="detalle" data-id="${safeId}" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer" title="Ver más detalles" aria-label="Ver detalles">
+        <div class="flex gap-1.5 sm:gap-2">
+          <button type="button" data-action="detalle" data-id="${safeId}" class="hidden sm:flex bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer items-center justify-center" title="Ver más detalles" aria-label="Ver detalles">
             <i class="fa-solid fa-eye pointer-events-none"></i>
           </button>
-          <button type="button" data-action="agregar" data-id="${safeId}" class="flex-grow ${p.stockTotal <= 0 ? 'bg-amber-600 hover:bg-amber-500' : 'bg-orange-600 hover:bg-orange-500'} text-white cursor-pointer shadow-md font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+          <button type="button" data-action="agregar" data-id="${safeId}" class="flex-grow ${p.stockTotal <= 0 ? 'bg-amber-600 hover:bg-amber-500' : 'bg-orange-600 hover:bg-orange-500'} text-white cursor-pointer shadow-md font-bold py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-xs transition-colors flex items-center justify-center gap-1.5 sm:gap-2">
             <i class="fa-solid ${p.stockTotal <= 0 ? 'fa-clock' : 'fa-plus'} pointer-events-none"></i> ${p.stockTotal <= 0 ? 'Encargar' : 'Agregar'}
           </button>
         </div>
@@ -1286,6 +1286,8 @@ async function obtenerTasaBCV() {
     if (productoModalActual) {
       const modalBs = document.getElementById('precioModalBS');
       if (modalBs) modalBs.innerText = `/ ${formatearBs(productoModalActual.precioUSD)}`;
+      const footerBs = document.getElementById('precioModalFooterBS');
+      if (footerBs) footerBs.innerText = formatearBs(productoModalActual.precioUSD);
     }
   } else if (displayEl) {
     displayEl.innerText = tasaBCV > 0 ? tasaBCV.toFixed(2) : 'Consultar';
@@ -1549,6 +1551,10 @@ function abrirDetalleProducto(id, pushHist = true) {
 
   document.getElementById('precioModalUSD').innerText = `$${prod.precioUSD.toFixed(2)}`;
   document.getElementById('precioModalBS').innerText = `/ ${formatearBs(prod.precioUSD)}`;
+  const footerUSD = document.getElementById('precioModalFooterUSD');
+  const footerBS = document.getElementById('precioModalFooterBS');
+  if (footerUSD) footerUSD.innerText = `$${prod.precioUSD.toFixed(2)}`;
+  if (footerBS) footerBS.innerText = formatearBs(prod.precioUSD);
   document.getElementById('descModalText').innerText = prod.descripcion || 'Producto 100% original disponible en Maviko.';
 
   const msgConsulta = `¡Hola Maviko! Me interesa el producto *${prod.nombre}* (Ref: ${prod.id}) de $${prod.precioUSD.toFixed(2)}. ¿Tienen disponibilidad?`;
@@ -1650,14 +1656,15 @@ function abrirDetalleProducto(id, pushHist = true) {
   }
 
   const btnAgregar = document.getElementById('btnAgregarModal');
-  btnAgregar.className = "flex-grow bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-sm";
+  btnAgregar.className = "flex-grow bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 cursor-pointer text-xs sm:text-sm";
   btnAgregar.innerHTML = prod.stockTotal <= 0
-    ? `<i class="fa-solid fa-clock text-base"></i> <span>Solicitar por Encargo</span>`
-    : `<i class="fa-solid fa-cart-plus text-base"></i> <span>Agregar al Carrito</span>`;
+    ? `<i class="fa-solid fa-clock text-sm"></i> <span>Solicitar por Encargo</span>`
+    : `<i class="fa-solid fa-cart-plus text-sm"></i> <span>Agregar al Carrito</span>`;
 
   btnAgregar.onclick = () => {
     if (prod.tieneTallas && !tallaSeleccionadaActual) {
       mostrarToast("Por favor selecciona una opción o talla antes de agregar.", "Selecciona tu talla", true);
+      document.getElementById('boxTallasModal')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     vibrar();
@@ -1670,7 +1677,8 @@ function abrirDetalleProducto(id, pushHist = true) {
   cambiarTab('desc');
   const modalEl = document.getElementById('modalDetalle');
   modalEl.classList.remove('hidden');
-  modalEl.scrollTop = 0;
+  const modalBody = document.getElementById('modalDetalleBody');
+  if (modalBody) modalBody.scrollTop = 0;
   document.body.classList.add('overflow-hidden');
   iniciarPaseAutomatico();
 

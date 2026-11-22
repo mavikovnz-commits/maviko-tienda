@@ -349,12 +349,12 @@
       </div>
     </div>
 
-    <!-- CUADRÍCULA DE PRODUCTOS -->
-    <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden sm:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden lg:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 hidden xl:block"><div class="h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+    <!-- CUADRÍCULA DE PRODUCTOS (2 COLUMNAS EN MÓVIL, 3 EN TABLET/LAPTOP, 4 EN PANTALLA GRANDE) -->
+    <div id="gridProductos" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-2.5 sm:p-4 space-y-2.5"><div class="h-36 sm:h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-2.5 sm:p-4 space-y-2.5"><div class="h-36 sm:h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-2.5 sm:p-4 space-y-2.5"><div class="h-36 sm:h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-2.5 sm:p-4 space-y-2.5"><div class="h-36 sm:h-48 rounded-xl skeleton-box"></div><div class="h-4 w-3/4 rounded skeleton-box"></div><div class="h-9 w-full rounded-xl skeleton-box"></div></div>
     </div>
 
     <!-- PAGINACIÓN DEL CATÁLOGO (CAMBIO DE HOJA) -->
@@ -384,116 +384,134 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE PRODUCTO -->
-  <div id="modalDetalle" onclick="cerrarDetallePorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full p-5 sm:p-6 relative space-y-5 shadow-2xl my-8">
-      <div class="absolute top-4 right-4 flex items-center gap-1.5 z-20">
-        <button id="btnFavoritoModal" onclick="toggleFavoritoModal()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-300 hover:text-rose-400 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700 transition-colors" title="Guardar en favoritos" aria-label="Guardar en favoritos">
-          <i class="fa-regular fa-heart text-sm"></i>
+  <!-- MODAL DETALLE PRODUCTO (PANTALLA COMPLETA EN MÓVIL + BARRA DE COMPRA FIJA) -->
+  <div id="modalDetalle" onclick="cerrarDetallePorOverlay(event)" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4">
+    <div class="bg-zinc-900 border-0 md:border md:border-zinc-800 rounded-none md:rounded-2xl max-w-3xl w-full h-[100dvh] md:h-auto md:max-h-[92vh] relative shadow-2xl flex flex-col overflow-hidden">
+
+      <!-- CABECERA FIJA DEL MODAL -->
+      <div class="shrink-0 flex items-center justify-between gap-3 px-4 py-3 sm:px-5 border-b border-zinc-800 bg-zinc-900/95 backdrop-blur-md">
+        <button type="button" onclick="cerrarDetalle()" class="flex items-center gap-2 text-zinc-200 hover:text-white text-xs font-bold cursor-pointer">
+          <i class="fa-solid fa-arrow-left text-orange-400"></i>
+          <span>Volver al catálogo</span>
         </button>
-        <button id="btnCompartirModal" onclick="compartirProductoActual()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 hover:text-orange-400 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700 transition-colors" title="Compartir producto" aria-label="Compartir producto">
-          <i class="fa-solid fa-share-nodes text-sm"></i>
-        </button>
-        <button onclick="cerrarDetalle()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 hover:text-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700" aria-label="Cerrar detalle">
-          <i class="fa-solid fa-xmark text-base"></i>
-        </button>
+        <div class="flex items-center gap-1.5">
+          <button id="btnFavoritoModal" onclick="toggleFavoritoModal()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-300 hover:text-rose-400 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700 transition-colors" title="Guardar en favoritos" aria-label="Guardar en favoritos">
+            <i class="fa-regular fa-heart text-sm"></i>
+          </button>
+          <button id="btnCompartirModal" onclick="compartirProductoActual()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 hover:text-orange-400 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700 transition-colors" title="Compartir producto" aria-label="Compartir producto">
+            <i class="fa-solid fa-share-nodes text-sm"></i>
+          </button>
+          <button onclick="cerrarDetalle()" class="bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 hover:text-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer border border-zinc-700" aria-label="Cerrar detalle">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-3">
-          <div
-            id="contenedorVisor"
-            class="zoom-container h-72 sm:h-80 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center relative p-2 select-none"
-            onmouseenter="pausarPaseAutomatico()"
-            onmouseleave="resetearZoom(); iniciarPaseAutomatico()"
-            onmousemove="aplicarZoom(event)"
-          >
-            <img id="fotoPrincipalModal" src="" alt="Producto" class="zoom-image max-w-full max-h-full object-contain pointer-events-none select-none">
-            <video id="videoPrincipalModal" controls playsinline class="hidden max-w-full max-h-full object-contain rounded-xl"></video>
+      <!-- CONTENIDO DESPLAZABLE DEL MODAL -->
+      <div id="modalDetalleBody" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+          <div class="space-y-3">
+            <div
+              id="contenedorVisor"
+              class="zoom-container h-64 sm:h-80 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center relative p-2 select-none"
+              onmouseenter="pausarPaseAutomatico()"
+              onmouseleave="resetearZoom(); iniciarPaseAutomatico()"
+              onmousemove="aplicarZoom(event)"
+            >
+              <img id="fotoPrincipalModal" src="" alt="Producto" class="zoom-image max-w-full max-h-full object-contain pointer-events-none select-none">
+              <video id="videoPrincipalModal" controls playsinline class="hidden max-w-full max-h-full object-contain rounded-xl"></video>
 
-            <!-- Flechas de navegación de galería -->
-            <button id="btnPrevFoto" onclick="cambiarFotoRelativa(-1)" class="hidden absolute left-2 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-black text-white w-8 h-8 rounded-full flex items-center justify-center border border-zinc-700 cursor-pointer z-10" aria-label="Foto anterior">
-              <i class="fa-solid fa-chevron-left text-xs"></i>
-            </button>
-            <button id="btnNextFoto" onclick="cambiarFotoRelativa(1)" class="hidden absolute right-2 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-black text-white w-8 h-8 rounded-full flex items-center justify-center border border-zinc-700 cursor-pointer z-10" aria-label="Foto siguiente">
-              <i class="fa-solid fa-chevron-right text-xs"></i>
-            </button>
+              <!-- Flechas de navegación de galería -->
+              <button id="btnPrevFoto" onclick="cambiarFotoRelativa(-1)" class="hidden absolute left-2 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-black text-white w-8 h-8 rounded-full flex items-center justify-center border border-zinc-700 cursor-pointer z-10" aria-label="Foto anterior">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <button id="btnNextFoto" onclick="cambiarFotoRelativa(1)" class="hidden absolute right-2 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-black text-white w-8 h-8 rounded-full flex items-center justify-center border border-zinc-700 cursor-pointer z-10" aria-label="Foto siguiente">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+              </button>
 
-            <span id="contadorFotosModal" class="hidden absolute top-2 left-2 bg-black/75 backdrop-blur-sm px-2 py-0.5 rounded-md text-[10px] text-zinc-200 font-semibold border border-zinc-800 pointer-events-none">1 / 1</span>
+              <span id="contadorFotosModal" class="hidden absolute top-2 left-2 bg-black/75 backdrop-blur-sm px-2 py-0.5 rounded-md text-[10px] text-zinc-200 font-semibold border border-zinc-800 pointer-events-none">1 / 1</span>
 
-            <div id="zoomHint" class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-zinc-400 pointer-events-none flex items-center gap-1 border border-zinc-800">
-              <i class="fa-solid fa-magnifying-glass-plus"></i> Desliza para ver fotos · Cursor para lupa
+              <div id="zoomHint" class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-zinc-400 pointer-events-none flex items-center gap-1 border border-zinc-800">
+                <i class="fa-solid fa-magnifying-glass-plus"></i> Desliza para ver fotos · Cursor para lupa
+              </div>
             </div>
+            <div id="galeriaMiniaturas" class="flex gap-2 overflow-x-auto pb-1"></div>
           </div>
-          <div id="galeriaMiniaturas" class="flex gap-2 overflow-x-auto pb-1"></div>
-        </div>
 
-        <div class="flex flex-col justify-between space-y-4">
-          <div class="space-y-2 pr-24 md:pr-0">
-            <div class="flex flex-wrap items-center gap-2">
-              <span id="categoriaModal" class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-md capitalize border border-orange-500/30"></span>
-              <span id="skuModal" class="text-zinc-500 text-[11px] font-mono"></span>
-              <span id="estadoStockModal" class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-500/20">100% Original</span>
-            </div>
-            <h2 id="tituloModal" class="text-lg font-bold text-white leading-snug"></h2>
+          <div class="flex flex-col justify-between space-y-4">
+            <div class="space-y-2.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="categoriaModal" class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-md capitalize border border-orange-500/30"></span>
+                <span id="skuModal" class="text-zinc-500 text-[11px] font-mono"></span>
+                <span id="estadoStockModal" class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-500/20">100% Original</span>
+              </div>
+              <h2 id="tituloModal" class="text-lg sm:text-xl font-bold text-white leading-snug"></h2>
 
-            <div class="flex items-baseline gap-2 pt-1 flex-wrap">
-              <span id="precioAnteriorModal" class="hidden text-sm text-zinc-500 line-through"></span>
-              <span id="precioModalUSD" class="text-2xl font-black text-orange-400"></span>
-              <span id="precioModalBS" class="text-xs text-zinc-400"></span>
-            </div>
+              <div class="flex items-baseline gap-2 pt-0.5 flex-wrap">
+                <span id="precioAnteriorModal" class="hidden text-sm text-zinc-500 line-through"></span>
+                <span id="precioModalUSD" class="text-2xl font-black text-orange-400"></span>
+                <span id="precioModalBS" class="text-xs text-zinc-400"></span>
+              </div>
 
-            <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
-              <div class="flex justify-between items-center gap-2">
-                <span class="text-xs font-bold text-zinc-300">Selecciona tu opción / talla:</span>
-                <div class="flex items-center gap-2">
-                  <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
-                  <button type="button" onclick="toggleGuiaTallas(true)" class="text-[11px] text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1 cursor-pointer underline-offset-2 hover:underline">
-                    <i class="fa-solid fa-ruler-horizontal"></i> Guía de tallas
-                  </button>
+              <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
+                <div class="flex justify-between items-center gap-2">
+                  <span class="text-xs font-bold text-zinc-300">Selecciona tu opción / talla:</span>
+                  <div class="flex items-center gap-2">
+                    <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
+                    <button type="button" onclick="toggleGuiaTallas(true)" class="text-[11px] text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1 cursor-pointer underline-offset-2 hover:underline">
+                      <i class="fa-solid fa-ruler-horizontal"></i> Guía de tallas
+                    </button>
+                  </div>
+                </div>
+                <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
+              </div>
+
+              <div class="pt-3 border-t border-zinc-800">
+                <div class="flex gap-4 border-b border-zinc-800 text-xs font-bold mb-2">
+                  <button id="tabDescBtn" onclick="cambiarTab('desc')" class="tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors">Descripción</button>
+                  <button id="tabFichaBtn" onclick="cambiarTab('ficha')" class="tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors">Ficha Técnica</button>
+                </div>
+                <div id="tabDescripcion" class="text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+                  <p id="descModalText"></p>
+                </div>
+                <div id="tabFicha" class="hidden text-xs text-zinc-300 leading-relaxed max-h-36 overflow-y-auto">
+                  <ul id="fichaModalList" class="list-disc list-inside space-y-1"></ul>
                 </div>
               </div>
-              <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
-            </div>
 
-            <div class="pt-4 border-t border-zinc-800">
-              <div class="flex gap-4 border-b border-zinc-800 text-xs font-bold mb-2">
-                <button id="tabDescBtn" onclick="cambiarTab('desc')" class="tab-btn text-orange-400 border-b-2 border-orange-500 pb-2 cursor-pointer transition-colors">Descripción</button>
-                <button id="tabFichaBtn" onclick="cambiarTab('ficha')" class="tab-btn text-zinc-400 hover:text-zinc-200 pb-2 cursor-pointer transition-colors">Ficha Técnica</button>
+              <div class="grid grid-cols-3 gap-1.5 pt-2 text-[10px] text-zinc-400 text-center">
+                <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📸 Fotos Reales</div>
+                <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📦 Embalaje Seguro</div>
+                <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">🚚 Envío Asegurado</div>
               </div>
-              <div id="tabDescripcion" class="text-xs text-zinc-300 leading-relaxed max-h-28 overflow-y-auto">
-                <p id="descModalText"></p>
-              </div>
-              <div id="tabFicha" class="hidden text-xs text-zinc-300 leading-relaxed max-h-28 overflow-y-auto">
-                <ul id="fichaModalList" class="list-disc list-inside space-y-1"></ul>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-1.5 pt-2 text-[10px] text-zinc-400 text-center">
-              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📸 Fotos Reales</div>
-              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">📦 Embalaje Seguro</div>
-              <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">🚚 Envío Asegurado</div>
             </div>
           </div>
+        </div>
 
-          <div class="flex gap-2">
-            <a id="btnConsultaDirectaModal" href="#" target="_blank" rel="noopener noreferrer" class="bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 px-3.5 py-3.5 rounded-xl transition-all flex items-center justify-center" title="Consultar duda por WhatsApp">
-              <i class="fa-brands fa-whatsapp text-lg"></i>
-            </a>
-            <button id="btnAgregarModal" class="flex-grow bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 cursor-pointer text-xs">
-              <i class="fa-solid fa-cart-plus text-sm"></i>
-              <span>Agregar al Carrito</span>
-            </button>
-          </div>
+        <!-- TAMBIÉN TE PUEDE INTERESAR (PRODUCTOS RELACIONADOS) -->
+        <div id="seccionRelacionados" class="hidden pt-4 border-t border-zinc-800 space-y-3">
+          <h3 class="text-xs font-extrabold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-sparkles text-orange-400"></i> También te puede interesar
+          </h3>
+          <div id="gridRelacionados" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
         </div>
       </div>
 
-      <!-- TAMBIÉN TE PUEDE INTERESAR (PRODUCTOS RELACIONADOS) -->
-      <div id="seccionRelacionados" class="hidden pt-4 border-t border-zinc-800 space-y-3">
-        <h3 class="text-xs font-extrabold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-sparkles text-orange-400"></i> También te puede interesar
-        </h3>
-        <div id="gridRelacionados" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+      <!-- BARRA INFERIOR FIJA DE COMPRA (SIEMPRE AL ALCANCE DEL PULGAR) -->
+      <div class="shrink-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-md px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:py-3.5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p id="precioModalFooterUSD" class="text-lg sm:text-xl font-black text-orange-400 leading-none">$0.00</p>
+          <p id="precioModalFooterBS" class="text-[10px] text-zinc-400 truncate mt-0.5"></p>
+        </div>
+        <div class="flex items-center gap-2 flex-grow sm:flex-grow-0 sm:min-w-[280px]">
+          <a id="btnConsultaDirectaModal" href="#" target="_blank" rel="noopener noreferrer" class="bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 px-3.5 py-3 rounded-xl transition-all flex items-center justify-center shrink-0" title="Consultar duda por WhatsApp" aria-label="Consultar por WhatsApp">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+          </a>
+          <button id="btnAgregarModal" class="flex-grow bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 cursor-pointer text-xs sm:text-sm">
+            <i class="fa-solid fa-cart-plus text-sm"></i>
+            <span>Agregar al Carrito</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
