@@ -2245,6 +2245,32 @@ function toggleCarrito(forceOpen = false, desdePopState = false) {
   }
 }
 
+function enviarFormularioSheets(formData) {
+  const uniqueName = `hidden_iframe_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+  const iframe = document.createElement('iframe');
+  iframe.name = uniqueName;
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = WEBHOOK_APPSCRIPT_URL;
+  form.target = uniqueName;
+
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'data';
+  input.value = JSON.stringify(formData);
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => {
+    form.remove();
+    iframe.remove();
+  }, 5000);
+}
+
 function enviarPedidoWhatsApp() {
   if (!carrito.length) {
     alert("Tu carrito está vacío.");
@@ -2256,6 +2282,8 @@ function enviarPedidoWhatsApp() {
   const ref = document.getElementById('referenciaPago')?.value.trim() || "";
   const agencia = document.getElementById('empresaEnvio').value;
   const direccion = document.getElementById('direccionEnvio').value.trim();
+  const fechaEncargo = document.getElementById('fechaEncargo')?.value || '';
+  const planEncargo = document.getElementById('planPagoEncargo')?.value || '2 Partes (50% Abono / 50% Entrega)';
 
   if (!cliente || !telefono) {
     alert("Por favor completa tu Nombre y WhatsApp.");
@@ -2271,53 +2299,63 @@ function enviarPedidoWhatsApp() {
   const totalBS = tasaSegura > 0
     ? (totalUSD * tasaSegura).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     : 'Consultar';
-  const resumenProds = carrito
-    .map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [${i.modalidad} x${i.cantidad}]`)
-    .join(' | ');
+
+  const itemsInmediatos = carrito.filter(i => i.modalidad !== 'Encargo');
+  const itemsEncargo = carrito.filter(i => i.modalidad === 'Encargo');
 
   trackEvent('begin_checkout', { currency: 'USD', value: totalUSD });
 
-  // REGISTRO AUTOMÁTICO EN GOOGLE SHEETS (REGISTRO_VENTAS) MEDIANTE IFRAME OCULTO
-  const formData = {
-    tipo: "venta_confirmada",
-    cliente,
-    telefono,
-    metodo_pago: metodo,
-    referencia: ref,
-    agencia_envio: agencia,
-    direccion: direccion || "No especificada",
-    cupon: descuentoUSD > 0 ? cuponAplicado.codigo : "",
-    descuento_usd: descuentoUSD.toFixed(2),
-    total_usd: totalUSD.toFixed(2),
-    total_bs: (totalUSD * tasaSegura).toFixed(2),
-    tasa_bcv: tasaSegura.toFixed(2),
-    productos: resumenProds,
-    vendedor: "WEB_DIRECTA"
-  };
+  // 1. REGISTRO AUTOMÁTICO EN HOJA "Registro_Ventas" (artículos de compra inmediata)
+  if (itemsInmediatos.length > 0) {
+    const subInm = itemsInmediatos.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+    const totInm = Math.max(0, subInm - descuentoUSD) + (subInm > 0 ? costoEnvioAdicional : 0);
+    const prodsInm = itemsInmediatos
+      .map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}]`)
+      .join(' | ');
 
-  let iframe = document.getElementById('hidden_iframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.name = 'hidden_iframe';
-    iframe.id = 'hidden_iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    enviarFormularioSheets({
+      tipo: "venta_confirmada",
+      cliente,
+      telefono,
+      metodo_pago: metodo,
+      referencia: ref,
+      agencia_envio: agencia,
+      direccion: direccion || "No especificada",
+      cupon: descuentoUSD > 0 ? cuponAplicado.codigo : "",
+      descuento_usd: descuentoUSD.toFixed(2),
+      total_usd: totInm.toFixed(2),
+      total_bs: (totInm * tasaSegura).toFixed(2),
+      tasa_bcv: tasaSegura.toFixed(2),
+      productos: prodsInm,
+      vendedor: "WEB_DIRECTA"
+    });
   }
 
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = WEBHOOK_APPSCRIPT_URL;
-  form.target = 'hidden_iframe';
+  // 2. REGISTRO AUTOMÁTICO EN HOJA "Encargos_Web" (artículos por encargo / encargos especiales)
+  if (itemsEncargo.length > 0) {
+    const totEnc = itemsEncargo.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+    const abono = planEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : totEnc.toFixed(2);
+    const saldo = planEncargo.includes('2 Partes') ? (totEnc * 0.5).toFixed(2) : '0.00';
+    const prodsEnc = itemsEncargo
+      .map(i => `${i.nombre}${i.tallaSeleccionada ? ' (' + i.tallaSeleccionada + ')' : ''} [x${i.cantidad}]`)
+      .join(' | ');
 
-  const input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = 'data';
-  input.value = JSON.stringify(formData);
-  form.appendChild(input);
-
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(() => form.remove(), 1200);
+    enviarFormularioSheets({
+      tipo: "encargo_pedido",
+      cliente,
+      telefono,
+      producto: prodsEnc,
+      fechaTentativa: fechaEncargo || 'Sin fecha definida',
+      planPago: planEncargo,
+      totalEncargoUSD: totEnc > 0 ? totEnc.toFixed(2) : 'Por cotizar',
+      abonoInicialUSD: abono,
+      saldoPendiente: saldo,
+      metodo_pago: metodo,
+      referencia: ref,
+      agencia_envio: agencia,
+      direccion: direccion || "No especificada"
+    });
+  }
 
   let mensaje = `*¡Hola Maviko! Quiero confirmar este pedido:*\n\n`;
   mensaje += `👤 *Cliente:* ${cliente}\n`;
@@ -2327,10 +2365,7 @@ function enviarPedidoWhatsApp() {
   mensaje += `💳 *Pago:* ${metodo}\n`;
   if (ref) mensaje += `🔢 *Referencia:* ${ref}\n`;
 
-  const itemsEncargo = carrito.filter(i => i.modalidad === 'Encargo');
   if (itemsEncargo.length > 0) {
-    const fechaEncargo = document.getElementById('fechaEncargo')?.value || '';
-    const planEncargo = document.getElementById('planPagoEncargo')?.value || '';
     mensaje += `📦 *Plan Encargo:* ${planEncargo}${fechaEncargo ? ' · Fecha: ' + fechaEncargo : ''}\n`;
   }
 
@@ -2592,7 +2627,8 @@ async function registrarSuscriptorVIP() {
   fetch(WEBHOOK_APPSCRIPT_URL, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    keepalive: true,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     body: JSON.stringify({ tipo: 'suscripcion_vip', nombre, telefono, interes })
   }).catch(() => {});
 
@@ -2612,7 +2648,8 @@ function programarCapturaAbandono() {
       fetch(WEBHOOK_APPSCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
         body: JSON.stringify({
           tipo: 'lead_abandonado',
           nombre: nombre || 'Cliente Web',
