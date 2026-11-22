@@ -5,7 +5,22 @@ const GID_CATALOGO_WEB = "1599022863";
 const WEBHOOK_APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlSDhHTEkH7Kd_ZVS-wwZf2c1AMba5PrW8pYemAwnOhYf-3a8v9CVcU3VFRvghgjFP/exec";
 const NUMERO_WHATSAPP = "584127701750";
 const META_ENVIO_USD = 60;
+const PRODUCTOS_POR_PAGINA = 24;
 const IMAGEN_RESPALDO = "./icon-192.png";
+
+const MARCAS_CONOCIDAS = [
+  "Nike", "Jordan", "Adidas", "New Balance", "Puma", "Converse", "Vans",
+  "Skechers", "Under Armour", "Reebok", "Crocs", "Timberland", "Fila", "Asics",
+  "Tommy Hilfiger", "Ralph Lauren", "Lacoste", "Calvin Klein", "Guess", "Coach",
+  "Michael Kors", "Kate Spade", "Steve Madden", "Victoria's Secret", "Bath & Body Works",
+  "Zara", "Shein", "CeraVe", "La Roche-Posay", "Eucerin", "Neutrogena", "Cetaphil",
+  "The Ordinary", "Garnier", "L'Oreal", "Maybelline", "MAC", "Rare Beauty", "Dior",
+  "Chanel", "Carolina Herrera", "Versace", "Armani", "Casio", "Fossil", "Invicta",
+  "Stanley", "Yeti", "Jansport", "Kipling", "The North Face", "Columbia", "Champion",
+  "Levi's", "Oakley", "Ray-Ban", "Apple", "Samsung", "Xiaomi", "JBL", "Sony",
+  "Nivea", "Bioderma", "Isdin", "Vichy", "Avene", "Clinique", "Estee Lauder",
+  "Kylie", "Fenty", "Sol de Janeiro", "Tree Hut", "Olaplex", "Pantene", "Dove"
+];
 
 const STORAGE_KEYS = {
   CARRITO: 'maviko_carrito',
@@ -28,6 +43,8 @@ let productos = [];
 let carrito = leerJSONStorage(STORAGE_KEYS.CARRITO, []);
 let favoritos = leerJSONStorage(STORAGE_KEYS.FAVORITOS, []);
 let categoriaActual = 'todas';
+let marcaActual = 'todas';
+let paginaActual = 1;
 let soloInmediata = false;
 let soloFavoritos = false;
 let productoModalActual = null;
@@ -216,16 +233,18 @@ function toggleFavoritoModal() {
 function toggleSoloFavoritos() {
   vibrar();
   soloFavoritos = !soloFavoritos;
+  paginaActual = 1;
   actualizarContadorFavoritos();
   renderProductos(obtenerProductosFiltrados());
   if (soloFavoritos) {
-    document.getElementById('gridProductos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('barraCatalogo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
 function toggleSoloInmediata() {
   vibrar();
   soloInmediata = !soloInmediata;
+  paginaActual = 1;
   const btn = document.getElementById('btnFiltroInmediata');
   if (btn) {
     if (soloInmediata) {
@@ -243,6 +262,7 @@ function manejarInputBusqueda() {
   if (btn && input) {
     btn.classList.toggle('hidden', input.value.trim().length === 0);
   }
+  paginaActual = 1;
   filtrarProductos();
 }
 
@@ -257,6 +277,8 @@ function limpiarBusqueda() {
 
 function resetearTodosLosFiltros() {
   categoriaActual = 'todas';
+  marcaActual = 'todas';
+  paginaActual = 1;
   soloInmediata = false;
   soloFavoritos = false;
   const input = document.getElementById('searchInput');
@@ -268,9 +290,28 @@ function resetearTodosLosFiltros() {
   if (btnInm) {
     btnInm.className = "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap";
   }
+  cerrarMenusDesplegables();
   actualizarContadorFavoritos();
   generarBotonesCategoriasDinamicos();
+  generarMenuYBarraMarcas();
   renderProductos(obtenerProductosFiltrados());
+}
+
+function detectarMarca(item) {
+  const marcaExplicita = (item.marca || '').trim();
+  if (marcaExplicita) return marcaExplicita;
+
+  const texto = `${item.nombre || ''} ${item.descripcion || ''}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  for (const m of MARCAS_CONOCIDAS) {
+    const mNorm = m.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const esc = mNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?:^|[^a-zA-Z0-9])${esc}(?:$|[^a-zA-Z0-9])`, 'i');
+    if (regex.test(texto)) return m;
+  }
+  return '';
 }
 
 // ======================== CATÁLOGO GOOGLE SHEETS + CACHÉ INSTANTÁNEA ========================
@@ -293,8 +334,9 @@ function actualizarEstadoSync(tipo, texto) {
 function cargarCatalogoDesdeCache() {
   const cache = leerJSONStorage(STORAGE_KEYS.CATALOGO, null);
   if (cache && Array.isArray(cache.productos) && cache.productos.length > 0) {
-    productos = cache.productos;
+    productos = cache.productos.map(p => ({ ...p, marca: p.marca || detectarMarca(p) }));
     generarBotonesCategoriasDinamicos();
+    generarMenuYBarraMarcas();
     renderProductos(obtenerProductosFiltrados());
     abrirProductoDesdeURLSiAplica();
     actualizarEstadoSync('cargando', 'Actualizando precios y stock...');
@@ -397,6 +439,7 @@ window.manejarRespuestaGoogleSheets = function(data) {
           id: (f.id || '').trim(),
           nombre: (f.nombre || 'Sin nombre').trim(),
           categoria: catLimpia,
+          marca: detectarMarca(f),
           precioUSD: precioActualNum,
           precioAnteriorUSD: precioAnteriorNum > precioActualNum ? precioAnteriorNum : 0,
           mapaTallas,
@@ -420,6 +463,7 @@ window.manejarRespuestaGoogleSheets = function(data) {
     } catch (e) {}
 
     generarBotonesCategoriasDinamicos();
+    generarMenuYBarraMarcas();
     renderProductos(obtenerProductosFiltrados());
     verificarYNotificarOfertasNuevas(productos);
     actualizarEstadoSync('ok', 'Catálogo actualizado');
@@ -468,41 +512,199 @@ function verificarYNotificarOfertasNuevas(listaProductos) {
   }
 }
 
-// ======================== FILTROS Y RENDERIZADO ========================
+// ======================== FILTROS, DESPLEGABLES, MARCAS Y PAGINACIÓN ========================
+
+function cerrarMenusDesplegables() {
+  document.getElementById('panelCategorias')?.classList.add('hidden');
+  document.getElementById('panelMarcas')?.classList.add('hidden');
+  document.getElementById('chevronCategorias')?.classList.remove('rotate-180');
+  document.getElementById('chevronMarcas')?.classList.remove('rotate-180');
+}
+
+function toggleMenuCategorias() {
+  vibrar();
+  const panel = document.getElementById('panelCategorias');
+  const estabaOculto = panel?.classList.contains('hidden');
+  cerrarMenusDesplegables();
+  if (estabaOculto && panel) {
+    panel.classList.remove('hidden');
+    document.getElementById('chevronCategorias')?.classList.add('rotate-180');
+  }
+}
+
+function toggleMenuMarcas() {
+  vibrar();
+  const panel = document.getElementById('panelMarcas');
+  const estabaOculto = panel?.classList.contains('hidden');
+  cerrarMenusDesplegables();
+  if (estabaOculto && panel) {
+    panel.classList.remove('hidden');
+    document.getElementById('chevronMarcas')?.classList.add('rotate-180');
+  }
+}
 
 function generarBotonesCategoriasDinamicos() {
   const contenedor = document.getElementById('contenedorFiltros');
+  const labelActiva = document.getElementById('labelCategoriaActiva');
+  const btnMenu = document.getElementById('btnMenuCategorias');
   if (!contenedor) return;
 
   const categoriasUnicas = [...new Set(productos.map(p => p.categoria).filter(Boolean))].sort();
   contenedor.innerHTML = '';
 
-  const crearBtn = (cat, etiqueta, activo) => {
+  const crearBtn = (cat, nombre, count, activo) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.cat = cat;
-    btn.className = `cat-btn ${activo ? 'bg-orange-600 text-white font-bold shadow-md border-orange-500' : 'bg-zinc-900 text-zinc-300 hover:text-white border-zinc-800'} px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border`;
-    btn.textContent = etiqueta;
+    btn.className = `cat-btn ${activo ? 'bg-orange-600 text-white font-bold shadow-md border-orange-500' : 'bg-zinc-950 hover:bg-zinc-800 text-zinc-300 hover:text-white border-zinc-800'} px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border flex items-center justify-between gap-2 text-left`;
+    btn.innerHTML = `<span class="truncate">${escapeHTML(nombre)}</span><span class="text-[10px] px-1.5 py-0.5 rounded-md ${activo ? 'bg-black/25 text-white' : 'bg-zinc-900 text-zinc-400'}">${count}</span>`;
     return btn;
   };
 
-  contenedor.appendChild(crearBtn('todas', `Todas (${productos.length})`, categoriaActual === 'todas'));
+  contenedor.appendChild(crearBtn('todas', 'Todas', productos.length, categoriaActual === 'todas'));
 
   categoriasUnicas.forEach(cat => {
     const count = productos.filter(p => p.categoria === cat).length;
     const nombreVisible = cat.charAt(0).toUpperCase() + cat.slice(1);
-    contenedor.appendChild(crearBtn(cat, `${nombreVisible} (${count})`, categoriaActual === cat));
+    contenedor.appendChild(crearBtn(cat, nombreVisible, count, categoriaActual === cat));
   });
+
+  if (labelActiva) {
+    if (categoriaActual === 'todas') {
+      labelActiva.textContent = `Categorías (${productos.length})`;
+    } else {
+      const visible = categoriaActual.charAt(0).toUpperCase() + categoriaActual.slice(1);
+      labelActiva.textContent = `Categoría: ${visible}`;
+    }
+  }
+  if (btnMenu) {
+    btnMenu.classList.toggle('border-orange-500/70', categoriaActual !== 'todas');
+    btnMenu.classList.toggle('bg-orange-600/15', categoriaActual !== 'todas');
+  }
+}
+
+function generarMenuYBarraMarcas() {
+  const dropdown = document.getElementById('dropdownMarcas');
+  const panelContenedor = document.getElementById('contenedorMarcasPanel');
+  const seccionBarra = document.getElementById('seccionBarraMarcas');
+  const barra = document.getElementById('barraMarcas');
+  const labelActiva = document.getElementById('labelMarcaActiva');
+  const btnMenu = document.getElementById('btnMenuMarcas');
+
+  const conteoMarcas = new Map();
+  productos.forEach(p => {
+    const m = (p.marca || '').trim();
+    if (!m) return;
+    conteoMarcas.set(m, (conteoMarcas.get(m) || 0) + 1);
+  });
+
+  const marcasOrdenadas = [...conteoMarcas.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+  if (marcasOrdenadas.length === 0) {
+    dropdown?.classList.add('hidden');
+    seccionBarra?.classList.add('hidden');
+    return;
+  }
+
+  dropdown?.classList.remove('hidden');
+  seccionBarra?.classList.remove('hidden');
+
+  if (panelContenedor) {
+    panelContenedor.innerHTML = '';
+
+    const crearItemPanel = (marcaKey, etiqueta, count, activo) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.marca = marcaKey;
+      btn.className = `${activo ? 'bg-amber-500 text-black font-extrabold border-amber-400 shadow-md' : 'bg-zinc-950 hover:bg-zinc-800 text-zinc-200 border-zinc-800'} px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer border flex items-center justify-between gap-1.5 text-left`;
+      btn.innerHTML = `<span class="truncate">${escapeHTML(etiqueta)}</span><span class="text-[10px] px-1.5 py-0.5 rounded-md ${activo ? 'bg-black/20 text-black font-bold' : 'bg-zinc-900 text-zinc-400'}">${count}</span>`;
+      return btn;
+    };
+
+    panelContenedor.appendChild(crearItemPanel('todas', 'Todas', productos.length, marcaActual === 'todas'));
+    marcasOrdenadas.forEach(([marca, count]) => {
+      panelContenedor.appendChild(crearItemPanel(marca, marca, count, marcaActual === marca));
+    });
+  }
+
+  if (barra) {
+    barra.innerHTML = '';
+    const btnTodas = document.createElement('button');
+    btnTodas.type = 'button';
+    btnTodas.dataset.marca = 'todas';
+    btnTodas.className = `${marcaActual === 'todas' ? 'bg-amber-500 text-black font-extrabold border-amber-400' : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'} px-3 py-1.5 rounded-full text-[11px] border transition-all cursor-pointer whitespace-nowrap`;
+    btnTodas.textContent = 'Todas';
+    barra.appendChild(btnTodas);
+
+    marcasOrdenadas.slice(0, 14).forEach(([marca, count]) => {
+      const activo = marcaActual === marca;
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.dataset.marca = marca;
+      pill.className = `${activo ? 'bg-amber-500 text-black font-extrabold border-amber-400 shadow-md' : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-800'} px-3 py-1.5 rounded-full text-[11px] border transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5`;
+      pill.innerHTML = `<span>${escapeHTML(marca)}</span><span class="text-[10px] ${activo ? 'text-black/70' : 'text-zinc-500'}">${count}</span>`;
+      barra.appendChild(pill);
+    });
+  }
+
+  if (labelActiva) {
+    labelActiva.textContent = marcaActual === 'todas' ? `Marcas (${marcasOrdenadas.length})` : `Marca: ${marcaActual}`;
+  }
+  if (btnMenu) {
+    btnMenu.classList.toggle('border-amber-500/70', marcaActual !== 'todas');
+    btnMenu.classList.toggle('bg-amber-500/15', marcaActual !== 'todas');
+  }
 }
 
 function filtrarCategoria(cat) {
   vibrar();
   categoriaActual = cat;
+  paginaActual = 1;
+  cerrarMenusDesplegables();
   generarBotonesCategoriasDinamicos();
   renderProductos(obtenerProductosFiltrados());
 }
 
+function filtrarMarca(marca) {
+  vibrar();
+  marcaActual = (marcaActual === marca && marca !== 'todas') ? 'todas' : marca;
+  paginaActual = 1;
+  cerrarMenusDesplegables();
+  generarMenuYBarraMarcas();
+  renderProductos(obtenerProductosFiltrados());
+}
+
+function renderFiltrosActivos() {
+  const bar = document.getElementById('filtrosActivosBar');
+  if (!bar) return;
+
+  const chips = [];
+  if (categoriaActual !== 'todas') {
+    const visible = categoriaActual.charAt(0).toUpperCase() + categoriaActual.slice(1);
+    chips.push(`<button type="button" onclick="filtrarCategoria('todas')" class="bg-orange-500/15 text-orange-300 border border-orange-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-orange-500/25"><span>${escapeHTML(visible)}</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
+  if (marcaActual !== 'todas') {
+    chips.push(`<button type="button" onclick="filtrarMarca('todas')" class="bg-amber-500/15 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-amber-500/25"><span>${escapeHTML(marcaActual)}</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
+  if (soloInmediata) {
+    chips.push(`<button type="button" onclick="toggleSoloInmediata()" class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-emerald-500/25"><span>⚡ Inmediata</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
+  if (soloFavoritos) {
+    chips.push(`<button type="button" onclick="toggleSoloFavoritos()" class="bg-rose-500/15 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-rose-500/25"><span>❤️ Favoritos</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
+
+  if (chips.length > 0) {
+    chips.push(`<button type="button" onclick="resetearTodosLosFiltros()" class="text-[10px] text-zinc-400 hover:text-white underline cursor-pointer ml-1">Limpiar</button>`);
+    bar.innerHTML = chips.join('');
+    bar.classList.remove('hidden');
+  } else {
+    bar.innerHTML = '';
+    bar.classList.add('hidden');
+  }
+}
+
 function filtrarProductos() {
+  paginaActual = 1;
   renderProductos(obtenerProductosFiltrados());
 }
 
@@ -513,7 +715,8 @@ function obtenerProductosFiltrados() {
 
   let filtrados = productos.filter(p => {
     const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
-    const textoProducto = `${p.nombre} ${p.categoria} ${p.id} ${p.descripcion}`
+    const coincideMarca = marcaActual === 'todas' || (p.marca || '').toLowerCase() === marcaActual.toLowerCase();
+    const textoProducto = `${p.nombre} ${p.categoria} ${p.marca || ''} ${p.id} ${p.descripcion}`
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
@@ -521,7 +724,7 @@ function obtenerProductosFiltrados() {
     const coincideOferta = orden !== 'ofertas' || p.precioAnteriorUSD > 0;
     const coincideInmediata = !soloInmediata || p.stockTotal > 0;
     const coincideFav = !soloFavoritos || favoritos.includes(p.id);
-    return coincideCat && coincideBusqueda && coincideOferta && coincideInmediata && coincideFav;
+    return coincideCat && coincideMarca && coincideBusqueda && coincideOferta && coincideInmediata && coincideFav;
   });
 
   if (orden === 'menor-precio') {
@@ -533,14 +736,91 @@ function obtenerProductosFiltrados() {
   return filtrados;
 }
 
+function irAPagina(num) {
+  vibrar();
+  paginaActual = num;
+  renderProductos(obtenerProductosFiltrados());
+  document.getElementById('barraCatalogo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderPaginacion(totalItems, totalPaginas) {
+  const nav = document.getElementById('paginacionCatalogo');
+  if (!nav) return;
+
+  if (totalPaginas <= 1) {
+    nav.innerHTML = '';
+    nav.classList.add('hidden');
+    return;
+  }
+
+  nav.classList.remove('hidden');
+
+  const inicio = (paginaActual - 1) * PRODUCTOS_POR_PAGINA + 1;
+  const fin = Math.min(totalItems, paginaActual * PRODUCTOS_POR_PAGINA);
+
+  // Construir botones de página inteligentes (con puntos suspensivos)
+  const paginas = [];
+  if (totalPaginas <= 7) {
+    for (let i = 1; i <= totalPaginas; i++) paginas.push(i);
+  } else {
+    paginas.push(1);
+    if (paginaActual > 3) paginas.push('...');
+    const desde = Math.max(2, paginaActual - 1);
+    const hasta = Math.min(totalPaginas - 1, paginaActual + 1);
+    for (let i = desde; i <= hasta; i++) paginas.push(i);
+    if (paginaActual < totalPaginas - 2) paginas.push('...');
+    paginas.push(totalPaginas);
+  }
+
+  const botonesPaginas = paginas.map(p => {
+    if (p === '...') {
+      return `<span class="px-2 text-zinc-500 text-xs select-none">…</span>`;
+    }
+    const activo = p === paginaActual;
+    return `
+      <button type="button" data-page="${p}" ${activo ? 'aria-current="page"' : ''} class="min-w-[36px] h-9 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${activo ? 'bg-orange-600 text-white border-orange-500 shadow-lg shadow-orange-600/25' : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border-zinc-800'}">
+        ${p}
+      </button>
+    `;
+  }).join('');
+
+  nav.innerHTML = `
+    <div class="flex flex-wrap items-center justify-center gap-1.5">
+      <button type="button" data-page="${paginaActual - 1}" ${paginaActual <= 1 ? 'disabled' : ''} class="h-9 px-3 rounded-xl text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-chevron-left text-[10px]"></i> <span class="hidden sm:inline">Anterior</span>
+      </button>
+      ${botonesPaginas}
+      <button type="button" data-page="${paginaActual + 1}" ${paginaActual >= totalPaginas ? 'disabled' : ''} class="h-9 px-3 rounded-xl text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5 transition-all">
+        <span class="hidden sm:inline">Siguiente</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+      </button>
+    </div>
+    <p class="text-[11px] text-zinc-500">
+      Hoja <strong class="text-zinc-300">${paginaActual}</strong> de <strong class="text-zinc-300">${totalPaginas}</strong> · Mostrando ${inicio}–${fin} de ${totalItems} artículos
+    </p>
+  `;
+}
+
 function renderProductos(lista) {
   const container = document.getElementById('gridProductos');
   const contador = document.getElementById('contadorResultados');
   if (!container) return;
 
+  renderFiltrosActivos();
+
+  const totalPaginas = Math.max(1, Math.ceil(lista.length / PRODUCTOS_POR_PAGINA));
+  if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+  if (paginaActual < 1) paginaActual = 1;
+
+  const inicioIdx = (paginaActual - 1) * PRODUCTOS_POR_PAGINA;
+  const paginaItems = lista.slice(inicioIdx, inicioIdx + PRODUCTOS_POR_PAGINA);
+
   if (contador) {
     if (productos.length === 0) {
       contador.textContent = 'Cargando catálogo...';
+    } else if (lista.length === 0) {
+      contador.textContent = '0 artículos encontrados';
+    } else if (totalPaginas > 1) {
+      contador.textContent = `Mostrando ${inicioIdx + 1}–${inicioIdx + paginaItems.length} de ${lista.length} artículos`;
     } else if (lista.length === productos.length) {
       contador.textContent = `Mostrando ${lista.length} artículos disponibles`;
     } else {
@@ -551,6 +831,7 @@ function renderProductos(lista) {
   container.innerHTML = '';
 
   if (lista.length === 0) {
+    renderPaginacion(0, 0);
     container.innerHTML = `
       <div class="col-span-full bg-zinc-900/60 border border-zinc-800 rounded-2xl text-center py-14 px-4 space-y-3">
         <i class="fa-solid fa-magnifying-glass text-zinc-600 text-2xl"></i>
@@ -565,7 +846,7 @@ function renderProductos(lista) {
 
   const fragment = document.createDocumentFragment();
 
-  lista.forEach(p => {
+  paginaItems.forEach(p => {
     const precioBsTexto = formatearBs(p.precioUSD);
     const esFav = favoritos.includes(p.id);
     const safeId = escapeHTML(p.id);
@@ -648,6 +929,7 @@ function renderProductos(lista) {
   });
 
   container.appendChild(fragment);
+  renderPaginacion(lista.length, totalPaginas);
 }
 
 // ======================== TASA BCV (CON RESPALDO Y RE-RENDER) ========================
@@ -1994,11 +2276,35 @@ document.addEventListener('DOMContentLoaded', () => {
   obtenerTasaBCV();
   cargarCatalogoDesdeHoja();
 
-  // Delegación de eventos en categorías
+  // Delegación de eventos en categorías (menú desplegable)
   document.getElementById('contenedorFiltros')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-cat]');
     if (!btn) return;
     filtrarCategoria(btn.dataset.cat);
+  });
+
+  // Delegación de eventos en marcas (panel flotante y cinta rápida)
+  const manejarClickMarca = (e) => {
+    const btn = e.target.closest('button[data-marca]');
+    if (!btn) return;
+    filtrarMarca(btn.dataset.marca);
+  };
+  document.getElementById('contenedorMarcasPanel')?.addEventListener('click', manejarClickMarca);
+  document.getElementById('barraMarcas')?.addEventListener('click', manejarClickMarca);
+
+  // Delegación de eventos en paginación (cambio de hoja)
+  document.getElementById('paginacionCatalogo')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+    const p = parseInt(btn.dataset.page, 10);
+    if (!Number.isNaN(p) && p >= 1) irAPagina(p);
+  });
+
+  // Cerrar desplegables de categorías y marcas al hacer clic fuera
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#dropdownCategorias') && !e.target.closest('#dropdownMarcas')) {
+      cerrarMenusDesplegables();
+    }
   });
 
   // Delegación de eventos en cuadrícula de productos (100% seguro contra comillas/caracteres)
@@ -2073,9 +2379,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2500);
   }
 
-  // Atajo Escape para cerrar modales
+  // Atajo Escape para cerrar modales y desplegables
   document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") {
+      cerrarMenusDesplegables();
       cerrarDetalle();
       toggleCarrito(false);
       toggleQRModal(false);
