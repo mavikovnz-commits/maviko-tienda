@@ -11,16 +11,24 @@ const IMAGEN_RESPALDO = "./icon-192.png";
 const MARCAS_CONOCIDAS = [
   "Nike", "Jordan", "Adidas", "New Balance", "Puma", "Converse", "Vans",
   "Skechers", "Under Armour", "Reebok", "Crocs", "Timberland", "Fila", "Asics",
+  "Caterpillar", "CAT", "Brooks", "Hoka", "On Cloud", "Saucony", "Mizuno", "Merrell", "Salomon", "DC",
   "Tommy Hilfiger", "Ralph Lauren", "Lacoste", "Calvin Klein", "Guess", "Coach",
   "Michael Kors", "Kate Spade", "Steve Madden", "Victoria's Secret", "Bath & Body Works",
+  "Nautica", "US Polo", "Kenneth Cole", "Nine West", "Aldo", "Hollister", "Abercrombie", "Old Navy", "Gap",
   "Zara", "Shein", "CeraVe", "La Roche-Posay", "Eucerin", "Neutrogena", "Cetaphil",
-  "The Ordinary", "Garnier", "L'Oreal", "Maybelline", "MAC", "Rare Beauty", "Dior",
-  "Chanel", "Carolina Herrera", "Versace", "Armani", "Casio", "Fossil", "Invicta",
-  "Stanley", "Yeti", "Jansport", "Kipling", "The North Face", "Columbia", "Champion",
-  "Levi's", "Oakley", "Ray-Ban", "Apple", "Samsung", "Xiaomi", "JBL", "Sony",
+  "The Ordinary", "Garnier", "L'Oreal", "Maybelline", "MAC", "Rare Beauty", "Sheglam", "Revlon", "NYX", "Dior",
+  "Chanel", "Carolina Herrera", "Paco Rabanne", "Lattafa", "Armaf", "Rasasi", "Afnan", "Bharara",
+  "Versace", "Armani", "Casio", "G-Shock", "Fossil", "Invicta",
+  "Stanley", "Yeti", "Owala", "Jansport", "Kipling", "Totto", "The North Face", "Columbia", "Champion",
+  "Levi's", "Oakley", "Ray-Ban", "Apple", "Samsung", "Xiaomi", "JBL", "Sony", "Anker",
   "Nivea", "Bioderma", "Isdin", "Vichy", "Avene", "Clinique", "Estee Lauder",
   "Kylie", "Fenty", "Sol de Janeiro", "Tree Hut", "Olaplex", "Pantene", "Dove"
 ];
+
+const ALIAS_MARCAS = {
+  caterpillar: "CAT",
+  cat: "CAT"
+};
 
 const STORAGE_KEYS = {
   CARRITO: 'maviko_carrito',
@@ -29,7 +37,8 @@ const STORAGE_KEYS = {
   TASA_BCV: 'maviko_tasa_bcv_cache',
   FAVORITOS: 'maviko_favoritos_v1',
   OFERTAS_VISTAS: 'maviko_ofertas_vistas',
-  CUPONES_VERIFICADOS: 'maviko_cupones_verificados'
+  CUPONES_VERIFICADOS: 'maviko_cupones_verificados',
+  CLIENTE: 'maviko_cliente_v1'
 };
 
 const DATOS_PAGO_MOVIL = {
@@ -44,9 +53,11 @@ let carrito = leerJSONStorage(STORAGE_KEYS.CARRITO, []);
 let favoritos = leerJSONStorage(STORAGE_KEYS.FAVORITOS, []);
 let categoriaActual = 'todas';
 let marcaActual = 'todas';
+let tallaActual = 'todas';
 let paginaActual = 1;
 let soloInmediata = false;
 let soloFavoritos = false;
+let filtrosURLAplicados = false;
 let productoModalActual = null;
 let tallaSeleccionadaActual = "";
 let costoEnvioAdicional = 0;
@@ -278,6 +289,7 @@ function limpiarBusqueda() {
 function resetearTodosLosFiltros() {
   categoriaActual = 'todas';
   marcaActual = 'todas';
+  tallaActual = 'todas';
   paginaActual = 1;
   soloInmediata = false;
   soloFavoritos = false;
@@ -285,6 +297,8 @@ function resetearTodosLosFiltros() {
   if (input) input.value = '';
   const orden = document.getElementById('ordenSelect');
   if (orden) orden.value = 'destacados';
+  const precio = document.getElementById('precioSelect');
+  if (precio) precio.value = 'todos';
   document.getElementById('btnLimpiarBusqueda')?.classList.add('hidden');
   const btnInm = document.getElementById('btnFiltroInmediata');
   if (btnInm) {
@@ -294,12 +308,16 @@ function resetearTodosLosFiltros() {
   actualizarContadorFavoritos();
   generarBotonesCategoriasDinamicos();
   generarMenuYBarraMarcas();
+  generarMenuTallas();
+  sincronizarFiltrosEnURL();
   renderProductos(obtenerProductosFiltrados());
 }
 
 function detectarMarca(item) {
   const marcaExplicita = (item.marca || '').trim();
-  if (marcaExplicita) return marcaExplicita;
+  if (marcaExplicita) {
+    return ALIAS_MARCAS[marcaExplicita.toLowerCase()] || marcaExplicita;
+  }
 
   const texto = `${item.nombre || ''} ${item.descripcion || ''}`
     .normalize("NFD")
@@ -309,9 +327,48 @@ function detectarMarca(item) {
     const mNorm = m.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const esc = mNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(?:^|[^a-zA-Z0-9])${esc}(?:$|[^a-zA-Z0-9])`, 'i');
-    if (regex.test(texto)) return m;
+    if (regex.test(texto)) return ALIAS_MARCAS[m.toLowerCase()] || m;
   }
   return '';
+}
+
+function guardarDatosCliente() {
+  try {
+    const datos = {
+      nombre: document.getElementById('nombreCliente')?.value.trim() || '',
+      telefono: document.getElementById('telefonoCliente')?.value.trim() || '',
+      agencia: document.getElementById('empresaEnvio')?.value || '',
+      metodoPago: document.getElementById('metodoPago')?.value || '',
+      direccion: document.getElementById('direccionEnvio')?.value.trim() || ''
+    };
+    localStorage.setItem(STORAGE_KEYS.CLIENTE, JSON.stringify(datos));
+  } catch (e) {}
+}
+
+function cargarDatosClienteGuardados() {
+  const datos = leerJSONStorage(STORAGE_KEYS.CLIENTE, null);
+  if (!datos) return;
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  };
+  setVal('nombreCliente', datos.nombre);
+  setVal('telefonoCliente', datos.telefono);
+  setVal('direccionEnvio', datos.direccion);
+  if (datos.agencia) {
+    const sel = document.getElementById('empresaEnvio');
+    if (sel && Array.from(sel.options).some(o => o.value === datos.agencia)) {
+      sel.value = datos.agencia;
+      actualizarCostoEnvio();
+    }
+  }
+  if (datos.metodoPago) {
+    const selPago = document.getElementById('metodoPago');
+    if (selPago && Array.from(selPago.options).some(o => o.value === datos.metodoPago)) {
+      selPago.value = datos.metodoPago;
+      mostrarDatosPago();
+    }
+  }
 }
 
 // ======================== CATÁLOGO GOOGLE SHEETS + CACHÉ INSTANTÁNEA ========================
@@ -335,8 +392,11 @@ function cargarCatalogoDesdeCache() {
   const cache = leerJSONStorage(STORAGE_KEYS.CATALOGO, null);
   if (cache && Array.isArray(cache.productos) && cache.productos.length > 0) {
     productos = cache.productos.map(p => ({ ...p, marca: p.marca || detectarMarca(p) }));
+    aplicarFiltrosDesdeURL();
     generarBotonesCategoriasDinamicos();
     generarMenuYBarraMarcas();
+    generarMenuTallas();
+    renderCarruselOfertas();
     renderProductos(obtenerProductosFiltrados());
     abrirProductoDesdeURLSiAplica();
     actualizarEstadoSync('cargando', 'Actualizando precios y stock...');
@@ -462,8 +522,11 @@ window.manejarRespuestaGoogleSheets = function(data) {
       }));
     } catch (e) {}
 
+    aplicarFiltrosDesdeURL();
     generarBotonesCategoriasDinamicos();
     generarMenuYBarraMarcas();
+    generarMenuTallas();
+    renderCarruselOfertas();
     renderProductos(obtenerProductosFiltrados());
     verificarYNotificarOfertasNuevas(productos);
     actualizarEstadoSync('ok', 'Catálogo actualizado');
@@ -517,8 +580,10 @@ function verificarYNotificarOfertasNuevas(listaProductos) {
 function cerrarMenusDesplegables() {
   document.getElementById('panelCategorias')?.classList.add('hidden');
   document.getElementById('panelMarcas')?.classList.add('hidden');
+  document.getElementById('panelTallas')?.classList.add('hidden');
   document.getElementById('chevronCategorias')?.classList.remove('rotate-180');
   document.getElementById('chevronMarcas')?.classList.remove('rotate-180');
+  document.getElementById('chevronTallas')?.classList.remove('rotate-180');
 }
 
 function toggleMenuCategorias() {
@@ -540,6 +605,213 @@ function toggleMenuMarcas() {
   if (estabaOculto && panel) {
     panel.classList.remove('hidden');
     document.getElementById('chevronMarcas')?.classList.add('rotate-180');
+  }
+}
+
+function toggleMenuTallas() {
+  vibrar();
+  const panel = document.getElementById('panelTallas');
+  const estabaOculto = panel?.classList.contains('hidden');
+  cerrarMenusDesplegables();
+  if (estabaOculto && panel) {
+    panel.classList.remove('hidden');
+    document.getElementById('chevronTallas')?.classList.add('rotate-180');
+  }
+}
+
+function generarMenuTallas() {
+  const dropdown = document.getElementById('dropdownTallas');
+  const panelContenedor = document.getElementById('contenedorTallasPanel');
+  const labelActiva = document.getElementById('labelTallaActiva');
+  const btnMenu = document.getElementById('btnMenuTallas');
+
+  const conteoTallas = new Map();
+  productos.forEach(p => {
+    if (!p.tieneTallas || !p.mapaTallas) return;
+    Object.entries(p.mapaTallas).forEach(([talla, qty]) => {
+      if (qty > 0) {
+        conteoTallas.set(talla, (conteoTallas.get(talla) || 0) + 1);
+      }
+    });
+  });
+
+  const ordenRopa = { XS: 1, S: 2, M: 3, L: 4, XL: 5, XXL: 6, XXXL: 7 };
+  const tallasOrdenadas = [...conteoTallas.entries()].sort((a, b) => {
+    const na = parseFloat(a[0]);
+    const nb = parseFloat(b[0]);
+    const aNum = !Number.isNaN(na) && /^\d/.test(a[0]);
+    const bNum = !Number.isNaN(nb) && /^\d/.test(b[0]);
+    if (aNum && bNum) return na - nb;
+    if (aNum) return -1;
+    if (bNum) return 1;
+    const ra = ordenRopa[a[0]] || 99;
+    const rb = ordenRopa[b[0]] || 99;
+    if (ra !== rb) return ra - rb;
+    return a[0].localeCompare(b[0]);
+  });
+
+  if (tallasOrdenadas.length === 0) {
+    dropdown?.classList.add('hidden');
+    return;
+  }
+
+  dropdown?.classList.remove('hidden');
+
+  if (panelContenedor) {
+    panelContenedor.innerHTML = '';
+    const crearBtnTalla = (key, etiqueta, count, activo) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.talla = key;
+      btn.className = `${activo ? 'bg-sky-500 text-black font-extrabold border-sky-400 shadow-md' : 'bg-zinc-950 hover:bg-zinc-800 text-zinc-200 border-zinc-800'} px-2 py-2 rounded-xl text-xs transition-all cursor-pointer border flex flex-col items-center justify-center leading-tight`;
+      btn.innerHTML = `<span>${escapeHTML(etiqueta)}</span><span class="text-[9px] ${activo ? 'text-black/75 font-bold' : 'text-zinc-500'}">${count} disp.</span>`;
+      return btn;
+    };
+
+    tallasOrdenadas.forEach(([talla, count]) => {
+      panelContenedor.appendChild(crearBtnTalla(talla, talla, count, tallaActual === talla));
+    });
+  }
+
+  if (labelActiva) {
+    labelActiva.textContent = tallaActual === 'todas' ? 'Tallas' : `Talla: ${tallaActual}`;
+  }
+  if (btnMenu) {
+    btnMenu.classList.toggle('border-sky-500/70', tallaActual !== 'todas');
+    btnMenu.classList.toggle('bg-sky-500/15', tallaActual !== 'todas');
+  }
+}
+
+function filtrarTalla(talla) {
+  vibrar();
+  tallaActual = (tallaActual === talla && talla !== 'todas') ? 'todas' : talla;
+  paginaActual = 1;
+  cerrarMenusDesplegables();
+  generarMenuTallas();
+  sincronizarFiltrosEnURL();
+  renderProductos(obtenerProductosFiltrados());
+}
+
+function renderCarruselOfertas() {
+  const seccion = document.getElementById('seccionOfertasFlash');
+  const carrusel = document.getElementById('carruselOfertas');
+  if (!seccion || !carrusel) return;
+
+  const ofertas = productos
+    .filter(p => p.precioAnteriorUSD > p.precioUSD)
+    .sort((a, b) => ((b.precioAnteriorUSD - b.precioUSD) / b.precioAnteriorUSD) - ((a.precioAnteriorUSD - a.precioUSD) / a.precioAnteriorUSD))
+    .slice(0, 10);
+
+  if (ofertas.length === 0) {
+    seccion.classList.add('hidden');
+    carrusel.innerHTML = '';
+    return;
+  }
+
+  seccion.classList.remove('hidden');
+  carrusel.innerHTML = ofertas.map(p => {
+    const pct = Math.round(((p.precioAnteriorUSD - p.precioUSD) / p.precioAnteriorUSD) * 100);
+    return `
+      <button type="button" data-action="detalle" data-id="${escapeHTML(p.id)}" class="snap-start shrink-0 w-44 sm:w-48 bg-zinc-900 border border-zinc-800 hover:border-rose-500/50 rounded-2xl p-2.5 text-left transition-all cursor-pointer flex flex-col justify-between gap-2 group">
+        <div class="h-28 rounded-xl bg-zinc-950 relative flex items-center justify-center p-2 overflow-hidden">
+          <img src="${escapeHTML(p.imagen || IMAGEN_RESPALDO)}" alt="${escapeHTML(p.nombre)}" loading="lazy" onerror="this.src='${IMAGEN_RESPALDO}'" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+          <span class="absolute top-1.5 left-1.5 bg-rose-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">-${pct}%</span>
+        </div>
+        <div class="space-y-0.5">
+          <p class="text-[11px] font-bold text-white line-clamp-1">${escapeHTML(p.nombre)}</p>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-xs font-extrabold text-orange-400">$${p.precioUSD.toFixed(2)}</span>
+            <span class="text-[10px] text-zinc-500 line-through">$${p.precioAnteriorUSD.toFixed(2)}</span>
+          </div>
+        </div>
+      </button>
+    `;
+  }).join('');
+}
+
+function verSoloOfertas() {
+  vibrar();
+  const sel = document.getElementById('ordenSelect');
+  if (sel) sel.value = 'ofertas';
+  paginaActual = 1;
+  sincronizarFiltrosEnURL();
+  renderProductos(obtenerProductosFiltrados());
+  document.getElementById('barraCatalogo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function sincronizarFiltrosEnURL() {
+  try {
+    const url = new URL(window.location.href);
+    if (categoriaActual !== 'todas') url.searchParams.set('categoria', categoriaActual);
+    else url.searchParams.delete('categoria');
+
+    if (marcaActual !== 'todas') url.searchParams.set('marca', marcaActual);
+    else url.searchParams.delete('marca');
+
+    if (tallaActual !== 'todas') url.searchParams.set('talla', tallaActual);
+    else url.searchParams.delete('talla');
+
+    const orden = document.getElementById('ordenSelect')?.value || 'destacados';
+    if (orden === 'ofertas') url.searchParams.set('filtro', 'ofertas');
+    else if (soloInmediata) url.searchParams.set('filtro', 'inmediata');
+    else url.searchParams.delete('filtro');
+
+    history.replaceState({}, '', url.toString());
+  } catch (e) {}
+}
+
+function aplicarFiltrosDesdeURL() {
+  if (filtrosURLAplicados || !productos.length) return;
+  filtrosURLAplicados = true;
+
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get('categoria');
+  const marcaParam = params.get('marca');
+  const tallaParam = params.get('talla');
+
+  if (catParam) {
+    const catBuscada = catParam.trim().toLowerCase();
+    const matchCat = productos.find(p => p.categoria === catBuscada);
+    if (matchCat) categoriaActual = matchCat.categoria;
+  }
+
+  if (marcaParam) {
+    const marcaBuscada = marcaParam.trim().toLowerCase();
+    const matchMarca = productos.find(p => (p.marca || '').toLowerCase() === marcaBuscada);
+    if (matchMarca) marcaActual = matchMarca.marca;
+  }
+
+  if (tallaParam) {
+    const tallaBuscada = tallaParam.trim().toUpperCase();
+    const matchTalla = productos.find(p => p.tieneTallas && p.mapaTallas && p.mapaTallas[tallaBuscada] > 0);
+    if (matchTalla) tallaActual = tallaBuscada;
+  }
+}
+
+async function compartirEnlaceFiltro() {
+  vibrar();
+  sincronizarFiltrosEnURL();
+  const url = window.location.href;
+  const partes = [];
+  if (marcaActual !== 'todas') partes.push(marcaActual);
+  if (categoriaActual !== 'todas') partes.push(categoriaActual);
+  if (tallaActual !== 'todas') partes.push(`Talla ${tallaActual}`);
+  const titulo = partes.length > 0 ? `Maviko — ${partes.join(' · ')}` : 'Maviko | Tienda Oficial';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: titulo, text: `Mira esta selección disponible en Maviko:`, url });
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(url);
+    mostrarToast("Enlace filtrado copiado. ¡Pégalo en tus historias de Instagram o WhatsApp!", "Enlace copiado", true);
+  } catch (e) {
+    mostrarToast(url, "Copia este enlace", true);
   }
 }
 
@@ -662,6 +934,7 @@ function filtrarCategoria(cat) {
   paginaActual = 1;
   cerrarMenusDesplegables();
   generarBotonesCategoriasDinamicos();
+  sincronizarFiltrosEnURL();
   renderProductos(obtenerProductosFiltrados());
 }
 
@@ -671,12 +944,27 @@ function filtrarMarca(marca) {
   paginaActual = 1;
   cerrarMenusDesplegables();
   generarMenuYBarraMarcas();
+  sincronizarFiltrosEnURL();
   renderProductos(obtenerProductosFiltrados());
+}
+
+function limpiarFiltroPrecio() {
+  const sel = document.getElementById('precioSelect');
+  if (sel) sel.value = 'todos';
+  filtrarProductos();
 }
 
 function renderFiltrosActivos() {
   const bar = document.getElementById('filtrosActivosBar');
   if (!bar) return;
+
+  const precioVal = document.getElementById('precioSelect')?.value || 'todos';
+  const etiquetasPrecio = {
+    '0-30': 'Hasta $30',
+    '30-60': '$30 – $60',
+    '60-100': '$60 – $100',
+    '100+': 'Más de $100'
+  };
 
   const chips = [];
   if (categoriaActual !== 'todas') {
@@ -686,6 +974,12 @@ function renderFiltrosActivos() {
   if (marcaActual !== 'todas') {
     chips.push(`<button type="button" onclick="filtrarMarca('todas')" class="bg-amber-500/15 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-amber-500/25"><span>${escapeHTML(marcaActual)}</span><i class="fa-solid fa-xmark"></i></button>`);
   }
+  if (tallaActual !== 'todas') {
+    chips.push(`<button type="button" onclick="filtrarTalla('todas')" class="bg-sky-500/15 text-sky-300 border border-sky-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-sky-500/25"><span>Talla ${escapeHTML(tallaActual)}</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
+  if (precioVal !== 'todos' && etiquetasPrecio[precioVal]) {
+    chips.push(`<button type="button" onclick="limpiarFiltroPrecio()" class="bg-purple-500/15 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-purple-500/25"><span>${etiquetasPrecio[precioVal]}</span><i class="fa-solid fa-xmark"></i></button>`);
+  }
   if (soloInmediata) {
     chips.push(`<button type="button" onclick="toggleSoloInmediata()" class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer hover:bg-emerald-500/25"><span>⚡ Inmediata</span><i class="fa-solid fa-xmark"></i></button>`);
   }
@@ -694,6 +988,7 @@ function renderFiltrosActivos() {
   }
 
   if (chips.length > 0) {
+    chips.push(`<button type="button" onclick="compartirEnlaceFiltro()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 cursor-pointer" title="Copiar enlace directo de esta selección"><i class="fa-solid fa-share-nodes text-orange-400"></i> Compartir enlace</button>`);
     chips.push(`<button type="button" onclick="resetearTodosLosFiltros()" class="text-[10px] text-zinc-400 hover:text-white underline cursor-pointer ml-1">Limpiar</button>`);
     bar.innerHTML = chips.join('');
     bar.classList.remove('hidden');
@@ -705,6 +1000,7 @@ function renderFiltrosActivos() {
 
 function filtrarProductos() {
   paginaActual = 1;
+  sincronizarFiltrosEnURL();
   renderProductos(obtenerProductosFiltrados());
 }
 
@@ -712,10 +1008,12 @@ function obtenerProductosFiltrados() {
   const textoRaw = (document.getElementById('searchInput')?.value || '').trim();
   const tokensBusqueda = normalizarTextoBusqueda(textoRaw);
   const orden = document.getElementById('ordenSelect')?.value || 'destacados';
+  const rangoPrecio = document.getElementById('precioSelect')?.value || 'todos';
 
   let filtrados = productos.filter(p => {
     const coincideCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
     const coincideMarca = marcaActual === 'todas' || (p.marca || '').toLowerCase() === marcaActual.toLowerCase();
+    const coincideTalla = tallaActual === 'todas' || (p.tieneTallas && p.mapaTallas && p.mapaTallas[tallaActual] > 0);
     const textoProducto = `${p.nombre} ${p.categoria} ${p.marca || ''} ${p.id} ${p.descripcion}`
       .toLowerCase()
       .normalize("NFD")
@@ -724,7 +1022,14 @@ function obtenerProductosFiltrados() {
     const coincideOferta = orden !== 'ofertas' || p.precioAnteriorUSD > 0;
     const coincideInmediata = !soloInmediata || p.stockTotal > 0;
     const coincideFav = !soloFavoritos || favoritos.includes(p.id);
-    return coincideCat && coincideMarca && coincideBusqueda && coincideOferta && coincideInmediata && coincideFav;
+
+    let coincidePrecio = true;
+    if (rangoPrecio === '0-30') coincidePrecio = p.precioUSD <= 30;
+    else if (rangoPrecio === '30-60') coincidePrecio = p.precioUSD > 30 && p.precioUSD <= 60;
+    else if (rangoPrecio === '60-100') coincidePrecio = p.precioUSD > 60 && p.precioUSD <= 100;
+    else if (rangoPrecio === '100+') coincidePrecio = p.precioUSD > 100;
+
+    return coincideCat && coincideMarca && coincideTalla && coincidePrecio && coincideBusqueda && coincideOferta && coincideInmediata && coincideFav;
   });
 
   if (orden === 'menor-precio') {
@@ -1361,8 +1666,11 @@ function abrirDetalleProducto(id, pushHist = true) {
   };
 
   actualizarBotonFavoritoModal();
+  renderProductosRelacionados(prod);
   cambiarTab('desc');
-  document.getElementById('modalDetalle').classList.remove('hidden');
+  const modalEl = document.getElementById('modalDetalle');
+  modalEl.classList.remove('hidden');
+  modalEl.scrollTop = 0;
   document.body.classList.add('overflow-hidden');
   iniciarPaseAutomatico();
 
@@ -1375,6 +1683,113 @@ function abrirDetalleProducto(id, pushHist = true) {
       historialModalActivo = true;
     } catch (e) {}
   }
+}
+
+function renderProductosRelacionados(prodActual) {
+  const seccion = document.getElementById('seccionRelacionados');
+  const grid = document.getElementById('gridRelacionados');
+  if (!seccion || !grid) return;
+
+  const candidatos = productos
+    .filter(p => p.id !== prodActual.id)
+    .map(p => {
+      let score = 0;
+      if (p.categoria === prodActual.categoria) score += 3;
+      if (prodActual.marca && p.marca && p.marca.toLowerCase() === prodActual.marca.toLowerCase()) score += 4;
+      if (p.stockTotal > 0) score += 1;
+      return { p, score };
+    })
+    .filter(x => x.score >= 3)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map(x => x.p);
+
+  if (candidatos.length === 0) {
+    seccion.classList.add('hidden');
+    grid.innerHTML = '';
+    return;
+  }
+
+  seccion.classList.remove('hidden');
+  grid.innerHTML = candidatos.map(r => `
+    <button type="button" data-action="detalle" data-id="${escapeHTML(r.id)}" class="bg-zinc-950 hover:bg-zinc-800/80 border border-zinc-800 hover:border-orange-500/50 rounded-xl p-2 text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 group">
+      <div class="h-20 rounded-lg bg-black/50 flex items-center justify-center p-1 overflow-hidden">
+        <img src="${escapeHTML(r.imagen || IMAGEN_RESPALDO)}" alt="${escapeHTML(r.nombre)}" loading="lazy" onerror="this.src='${IMAGEN_RESPALDO}'" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-200">
+      </div>
+      <div>
+        <p class="text-[11px] font-bold text-zinc-200 line-clamp-1">${escapeHTML(r.nombre)}</p>
+        <p class="text-xs font-extrabold text-orange-400">$${r.precioUSD.toFixed(2)}</p>
+      </div>
+    </button>
+  `).join('');
+}
+
+const TABLAS_TALLAS = {
+  caballero: [
+    { eu: '39', us: '6.5', cm: '24.5 cm' },
+    { eu: '40', us: '7', cm: '25.0 cm' },
+    { eu: '41', us: '8', cm: '26.0 cm' },
+    { eu: '42', us: '8.5', cm: '26.5 cm' },
+    { eu: '43', us: '9.5', cm: '27.5 cm' },
+    { eu: '44', us: '10', cm: '28.0 cm' },
+    { eu: '45', us: '11', cm: '29.0 cm' },
+    { eu: '46', us: '12', cm: '30.0 cm' }
+  ],
+  dama: [
+    { eu: '35', us: '5', cm: '22.0 cm' },
+    { eu: '36', us: '5.5', cm: '22.5 cm' },
+    { eu: '37', us: '6.5', cm: '23.5 cm' },
+    { eu: '38', us: '7', cm: '24.0 cm' },
+    { eu: '39', us: '8', cm: '25.0 cm' },
+    { eu: '40', us: '8.5', cm: '25.5 cm' },
+    { eu: '41', us: '9.5', cm: '26.5 cm' }
+  ]
+};
+
+function toggleGuiaTallas(abrir) {
+  const modal = document.getElementById('modalGuiaTallas');
+  if (!modal) return;
+  modal.classList.toggle('hidden', !abrir);
+  if (abrir) cambiarTabGuiaTallas('caballero');
+}
+
+function cambiarTabGuiaTallas(genero) {
+  const btnCab = document.getElementById('tabGuiaCaballero');
+  const btnDama = document.getElementById('tabGuiaDama');
+  const tabla = document.getElementById('tablaGuiaTallas');
+  if (!tabla) return;
+
+  if (btnCab && btnDama) {
+    if (genero === 'caballero') {
+      btnCab.className = "bg-orange-600 text-white py-1.5 rounded-lg cursor-pointer transition-colors";
+      btnDama.className = "text-zinc-400 hover:text-white py-1.5 rounded-lg cursor-pointer transition-colors";
+    } else {
+      btnDama.className = "bg-orange-600 text-white py-1.5 rounded-lg cursor-pointer transition-colors";
+      btnCab.className = "text-zinc-400 hover:text-white py-1.5 rounded-lg cursor-pointer transition-colors";
+    }
+  }
+
+  const filas = TABLAS_TALLAS[genero] || TABLAS_TALLAS.caballero;
+  tabla.innerHTML = `
+    <table class="w-full text-center border-collapse">
+      <thead class="bg-zinc-900 text-zinc-400 text-[11px] uppercase">
+        <tr>
+          <th class="py-2 px-3 border-b border-zinc-800">Talla EU / VE</th>
+          <th class="py-2 px-3 border-b border-zinc-800">Talla US</th>
+          <th class="py-2 px-3 border-b border-zinc-800">Largo del pie</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-zinc-800/70 text-zinc-200">
+        ${filas.map(f => `
+          <tr class="hover:bg-zinc-900/60">
+            <td class="py-2 px-3 font-bold text-orange-400">${f.eu}</td>
+            <td class="py-2 px-3">${f.us}</td>
+            <td class="py-2 px-3 font-mono text-zinc-300">${f.cm}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
 }
 
 async function compartirProductoActual() {
@@ -1734,6 +2149,30 @@ function actualizarCarritoUI() {
   document.getElementById('subtotalUSD').innerText = subtotalUSD.toFixed(2);
   document.getElementById('totalUSD').innerText = totalUSD.toFixed(2);
   document.getElementById('totalBS').innerText = totalBS;
+
+  // Actualizar barra inferior flotante del carrito en móvil y posición del botón WhatsApp
+  const barraMovil = document.getElementById('barraCarritoMovil');
+  const movilCount = document.getElementById('movilCartCount');
+  const movilSub = document.getElementById('movilCartSub');
+  const btnWa = document.getElementById('floatingWhatsApp');
+
+  if (barraMovil) {
+    if (count > 0) {
+      barraMovil.classList.remove('hidden');
+      if (movilCount) movilCount.innerText = count;
+      if (movilSub) movilSub.innerText = `$${totalUSD.toFixed(2)} USD${tasaBCV > 0 ? ' · ' + totalBS + ' Bs.' : ''}`;
+      if (btnWa) {
+        btnWa.classList.remove('bottom-6');
+        btnWa.classList.add('bottom-20', 'sm:bottom-6');
+      }
+    } else {
+      barraMovil.classList.add('hidden');
+      if (btnWa) {
+        btnWa.classList.remove('bottom-20', 'sm:bottom-6');
+        btnWa.classList.add('bottom-6');
+      }
+    }
+  }
 }
 
 function mostrarDatosPago() {
@@ -1814,6 +2253,8 @@ function enviarPedidoWhatsApp() {
     alert("Por favor completa tu Nombre y WhatsApp.");
     return;
   }
+
+  guardarDatosCliente();
 
   const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
   const descuentoUSD = (cuponAplicado && subtotalUSD >= cuponAplicado.minCompraUSD) ? cuponAplicado.descuentoUSD : 0;
@@ -2258,8 +2699,23 @@ document.addEventListener('DOMContentLoaded', () => {
   actualizarVisibilidadBotonInstalar();
   actualizarContadorFavoritos();
   mostrarDatosPago();
+  cargarDatosClienteGuardados();
   actualizarCarritoUI();
   iniciarContadorBCV();
+
+  // Recordar datos del cliente automáticamente al editar
+  ['nombreCliente', 'telefonoCliente', 'direccionEnvio'].forEach(id => {
+    document.getElementById(id)?.addEventListener('blur', guardarDatosCliente);
+  });
+  ['empresaEnvio', 'metodoPago'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', guardarDatosCliente);
+  });
+
+  // Botón Volver Arriba
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('btnVolverArriba');
+    if (btn) btn.classList.toggle('hidden', window.scrollY < 450);
+  }, { passive: true });
 
   // Aplicar accesos directos desde URL (?filtro=ofertas | ?filtro=inmediata)
   const params = new URLSearchParams(window.location.search);
@@ -2292,6 +2748,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('contenedorMarcasPanel')?.addEventListener('click', manejarClickMarca);
   document.getElementById('barraMarcas')?.addEventListener('click', manejarClickMarca);
 
+  // Delegación de eventos en tallas (menú desplegable)
+  document.getElementById('contenedorTallasPanel')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-talla]');
+    if (!btn) return;
+    filtrarTalla(btn.dataset.talla);
+  });
+
+  // Delegación de eventos en carrusel de ofertas y productos relacionados
+  const manejarClickTarjetaDetalle = (e) => {
+    const target = e.target.closest('[data-action="detalle"]');
+    if (!target || !target.dataset.id) return;
+    abrirDetalleProducto(target.dataset.id);
+  };
+  document.getElementById('carruselOfertas')?.addEventListener('click', manejarClickTarjetaDetalle);
+  document.getElementById('gridRelacionados')?.addEventListener('click', manejarClickTarjetaDetalle);
+
   // Delegación de eventos en paginación (cambio de hoja)
   document.getElementById('paginacionCatalogo')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-page]');
@@ -2300,9 +2772,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!Number.isNaN(p) && p >= 1) irAPagina(p);
   });
 
-  // Cerrar desplegables de categorías y marcas al hacer clic fuera
+  // Cerrar desplegables de categorías, marcas y tallas al hacer clic fuera
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('#dropdownCategorias') && !e.target.closest('#dropdownMarcas')) {
+    if (!e.target.closest('#dropdownCategorias') && !e.target.closest('#dropdownMarcas') && !e.target.closest('#dropdownTallas')) {
       cerrarMenusDesplegables();
     }
   });
@@ -2390,6 +2862,7 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleClubVIP(false);
       toggleEncargoExterno(false);
       toggleModalInstalar(false);
+      toggleGuiaTallas(false);
     }
   });
 });

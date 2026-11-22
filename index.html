@@ -218,7 +218,21 @@
       </div>
     </div>
 
-    <!-- BUSCADOR INTELIGENTE, DESPLEGABLES DE CATEGORÍAS Y MARCAS, ORDEN -->
+    <!-- CARRUSEL COMPACTO DE OFERTAS FLASH (SOLO APARECE SI HAY DESCUENTOS ACTIVOS) -->
+    <section id="seccionOfertasFlash" class="hidden space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xs sm:text-sm font-extrabold text-white flex items-center gap-2 uppercase tracking-wide">
+          <span class="bg-rose-600/20 text-rose-400 border border-rose-500/40 px-2 py-0.5 rounded-lg text-[10px]">🔥 Ofertas</span>
+          <span>Rebajas Destacadas</span>
+        </h2>
+        <button type="button" onclick="verSoloOfertas()" class="text-[11px] font-bold text-orange-400 hover:text-orange-300 cursor-pointer flex items-center gap-1">
+          <span>Ver todas</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+      </div>
+      <div id="carruselOfertas" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar snap-x snap-mandatory"></div>
+    </section>
+
+    <!-- BUSCADOR INTELIGENTE, DESPLEGABLES DE CATEGORÍAS, MARCAS, TALLAS Y PRESUPUESTO -->
     <div id="barraCatalogo" class="space-y-3 scroll-mt-20">
       <div class="flex flex-col lg:flex-row gap-2.5 justify-between">
         <div class="relative flex-grow lg:max-w-md">
@@ -238,7 +252,7 @@
         <div class="flex flex-wrap items-center gap-2">
           <!-- DESPLEGABLE DE CATEGORÍAS -->
           <div id="dropdownCategorias" class="relative">
-            <button id="btnMenuCategorias" type="button" onclick="toggleMenuCategorias()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap">
+            <button id="btnMenuCategorias" type="button" onclick="toggleMenuCategorias()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap">
               <i class="fa-solid fa-layer-group text-orange-400"></i>
               <span id="labelCategoriaActiva">Categorías: Todas</span>
               <i id="chevronCategorias" class="fa-solid fa-chevron-down text-[10px] text-zinc-400 transition-transform duration-200"></i>
@@ -259,7 +273,7 @@
 
           <!-- DESPLEGABLE / VENTANA FLOTANTE DE MARCAS -->
           <div id="dropdownMarcas" class="relative hidden">
-            <button id="btnMenuMarcas" type="button" onclick="toggleMenuMarcas()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap">
+            <button id="btnMenuMarcas" type="button" onclick="toggleMenuMarcas()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap">
               <i class="fa-solid fa-tags text-amber-400"></i>
               <span id="labelMarcaActiva">Marcas</span>
               <i id="chevronMarcas" class="fa-solid fa-chevron-down text-[10px] text-zinc-400 transition-transform duration-200"></i>
@@ -274,13 +288,39 @@
             </div>
           </div>
 
+          <!-- DESPLEGABLE DE TALLAS DISPONIBLES -->
+          <div id="dropdownTallas" class="relative hidden">
+            <button id="btnMenuTallas" type="button" onclick="toggleMenuTallas()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-ruler text-sky-400"></i>
+              <span id="labelTallaActiva">Tallas</span>
+              <i id="chevronTallas" class="fa-solid fa-chevron-down text-[10px] text-zinc-400 transition-transform duration-200"></i>
+            </button>
+
+            <div id="panelTallas" class="hidden absolute left-0 sm:right-0 sm:left-auto mt-2 w-72 bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/80 rounded-2xl shadow-2xl p-3 z-30 dropdown-panel">
+              <div class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-zinc-800">
+                <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Tallas con stock hoy</span>
+                <button type="button" onclick="filtrarTalla('todas')" class="text-[11px] text-sky-400 hover:text-sky-300 font-semibold cursor-pointer">Todas</button>
+              </div>
+              <div id="contenedorTallasPanel" class="grid grid-cols-3 gap-1.5 max-h-64 overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+
           <!-- FILTRO ENTREGA INMEDIATA -->
           <button id="btnFiltroInmediata" onclick="toggleSoloInmediata()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-solid fa-bolt text-emerald-400"></i> <span>Entrega Inmediata</span>
+            <i class="fa-solid fa-bolt text-emerald-400"></i> <span>Inmediata</span>
           </button>
 
+          <!-- FILTRO DE PRESUPUESTO -->
+          <select id="precioSelect" onchange="filtrarProductos()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-orange-500 cursor-pointer" aria-label="Filtrar por presupuesto">
+            <option value="todos">Precio: Todos</option>
+            <option value="0-30">Hasta $30</option>
+            <option value="30-60">$30 – $60</option>
+            <option value="60-100">$60 – $100</option>
+            <option value="100+">Más de $100</option>
+          </select>
+
           <!-- ORDENAR POR -->
-          <select id="ordenSelect" onchange="filtrarProductos()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-orange-500 cursor-pointer flex-grow sm:flex-grow-0">
+          <select id="ordenSelect" onchange="filtrarProductos()" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-orange-500 cursor-pointer flex-grow sm:flex-grow-0" aria-label="Ordenar productos">
             <option value="destacados">Destacados</option>
             <option value="ofertas">🔥 Solo Ofertas</option>
             <option value="menor-precio">Precio: Menor a Mayor</option>
@@ -404,9 +444,14 @@
             </div>
 
             <div id="boxTallasModal" class="pt-3 hidden space-y-2 border-t border-zinc-800">
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center gap-2">
                 <span class="text-xs font-bold text-zinc-300">Selecciona tu opción / talla:</span>
-                <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
+                <div class="flex items-center gap-2">
+                  <span id="labelTallaSeleccionada" class="text-[11px] font-bold text-orange-400"></span>
+                  <button type="button" onclick="toggleGuiaTallas(true)" class="text-[11px] text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1 cursor-pointer underline-offset-2 hover:underline">
+                    <i class="fa-solid fa-ruler-horizontal"></i> Guía de tallas
+                  </button>
+                </div>
               </div>
               <div id="gridTallasModal" class="flex flex-wrap gap-2"></div>
             </div>
@@ -442,6 +487,47 @@
           </div>
         </div>
       </div>
+
+      <!-- TAMBIÉN TE PUEDE INTERESAR (PRODUCTOS RELACIONADOS) -->
+      <div id="seccionRelacionados" class="hidden pt-4 border-t border-zinc-800 space-y-3">
+        <h3 class="text-xs font-extrabold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+          <i class="fa-solid fa-sparkles text-orange-400"></i> También te puede interesar
+        </h3>
+        <div id="gridRelacionados" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GUÍA DE TALLAS INTERACTIVA (US / EU / CM) -->
+  <div id="modalGuiaTallas" onclick="if(event.target.id==='modalGuiaTallas') toggleGuiaTallas(false)" class="hidden fixed inset-0 z-[60] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="toggleGuiaTallas(false)" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 cursor-pointer" aria-label="Cerrar guía de tallas">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+      <div>
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-ruler-horizontal text-sky-400"></i> Guía de Tallas (Calzado)
+        </h3>
+        <p class="text-[11px] text-zinc-400 mt-1">Equivalencias aproximadas para calzado original (Adidas, Nike, Puma, NB, CAT).</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-1 rounded-xl border border-zinc-800 text-xs font-bold">
+        <button id="tabGuiaCaballero" type="button" onclick="cambiarTabGuiaTallas('caballero')" class="bg-orange-600 text-white py-1.5 rounded-lg cursor-pointer transition-colors">Caballero</button>
+        <button id="tabGuiaDama" type="button" onclick="cambiarTabGuiaTallas('dama')" class="text-zinc-400 hover:text-white py-1.5 rounded-lg cursor-pointer transition-colors">Dama</button>
+      </div>
+
+      <div id="tablaGuiaTallas" class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-xs"></div>
+
+      <div class="bg-sky-500/10 border border-sky-500/25 rounded-xl p-3 text-[11px] text-zinc-300 space-y-1">
+        <p class="font-bold text-sky-300"><i class="fa-solid fa-lightbulb"></i> ¿Cómo medir tu pie en 30 segundos?</p>
+        <p>1. Coloca una hoja en el piso pegada a la pared y apoya el talón.</p>
+        <p>2. Marca hasta la punta del dedo más largo y mide los centímetros (cm).</p>
+        <p>3. Si estás entre dos tallas o tienes pie ancho, elige media talla arriba.</p>
+      </div>
+
+      <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Necesito%20asesor%C3%ADa%20para%20elegir%20mi%20talla." target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
+        <i class="fa-brands fa-whatsapp text-sm"></i> ¿Dudas con tu talla? Te asesoramos
+      </a>
     </div>
   </div>
 
@@ -695,11 +781,32 @@
     </button>
   </div>
 
+  <!-- BARRA FLOTANTE DEL CARRITO EN MÓVIL (ESTILO APP) -->
+  <div id="barraCarritoMovil" class="hidden sm:hidden fixed bottom-3 left-3 right-3 z-40">
+    <button type="button" onclick="vibrar(); toggleCarrito(true)" class="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-orange-600/30 border border-orange-400/40 flex items-center justify-between gap-3 active:scale-[0.99] transition-transform cursor-pointer">
+      <div class="flex items-center gap-2.5">
+        <span id="movilCartCount" class="bg-black/80 text-orange-400 text-xs font-black w-7 h-7 rounded-xl flex items-center justify-center border border-orange-400/40">0</span>
+        <div class="text-left leading-tight">
+          <p class="text-xs font-extrabold">Ver mi pedido</p>
+          <p id="movilCartSub" class="text-[10px] text-orange-100/90 font-medium">$0.00 USD</p>
+        </div>
+      </div>
+      <span class="bg-black/25 px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5">
+        Finalizar <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      </span>
+    </button>
+  </div>
+
+  <!-- BOTÓN VOLVER ARRIBA -->
+  <button id="btnVolverArriba" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="hidden fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 bg-zinc-900/95 hover:bg-orange-600 text-zinc-200 hover:text-white border border-zinc-700 w-10 h-10 rounded-full shadow-xl flex items-center justify-center cursor-pointer transition-all active:scale-95" title="Volver arriba" aria-label="Volver arriba">
+    <i class="fa-solid fa-arrow-up text-xs"></i>
+  </button>
+
   <!-- BOTÓN FLOTANTE DIRECTO A WHATSAPP -->
-  <div class="fixed bottom-6 left-6 z-40 group flex items-center">
-    <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Tengo%20una%20consulta%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95" aria-label="Escríbenos a WhatsApp">
+  <div id="floatingWhatsApp" class="fixed bottom-6 left-4 sm:left-6 z-40 group flex items-center transition-all duration-300">
+    <a href="https://wa.me/584127701750?text=%C2%A1Hola%20Maviko!%20Tengo%20una%20consulta%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" class="relative bg-emerald-500 hover:bg-emerald-400 text-white w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-110 active:scale-95 p-3" aria-label="Escríbenos a WhatsApp">
       <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping pointer-events-none"></span>
-      <i class="fa-brands fa-whatsapp text-3xl"></i>
+      <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl"></i>
     </a>
     <span class="absolute left-16 bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap ml-2">
       ¿Dudas? Escríbenos
