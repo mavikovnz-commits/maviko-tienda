@@ -2758,6 +2758,176 @@ function mostrarToast(mensaje, titulo = "¡Producto agregado!", ocultarBoton = f
   }, 3200);
 }
 
+// ======================== TEMAS AUTOMÁTICOS SEGÚN LA FECHA ========================
+
+const TEMAS_TEMPORADA = {
+  navidad: {
+    badge: "🎄 Navidad",
+    badgeClass: "bg-red-600/20 border-red-500/40 text-amber-300",
+    subtitulo: "🎄 Especial Navidad · Regala 100% original",
+    cintilloClass: "bg-gradient-to-r from-red-700 via-emerald-700 to-red-700 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-amber-400/40",
+    themeColor: "#b91c1c",
+    luces: true,
+    nieve: true,
+    mensajes: [
+      "🎄 ESPECIAL NAVIDAD MAVIKO · REGALA 100% ORIGINAL",
+      "🎁 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "✨ ACUMULA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  },
+  sanvalentin: {
+    badge: "💘 San Valentín",
+    badgeClass: "bg-rose-600/20 border-rose-400/40 text-rose-300",
+    subtitulo: "💘 Regalos 100% originales para sorprender",
+    cintilloClass: "bg-gradient-to-r from-rose-700 via-pink-600 to-rose-700 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-rose-400/30",
+    themeColor: "#be123c",
+    mensajes: [
+      "💘 ESPECIAL SAN VALENTÍN · REGALOS 100% ORIGINALES",
+      "🎁 ENVÍOS RÁPIDOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "✨ GANA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  },
+  madres: {
+    badge: "💐 Día de las Madres",
+    badgeClass: "bg-fuchsia-600/20 border-fuchsia-400/40 text-fuchsia-300",
+    subtitulo: "💐 El regalo perfecto para mamá · 100% original",
+    cintilloClass: "bg-gradient-to-r from-fuchsia-700 via-rose-600 to-amber-600 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-fuchsia-400/30",
+    themeColor: "#a21caf",
+    mensajes: [
+      "💐 ESPECIAL DÍA DE LAS MADRES · DETALLES 100% ORIGINALES",
+      "🎁 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "✨ GANA PUNTOS Y CUPONES EN MAVIKO CLUB",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  },
+  padres: {
+    badge: "👔 Día del Padre",
+    badgeClass: "bg-blue-600/20 border-blue-400/40 text-sky-300",
+    subtitulo: "👔 Calzado y accesorios originales para papá",
+    cintilloClass: "bg-gradient-to-r from-blue-800 via-indigo-700 to-slate-800 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-sky-400/30",
+    themeColor: "#1d4ed8",
+    mensajes: [
+      "👔 ESPECIAL DÍA DEL PADRE · CALZADO Y ACCESORIOS ORIGINALES",
+      "🎁 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "✨ GANA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  },
+  clases: {
+    badge: "🎒 Regreso a Clases",
+    badgeClass: "bg-indigo-600/20 border-indigo-400/40 text-indigo-300",
+    subtitulo: "🎒 Morrales, calzado y accesorios 100% originales",
+    cintilloClass: "bg-gradient-to-r from-indigo-700 via-orange-600 to-indigo-700 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-indigo-400/30",
+    themeColor: "#4338ca",
+    mensajes: [
+      "🎒 REGRESO A CLASES · MORRALES Y CALZADO 100% ORIGINALES",
+      "🚚 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "✨ GANA PUNTOS Y CUPONES EN CADA COMPRA",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  },
+  halloween: {
+    badge: "🎃 Halloween",
+    badgeClass: "bg-purple-600/20 border-orange-400/50 text-orange-300",
+    subtitulo: "🎃 Ofertas de miedo en productos originales",
+    cintilloClass: "bg-gradient-to-r from-purple-800 via-orange-600 to-purple-800 text-white text-[11px] font-bold py-1.5 overflow-hidden whitespace-nowrap border-b border-orange-400/40",
+    themeColor: "#7e22ce",
+    mensajes: [
+      "🎃 ESPECIAL HALLOWEEN · OFERTAS EN PRODUCTOS ORIGINALES",
+      "🔥 ENVÍOS A TODA VENEZUELA (MRW, ZOOM, TEALCA)",
+      "🎁 GANA PUNTOS Y CUPONES DE REGALO EN CADA COMPRA",
+      "💵 TASA OFICIAL BCV GARANTIZADA"
+    ]
+  }
+};
+
+function detectarTemaPorFecha(fecha = new Date()) {
+  const params = new URLSearchParams(window.location.search);
+  const override = (params.get('tema') || '').trim().toLowerCase();
+  if (override === 'normal') return null;
+  if (override && TEMAS_TEMPORADA[override]) return override;
+
+  const mes = fecha.getMonth() + 1; // 1-12
+  const dia = fecha.getDate();      // 1-31
+
+  // Navidad y Reyes: 15 Nov – 6 Ene
+  if ((mes === 11 && dia >= 15) || mes === 12 || (mes === 1 && dia <= 6)) return 'navidad';
+  // San Valentín: 1 Feb – 15 Feb
+  if (mes === 2 && dia <= 15) return 'sanvalentin';
+  // Día de las Madres: 1 May – 15 May
+  if (mes === 5 && dia <= 15) return 'madres';
+  // Día del Padre: 1 Jun – 22 Jun
+  if (mes === 6 && dia <= 22) return 'padres';
+  // Regreso a Clases: 15 Ago – 25 Sep
+  if ((mes === 8 && dia >= 15) || (mes === 9 && dia <= 25)) return 'clases';
+  // Halloween: 24 Oct – 1 Nov
+  if ((mes === 10 && dia >= 24) || (mes === 11 && dia === 1)) return 'halloween';
+
+  return null;
+}
+
+function crearCoposNieve() {
+  const capa = document.getElementById('capaNieve');
+  if (!capa) return;
+  capa.innerHTML = '';
+  capa.classList.remove('hidden');
+
+  const simbolos = ['❄', '•', '✦'];
+  const totalCopos = 14;
+  for (let i = 0; i < totalCopos; i++) {
+    const copo = document.createElement('span');
+    copo.className = 'snowflake';
+    copo.textContent = simbolos[i % simbolos.length];
+    copo.style.left = `${Math.round((i / totalCopos) * 96 + (i % 3) * 2)}%`;
+    copo.style.fontSize = `${9 + (i % 4) * 2.5}px`;
+    copo.style.opacity = `${0.22 + (i % 4) * 0.07}`;
+    copo.style.animationDuration = `${11 + (i % 5) * 3}s`;
+    copo.style.animationDelay = `-${(i * 1.9).toFixed(1)}s`;
+    capa.appendChild(copo);
+  }
+}
+
+function aplicarTemaTemporada() {
+  const claveTema = detectarTemaPorFecha();
+  if (!claveTema || !TEMAS_TEMPORADA[claveTema]) return;
+
+  const cfg = TEMAS_TEMPORADA[claveTema];
+  document.body.setAttribute('data-tema', claveTema);
+
+  const badge = document.getElementById('badgeTemporada');
+  if (badge) {
+    badge.textContent = cfg.badge;
+    badge.className = `inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${cfg.badgeClass}`;
+  }
+
+  const subtitulo = document.getElementById('subtituloMarca');
+  if (subtitulo && cfg.subtitulo) {
+    subtitulo.textContent = cfg.subtitulo;
+  }
+
+  const cintillo = document.getElementById('cintilloTemporada');
+  const marquee = document.getElementById('textoMarquee');
+  if (cintillo && cfg.cintilloClass) {
+    cintillo.className = cfg.cintilloClass;
+  }
+  if (marquee && Array.isArray(cfg.mensajes)) {
+    const duplicados = [...cfg.mensajes, ...cfg.mensajes];
+    marquee.innerHTML = duplicados.map(m => `<span>${escapeHTML(m)}</span>`).join('');
+  }
+
+  if (cfg.luces) {
+    document.getElementById('lucesTemporada')?.classList.remove('hidden');
+  }
+  if (cfg.nieve) {
+    crearCoposNieve();
+  }
+  if (cfg.themeColor) {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', cfg.themeColor);
+  }
+}
+
 // ======================== SERVICE WORKER E INICIALIZACIÓN ========================
 
 if ('serviceWorker' in navigator) {
@@ -2767,6 +2937,7 @@ if ('serviceWorker' in navigator) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  aplicarTemaTemporada();
   actualizarVisibilidadBotonInstalar();
   actualizarContadorFavoritos();
   mostrarDatosPago();

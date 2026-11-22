@@ -110,11 +110,77 @@ body {
   animation: dropdownIn 0.16s ease-out;
 }
 
+/* ======================== TEMAS DE TEMPORADA AUTOMÁTICOS ======================== */
+
+@keyframes festiveLights {
+  0%, 100% { opacity: 0.75; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.35); }
+}
+
+.seasonal-lights {
+  height: 3px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #ef4444 0px, #ef4444 12px,
+    #f59e0b 12px, #f59e0b 24px,
+    #10b981 24px, #10b981 36px,
+    #fbbf24 36px, #fbbf24 48px
+  );
+  animation: festiveLights 3.2s ease-in-out infinite;
+}
+
+@keyframes snowFall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(24px, 108vh, 0) rotate(240deg);
+  }
+}
+
+.snowflake {
+  position: absolute;
+  top: -8vh;
+  color: rgba(255, 255, 255, 0.38);
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  animation-name: snowFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+body[data-tema="navidad"] {
+  background-image: radial-gradient(circle at top center, rgba(185, 28, 28, 0.14), transparent 46%);
+}
+
+body[data-tema="sanvalentin"] {
+  background-image: radial-gradient(circle at top center, rgba(225, 29, 72, 0.14), transparent 46%);
+}
+
+body[data-tema="madres"] {
+  background-image: radial-gradient(circle at top center, rgba(192, 38, 211, 0.13), transparent 46%);
+}
+
+body[data-tema="padres"] {
+  background-image: radial-gradient(circle at top center, rgba(37, 99, 235, 0.14), transparent 46%);
+}
+
+body[data-tema="halloween"] {
+  background-image: radial-gradient(circle at top center, rgba(147, 51, 234, 0.16), transparent 46%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .skeleton-box,
   .animate-pulse,
-  .animate-ping {
+  .animate-ping,
+  .seasonal-lights,
+  .snowflake {
     animation: none !important;
+  }
+  #capaNieve {
+    display: none !important;
   }
 }
