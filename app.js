@@ -65,6 +65,7 @@ let cuponAplicado = null; // { codigo, descuentoUSD, minCompraUSD }
 let toastTimeout = null;
 let timerEsperaJSONP = null;
 let timerAbandonoLead = null;
+let ultimoLeadEnviadoFirma = "";
 let eventoInstalacionDirecta = null;
 let intervaloCarruselModal = null;
 let fotosModalActuales = [];
@@ -2242,6 +2243,7 @@ function toggleCarrito(forceOpen = false, desdePopState = false) {
     document.body.classList.remove('overflow-hidden');
     setTimeout(() => overlay.classList.add('hidden'), 300);
     if (desdePopState) historialCarritoActivo = false;
+    if (carrito.length > 0) enviarLeadAbandonadoSiAplica();
   }
 }
 
@@ -2290,6 +2292,8 @@ function enviarPedidoWhatsApp() {
     return;
   }
 
+  clearTimeout(timerAbandonoLead);
+  ultimoLeadEnviadoFirma = "";
   guardarDatosCliente();
 
   const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
@@ -2644,31 +2648,45 @@ async function registrarSuscriptorVIP() {
   mostrarToast("¡Sumaste +10 Puntos de bienvenida en Maviko Club!", "¡Bienvenido al Club VIP!", true);
 }
 
+function enviarLeadAbandonadoSiAplica() {
+  clearTimeout(timerAbandonoLead);
+  if (carrito.length === 0) return;
+
+  const tel = (document.getElementById('telefonoCliente')?.value || '').trim();
+  const telDigitos = tel.replace(/\D/g, '');
+  if (telDigitos.length < 10) return;
+
+  const nombre = (document.getElementById('nombreCliente')?.value || '').trim();
+  const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
+  const totalBS = (subtotalUSD * (tasaBCV || 0)).toFixed(2);
+  const prods = carrito.map(i => `${i.nombre} x${i.cantidad}`).join(', ');
+  const firma = `${telDigitos}|${prods}`;
+
+  // Evitar duplicados en la misma sesión para el mismo teléfono y carrito
+  if (firma === ultimoLeadEnviadoFirma) return;
+  ultimoLeadEnviadoFirma = firma;
+
+  fetch(WEBHOOK_APPSCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    keepalive: true,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    body: JSON.stringify({
+      tipo: 'lead_abandonado',
+      nombre: nombre || 'Cliente Web',
+      telefono: tel,
+      totalUSD: subtotalUSD.toFixed(2),
+      totalBS,
+      productos: prods
+    })
+  }).catch(() => {});
+}
+
 function programarCapturaAbandono() {
   clearTimeout(timerAbandonoLead);
   timerAbandonoLead = setTimeout(() => {
-    const tel = document.getElementById('telefonoCliente').value.trim();
-    const nombre = document.getElementById('nombreCliente').value.trim();
-    if (tel.length >= 10 && carrito.length > 0) {
-      const subtotalUSD = carrito.reduce((acc, i) => acc + (i.precioUSD * i.cantidad), 0);
-      const totalBS = (subtotalUSD * (tasaBCV || 0)).toFixed(2);
-      const prods = carrito.map(i => `${i.nombre} x${i.cantidad}`).join(', ');
-      fetch(WEBHOOK_APPSCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        keepalive: true,
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        body: JSON.stringify({
-          tipo: 'lead_abandonado',
-          nombre: nombre || 'Cliente Web',
-          telefono: tel,
-          totalUSD: subtotalUSD.toFixed(2),
-          totalBS,
-          productos: prods
-        })
-      }).catch(() => {});
-    }
-  }, 6000);
+    enviarLeadAbandonadoSiAplica();
+  }, 35000);
 }
 
 // ======================== TOAST, MODALES Y PORTAPAPELES ========================
@@ -2769,6 +2787,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnVolverArriba');
     if (btn) btn.classList.toggle('hidden', window.scrollY < 450);
   }, { passive: true });
+
+  // Capturar carrito abandonado al instante si el cliente sale o minimiza la pestaña sin comprar
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && carrito.length > 0) {
+      enviarLeadAbandonadoSiAplica();
+    }
+  });
+  window.addEventListener('pagehide', () => {
+    if (carrito.length > 0) enviarLeadAbandonadoSiAplica();
+  });
 
   // Aplicar accesos directos desde URL (?filtro=ofertas | ?filtro=inmediata)
   const params = new URLSearchParams(window.location.search);
