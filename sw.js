@@ -1,4 +1,4 @@
-const CACHE_NAME = 'maviko-cache-v17';
+const CACHE_NAME = 'maviko-cache-v18';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -75,6 +75,10 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        if (event.request.mode === 'navigate') return caches.match('./index.html');
+        return cached;
+      }))
   );
 });

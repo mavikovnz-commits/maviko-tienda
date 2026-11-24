@@ -66,7 +66,7 @@ let toastTimeout = null;
 let timerEsperaJSONP = null;
 let timerAbandonoLead = null;
 let ultimoLeadEnviadoFirma = "";
-let eventoInstalacionDirecta = null;
+let eventoInstalacionDirecta = window.__mavikoDeferredInstallPrompt || null;
 let intervaloCarruselModal = null;
 let fotosModalActuales = [];
 let indiceFotoModalActual = 0;
@@ -1325,16 +1325,23 @@ function esAppInstalada() {
 function actualizarVisibilidadBotonInstalar() {
   const btn = document.getElementById('btnInstalarApp');
   if (!btn) return;
+  if (!eventoInstalacionDirecta && window.__mavikoDeferredInstallPrompt) {
+    eventoInstalacionDirecta = window.__mavikoDeferredInstallPrompt;
+  }
   if (esAppInstalada()) {
     btn.classList.add('hidden');
   } else {
     btn.classList.remove('hidden');
+    if (eventoInstalacionDirecta) {
+      btn.classList.add('ring-2', 'ring-emerald-400/50');
+    }
   }
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   eventoInstalacionDirecta = e;
+  window.__mavikoDeferredInstallPrompt = e;
   const btn = document.getElementById('btnInstalarApp');
   if (btn) {
     btn.classList.remove('hidden');
@@ -1344,6 +1351,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 window.addEventListener('appinstalled', () => {
   eventoInstalacionDirecta = null;
+  window.__mavikoDeferredInstallPrompt = null;
   const btn = document.getElementById('btnInstalarApp');
   if (btn) btn.classList.add('hidden');
   toggleModalInstalar(false);
@@ -1352,22 +1360,29 @@ window.addEventListener('appinstalled', () => {
 
 async function accionInstalarApp() {
   vibrar();
-  if (eventoInstalacionDirecta) {
-    eventoInstalacionDirecta.prompt();
-    const { outcome } = await eventoInstalacionDirecta.userChoice;
-    if (outcome === 'accepted') {
-      const icono = document.getElementById('iconoInstalarApp');
-      const texto = document.getElementById('textoInstalarApp');
-      if (icono && texto) {
-        icono.className = "fa-solid fa-circle-notch fa-spin text-xs";
-        texto.innerText = "Instalando...";
+  const promptEvt = eventoInstalacionDirecta || window.__mavikoDeferredInstallPrompt;
+  if (promptEvt) {
+    try {
+      promptEvt.prompt();
+      const { outcome } = await promptEvt.userChoice;
+      if (outcome === 'accepted') {
+        const icono = document.getElementById('iconoInstalarApp');
+        const texto = document.getElementById('textoInstalarApp');
+        if (icono && texto) {
+          icono.className = "fa-solid fa-circle-notch fa-spin text-xs";
+          texto.innerText = "Instalando...";
+        }
       }
+      eventoInstalacionDirecta = null;
+      window.__mavikoDeferredInstallPrompt = null;
+      return;
+    } catch (err) {
+      eventoInstalacionDirecta = null;
+      window.__mavikoDeferredInstallPrompt = null;
     }
-    eventoInstalacionDirecta = null;
-    return;
   }
 
-  // Respaldo inteligente para iPhone (Safari), Instagram/WhatsApp o navegadores sin prompt nativo
+  // Respaldo inteligente para iPhone (Safari), navegadores propios (Honor/Huawei/Samsung) o Instagram/WhatsApp
   mostrarGuiaInstalacion();
 }
 
@@ -1375,25 +1390,29 @@ function mostrarGuiaInstalacion() {
   const ua = navigator.userAgent || '';
   const esIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const esAndroid = /Android/i.test(ua);
-  const esInApp = /Instagram|FBAN|FBAV|TikTok|WhatsApp|Line/i.test(ua);
+  const esInApp = /Instagram|FBAN|FBAV|TikTok|WhatsApp|Line|; wv\)/i.test(ua);
+  const esNavegadorNoChromeAndroid = esAndroid && (
+    esInApp ||
+    /HuaweiBrowser|HonorBrowser|HMSCore|SamsungBrowser|MiuiBrowser|OPR|Opera|UCBrowser|Firefox/i.test(ua) ||
+    !/Chrome\/\d+/i.test(ua)
+  );
+  const intentChromeUrl = `intent://${window.location.host}${window.location.pathname}#Intent;scheme=https;package=com.android.chrome;end`;
 
   const box = document.getElementById('instruccionesInstalacion');
   const extra = document.getElementById('accionesInstalacionExtra');
   if (!box || !extra) return;
 
-  if (esInApp) {
+  if (esInApp && !esIOS) {
     box.innerHTML = `
-      <p class="text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Estás dentro de un navegador integrado</p>
-      <p>Instagram/WhatsApp bloquean la instalación directa de apps. Para instalar <strong>Maviko</strong>:</p>
-      <ol class="list-decimal list-inside space-y-1.5 text-zinc-200">
-        <li>Toca los tres puntos <strong>(⋯ o ⋮)</strong> arriba a la derecha.</li>
-        <li>Selecciona <strong>"Abrir en Chrome"</strong> o <strong>"Abrir en Safari"</strong>.</li>
-        <li>Allí toca de nuevo <strong>Instalar App</strong>.</li>
-      </ol>
+      <p class="text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Estás en un navegador interno</p>
+      <p>WhatsApp e Instagram no permiten instalar apps directamente. Toca el botón de abajo para abrir <strong>Maviko en Google Chrome</strong> e instalarla en 1 toque:</p>
     `;
     extra.innerHTML = `
-      <button onclick="copiarEnlaceTienda()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer flex items-center justify-center gap-2">
-        <i class="fa-regular fa-copy"></i> Copiar enlace para abrir en Chrome / Safari
+      <a href="${intentChromeUrl}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer flex items-center justify-center gap-2">
+        <i class="fa-brands fa-chrome text-sm"></i> Abrir directo en Chrome para instalar
+      </a>
+      <button onclick="copiarEnlaceTienda()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold py-2 rounded-xl text-xs cursor-pointer flex items-center justify-center gap-2 border border-zinc-700">
+        <i class="fa-regular fa-copy"></i> Copiar enlace
       </button>
     `;
   } else if (esIOS) {
@@ -1410,6 +1429,23 @@ function mostrarGuiaInstalacion() {
         Entendido
       </button>
     `;
+  } else if (esNavegadorNoChromeAndroid) {
+    box.innerHTML = `
+      <p class="font-bold text-white">Instalar en tu Android (Honor / navegador propio):</p>
+      <p class="text-zinc-300">Para instalación directa en 1 toque, ábrela en <strong>Google Chrome</strong> o agrégala desde el menú de este navegador:</p>
+      <ol class="list-decimal list-inside space-y-1.5 text-zinc-200">
+        <li>Toca <strong>"Abrir en Chrome"</strong> abajo y luego pulsa <strong>App</strong>.</li>
+        <li>O en este navegador toca el menú <strong>(≡ o ⋮)</strong> → <strong>"Añadir a pantalla de inicio"</strong>.</li>
+      </ol>
+    `;
+    extra.innerHTML = `
+      <a href="${intentChromeUrl}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer flex items-center justify-center gap-2">
+        <i class="fa-brands fa-chrome text-sm"></i> Abrir en Google Chrome
+      </a>
+      <button onclick="copiarEnlaceTienda()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold py-2 rounded-xl text-xs cursor-pointer flex items-center justify-center gap-2 border border-zinc-700">
+        <i class="fa-regular fa-copy"></i> Copiar enlace
+      </button>
+    `;
   } else if (esAndroid) {
     box.innerHTML = `
       <p class="font-bold text-white">Instalar en Android (Chrome):</p>
@@ -1418,6 +1454,7 @@ function mostrarGuiaInstalacion() {
         <li>Selecciona <strong>"Instalar aplicación"</strong> o <strong>"Añadir a pantalla de inicio"</strong>.</li>
         <li>Confirma tocando <strong>Instalar</strong>.</li>
       </ol>
+      <p class="text-[10px] text-zinc-400 pt-1">Nota: Si ya la habías instalado o cerrado el aviso antes, Chrome puede tardar unos minutos en volver a mostrar el diálogo automático.</p>
     `;
     extra.innerHTML = `
       <button onclick="toggleModalInstalar(false)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">
